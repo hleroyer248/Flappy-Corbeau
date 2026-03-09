@@ -119,7 +119,7 @@ void Game::processEvents() {
 
 void Game::update(float dt) {
     if (state == GameState::MainMenu || state == GameState::OptionMenu) {
-        return; // Pas d'update du jeu de fond pendant qu'on est dans ces menus
+        return; 
     }
 
     float bgSpeed = 100.f;
