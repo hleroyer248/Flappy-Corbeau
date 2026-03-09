@@ -7,10 +7,11 @@
 #include "Player.h"
 #include "Obstacle.h"
 #include "MainMenu.h"
+#include "Boutique.h"
 #include "OptionMenu.h"
 
 // Ajout des nouveaux états
-enum class GameState { MainMenu, OptionMenu, Ready, Playing };
+enum class GameState { MainMenu, OptionMenu, Shop, Ready, Playing };
 
 class Game {
 public:
@@ -30,6 +31,7 @@ private:
 
     std::optional<MainMenu> mainMenu;
     std::optional<OptionMenu> optionMenu;
+    std::optional<Boutique> shop;
 
     std::optional<sf::Sprite> bg1;
     std::optional<sf::Sprite> bg2;

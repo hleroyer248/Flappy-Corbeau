@@ -4,7 +4,7 @@
 
 class MainMenu {
 public:
-    enum class Action { None, Play, Options, Quit };
+    enum class Action { None, Play, Shop, Options, Quit };
 
     MainMenu(const RessourcesManager& rm);
     Action handleEvent(const sf::Event& event);
@@ -15,5 +15,6 @@ private:
     sf::Sprite startBtn;
     sf::Sprite settingsBtn;
     sf::Sprite exitBtn;
+    sf::Sprite shopButton;
     sf::Text title;
 };

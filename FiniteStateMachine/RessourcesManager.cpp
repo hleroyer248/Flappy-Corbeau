@@ -10,17 +10,18 @@ bool RessourcesManager::loadAll() {
         std::cerr << "ERREUR: Impossible de charger arial.ttf depuis le dossier Assets.\n";
         return false;
     }
-    if (!playerTex.loadFromFile(basePath + "Player.png") ||
-        !bgTex.loadFromFile(basePath + "Background.png") ||
-        !topPipeTex.loadFromFile(basePath + "Hobstacle.png") ||
-        !bottomPipeTex.loadFromFile(basePath + "Bobstacle.png") ||
-        !menuBgTex.loadFromFile(basePath + "MenuBackground.png") ||
-        !startBtnTex.loadFromFile(basePath + "StartButton.png") ||
-        !settingsBtnTex.loadFromFile(basePath + "SettingsButton.png") ||
-        !exitBtnTex.loadFromFile(basePath + "ExitButton.png") ||
-        !settingsBgTex.loadFromFile(basePath + "SettingsBackground.png") ||
-        !returnBtnTex.loadFromFile(basePath + "ReturnButton.png")) {
-        std::cerr << "ERREUR: Impossible de charger un ou plusieurs assets png depuis le dossier Assets.\n";
+    if (!playerTex.loadFromFile("Player.png") ||
+        !bgTex.loadFromFile("Background.png") ||
+        !topPipeTex.loadFromFile("Hobstacle.png") ||
+        !bottomPipeTex.loadFromFile("Bobstacle.png") ||
+        !menuBgTex.loadFromFile("MenuBackground.png") ||
+        !startBtnTex.loadFromFile("StartButton.png") ||
+        !settingsBtnTex.loadFromFile("SettingsButton.png") ||
+        !exitBtnTex.loadFromFile("ExitButton.png") ||
+        !settingsBgTex.loadFromFile("SettingsBackground.png") ||
+        !returnBtnTex.loadFromFile("ReturnButton.png") ||
+        !shopTex.loadFromFile("UIShop.jpg")) {
+        std::cerr << "ERREUR: Impossible de charger un ou plusieurs assets png.\n";
         return false;
     }
     return true;
@@ -38,3 +39,4 @@ const sf::Texture& RessourcesManager::getSettingsBtnTexture() const { return set
 const sf::Texture& RessourcesManager::getExitBtnTexture() const { return exitBtnTex; }
 const sf::Texture& RessourcesManager::getSettingsBgTexture() const { return settingsBgTex; }
 const sf::Texture& RessourcesManager::getReturnBtnTexture() const { return returnBtnTex; }
+const sf::Texture& RessourcesManager::getShopTexture() const{ return shopTex; }
