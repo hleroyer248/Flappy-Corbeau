@@ -5,6 +5,7 @@ Game::Game() : window(sf::VideoMode({ 800, 600 }), "Flappy Bird - SFML 3.0.2"),
 state(GameState::MainMenu), score(0), pipeSpawnTimer(0.f), lastPipeWasMoving(false),
 player(nullptr) {
     window.setFramerateLimit(60);
+     window.setKeyRepeatEnabled(false);
     if (!rm.loadAll()) {
         std::exit(-1);
     }
