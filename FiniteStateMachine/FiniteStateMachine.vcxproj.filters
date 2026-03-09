@@ -36,6 +36,12 @@
     <ClInclude Include="RessourcesManager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="ShopItem.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Boutique.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="CollisionBox.cpp">
@@ -60,6 +66,12 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="main.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ShopItem.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Boutique.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

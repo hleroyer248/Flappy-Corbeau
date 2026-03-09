@@ -18,6 +18,7 @@ public:
     const sf::Texture& getExitBtnTexture() const;
     const sf::Texture& getSettingsBgTexture() const;
     const sf::Texture& getReturnBtnTexture() const;
+    const sf::Texture& getShopTexture() const;
 
 private:
     sf::Texture playerTex;
@@ -32,4 +33,5 @@ private:
     sf::Texture exitBtnTex;
     sf::Texture settingsBgTex;
     sf::Texture returnBtnTex;
+    sf::Texture shopTex;
 };

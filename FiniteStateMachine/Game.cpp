@@ -14,6 +14,7 @@ player(nullptr) {
     // Initialisation des menus
     mainMenu.emplace(rm);
     optionMenu.emplace(rm);
+    shop.emplace(rm);
 
     bg1.emplace(rm.getBgTexture());
     bg2.emplace(rm.getBgTexture());
@@ -75,6 +76,10 @@ void Game::processEvents() {
             else if (action == MainMenu::Action::Options) {
                 state = GameState::OptionMenu;
             }
+            else if (action == MainMenu::Action::Shop)
+            {
+                state = GameState::Shop;
+            }
             else if (action == MainMenu::Action::Quit) {
                 window.close();
             }
@@ -83,6 +88,27 @@ void Game::processEvents() {
             auto action = optionMenu->handleEvent(event);
             if (action == OptionMenu::Action::Return) {
                 state = GameState::MainMenu;
+            }
+        }
+        else if (state == GameState::Shop)
+        {
+            if (const auto* mouse = event.getIf<sf::Event::MouseButtonPressed>())
+            {
+                if (mouse->button == sf::Mouse::Button::Left)
+                {
+                    sf::Vector2f mousePos =
+                        window.mapPixelToCoords(sf::Mouse::getPosition(window));
+
+                    shop->handleClick(mousePos);
+                }
+            }
+
+            if (const auto* key = event.getIf<sf::Event::KeyPressed>())
+            {
+                if (key->code == sf::Keyboard::Key::Escape)
+                {
+                    state = GameState::MainMenu;
+                }
             }
         }
         else if (state == GameState::Ready) {
@@ -120,6 +146,11 @@ void Game::processEvents() {
 void Game::update(float dt) {
     if (state == GameState::MainMenu || state == GameState::OptionMenu) {
         return; // Pas d'update du jeu de fond pendant qu'on est dans ces menus
+    }
+    if (state == GameState::Shop)
+    {
+        shop->update();
+        return;
     }
 
     float bgSpeed = 100.f;
@@ -192,6 +223,10 @@ void Game::render() {
     }
     else if (state == GameState::OptionMenu) {
         optionMenu->draw(window);
+    }
+    else if (state == GameState::Shop)
+    {
+         shop->draw(window);
     }
     else {
         window.draw(*bg1);
