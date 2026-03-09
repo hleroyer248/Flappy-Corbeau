@@ -21,6 +21,7 @@
   <ItemGroup>
     <ClInclude Include="CollisionBox.h" />
     <ClInclude Include="Game.h" />
+    <ClInclude Include="GameOverMenu.h" />
     <ClInclude Include="MainMenu.h" />
     <ClInclude Include="Obstacle.h" />
     <ClInclude Include="OptionMenu.h" />
@@ -30,6 +31,7 @@
   <ItemGroup>
     <ClCompile Include="CollisionBox.cpp" />
     <ClCompile Include="Game.cpp" />
+    <ClCompile Include="GameOverMenu.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="MainMenu.cpp" />
     <ClCompile Include="Obstacle.cpp" />

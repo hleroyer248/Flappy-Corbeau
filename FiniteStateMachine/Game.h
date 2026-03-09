@@ -10,7 +10,7 @@
 #include "OptionMenu.h"
 
 // Ajout des nouveaux états
-enum class GameState { MainMenu, OptionMenu, Ready, Playing };
+enum class GameState { MainMenu, OptionMenu, Ready, Playing, GameOver };
 
 class Game {
 public:
