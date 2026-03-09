@@ -47,7 +47,7 @@
     <ProjectGuid>{46cf4af5-b888-458c-9d1a-e0d940369599}</ProjectGuid>
     <RootNamespace>StatesAfternoon</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
-    <ProjectName>FiniteStateMachine</ProjectName>
+    <ProjectName>FlappyCrow</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">

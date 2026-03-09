@@ -4,8 +4,10 @@
 RessourcesManager::RessourcesManager() {}
 
 bool RessourcesManager::loadAll() {
-    if (!font.openFromFile("arial.ttf")) {
-        std::cerr << "ERREUR: Impossible de charger arial.ttf.\n";
+    const std::string basePath = "../Assets/";
+
+    if (!font.openFromFile(basePath + "arial.ttf")) {
+        std::cerr << "ERREUR: Impossible de charger arial.ttf depuis le dossier Assets.\n";
         return false;
     }
     if (!playerTex.loadFromFile("Player.png") ||
