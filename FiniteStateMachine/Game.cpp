@@ -139,12 +139,17 @@ void Game::update(float dt) {
 
         pipeSpawnTimer += dt;
         if (pipeSpawnTimer > 1.5f) {
-            bool makeMoving = false;
+            ObstacleType spawnType = ObstacleType::Normal;
+
             if (!lastPipeWasMoving && chanceDist(gen) < 20.f) {
-                makeMoving = true;
+                if (chanceDist(gen) < 75.f) {
+                    spawnType = ObstacleType::ParMouv;
+                } else {
+                    spawnType = ObstacleType::MachMouv;
+                }
             }
-            lastPipeWasMoving = makeMoving;
-            obstacles.emplace_back(800.f, gapDist(gen), 150.f, rm, makeMoving);
+            lastPipeWasMoving = (spawnType != ObstacleType::Normal);
+            obstacles.emplace_back(800.f, gapDist(gen), 150.f, rm, spawnType);
             pipeSpawnTimer = 0.f;
         }
 
