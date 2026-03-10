@@ -16,6 +16,7 @@ MainMenu::MainMenu(const RessourcesManager& rm)
     settingsBtn.setPosition({ 300.f, 350.f });
     exitBtn.setPosition({ 300.f, 450.f });
     shopButton.setPosition({ 300.f, 400.f });
+    shopButton.setScale({1.f,1.f});
 }
 
 MainMenu::Action MainMenu::handleEvent(const sf::Event& event) {
