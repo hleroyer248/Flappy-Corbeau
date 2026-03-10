@@ -14,6 +14,7 @@ private:
     int selectedItem;
 
     sf::RectangleShape infoPanel;
+    sf::Sprite returnButton;
 
     sf::Font font;
     sf::Text itemNameText;
@@ -21,9 +22,15 @@ private:
 
 public:
 
+    enum class Action
+    {
+        None,
+        Return
+    };
+
     Boutique(RessourcesManager& rm);
 
-    void handleClick(sf::Vector2f mousePos);
+    Action handleClick(sf::Vector2f mousePos);
 
     void update();
 

@@ -100,7 +100,12 @@ void Game::processEvents() {
                     sf::Vector2f mousePos =
                         window.mapPixelToCoords(sf::Mouse::getPosition(window));
 
-                    shop->handleClick(mousePos);
+                    auto action = shop->handleClick(mousePos);
+
+                    if (action == Boutique::Action::Return)
+                    {
+                        state = GameState::MainMenu;
+                    }
                 }
             }
 
