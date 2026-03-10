@@ -1,9 +1,10 @@
 #include "Boutique.h"
 #include <iostream>
-Boutique::Boutique(RessourcesManager& rm):
-itemNameText(rm.getFont(), "", 24),
-priceText(rm.getFont(), "", 20),
-returnButton(rm.getReturnBtnTexture())
+Boutique::Boutique(RessourcesManager& rm) :
+    itemNameText(rm.getFont(), "", 24),
+    priceText(rm.getFont(), "", 20),
+    returnButton(rm.getReturnBtnTexture()), 
+    background(rm.getMenuBgTexture())
 {
 
     selectedItem = -1;
@@ -89,6 +90,7 @@ void Boutique::update()
 
 void Boutique::draw(sf::RenderWindow& window)
 {
+    window.draw(background);
 
     for (auto& item : items)
     {

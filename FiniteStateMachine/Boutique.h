@@ -15,6 +15,7 @@ private:
 
     sf::RectangleShape infoPanel;
     sf::Sprite returnButton;
+    sf::Sprite background;
 
     sf::Font font;
     sf::Text itemNameText;
