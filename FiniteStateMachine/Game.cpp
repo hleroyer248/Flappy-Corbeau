@@ -155,7 +155,8 @@ void Game::update(float dt) {
     }
     if (state == GameState::Shop)
     {
-        shop->update();
+        shop->update(window);
+        shop->updateCursor(window);
         return;
     }
 

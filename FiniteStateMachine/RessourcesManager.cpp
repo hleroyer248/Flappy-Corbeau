@@ -20,7 +20,8 @@ bool RessourcesManager::loadAll() {
         !exitBtnTex.loadFromFile(basePath + "ExitButton.png") ||
         !settingsBgTex.loadFromFile(basePath + "SettingsBackground.png") ||
         !returnBtnTex.loadFromFile(basePath + "ReturnButton.png") ||
-        !shopTex.loadFromFile(basePath + "UIShop.jpg")) {
+        !shopTex.loadFromFile(basePath + "UIShop.jpg") ||
+        !buyBtnTex.loadFromFile(basePath + "BuyButton.jpg")) {
         std::cerr << "ERREUR: Impossible de charger un ou plusieurs assets png.\n";
         return false;
     }
@@ -40,3 +41,4 @@ const sf::Texture& RessourcesManager::getExitBtnTexture() const { return exitBtn
 const sf::Texture& RessourcesManager::getSettingsBgTexture() const { return settingsBgTex; }
 const sf::Texture& RessourcesManager::getReturnBtnTexture() const { return returnBtnTex; }
 const sf::Texture& RessourcesManager::getShopTexture() const{ return shopTex; }
+const sf::Texture& RessourcesManager::getBuyBtnTexture() const { return buyBtnTex; }

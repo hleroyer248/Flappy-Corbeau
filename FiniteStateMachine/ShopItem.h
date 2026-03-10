@@ -11,6 +11,7 @@ private:
     int price;
 
     bool owned;
+    bool selected;
     bool equipped;
 
     sf::Sprite sprite;
@@ -31,5 +32,9 @@ public:
 
     bool isOwned() const;
     void setOwned(bool value);
+    void updateHover(sf::Vector2f mousePos);
+    void setSelected(bool value);
+
+    const sf::Sprite& getSprite() const;
 
 };

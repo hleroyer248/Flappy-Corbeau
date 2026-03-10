@@ -19,6 +19,7 @@ public:
     const sf::Texture& getSettingsBgTexture() const;
     const sf::Texture& getReturnBtnTexture() const;
     const sf::Texture& getShopTexture() const;
+    const sf::Texture& getBuyBtnTexture() const;
 
 private:
     sf::Texture playerTex;
@@ -34,4 +35,5 @@ private:
     sf::Texture settingsBgTex;
     sf::Texture returnBtnTex;
     sf::Texture shopTex;
+    sf::Texture buyBtnTex;
 };

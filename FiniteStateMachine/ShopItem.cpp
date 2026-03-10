@@ -1,7 +1,7 @@
 #include "ShopItem.h"
 
 ShopItem::ShopItem(const std::string& name, int price, const sf::Texture& texture):
-sprite(texture)
+sprite(texture), selected(false)
 {
 
     this->name = name;
@@ -59,4 +59,34 @@ bool ShopItem::isOwned() const
 void ShopItem::setOwned(bool value)
 {
     owned = value;
+}
+
+void ShopItem::updateHover(sf::Vector2f mousePos)
+{
+
+    if (selected)
+    {
+        box.setFillColor(sf::Color(200, 200, 50)); // jaune
+        return;
+    }
+
+    if (box.getGlobalBounds().contains(mousePos))
+    {
+        box.setFillColor(sf::Color(120, 120, 120)); // hover
+    }
+    else
+    {
+        box.setFillColor(sf::Color(70, 70, 70)); // normal
+    }
+
+}
+
+void ShopItem::setSelected(bool value)
+{
+    selected = value;
+}
+
+const sf::Sprite& ShopItem::getSprite() const
+{
+    return sprite;
 }
