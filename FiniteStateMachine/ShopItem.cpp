@@ -28,7 +28,16 @@ void ShopItem::setPosition(float x, float y)
 
 void ShopItem::draw(sf::RenderWindow& window)
 {
-
+    if (equipped)
+    {
+        box.setOutlineColor(sf::Color::Green);
+        box.setOutlineThickness(4.f);
+        box.setFillColor(sf::Color(90, 90, 90));
+    }
+    else
+    {
+        box.setOutlineThickness(0.f);
+    }
     window.draw(box);
     window.draw(sprite);
 
