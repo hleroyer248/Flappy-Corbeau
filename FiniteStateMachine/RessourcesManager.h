@@ -20,8 +20,9 @@ public:
     const sf::Texture& getReturnBtnTexture() const;
     const sf::Texture& getShopTexture() const;
     const sf::Texture& getBuyBtnTexture() const;
-    const sf::Texture& getEquippedBtnTexture() const;
     const sf::Texture& getEquipBtnTexture() const;
+
+    const sf::Texture& getGhostPlayerTexture() const; // Commit Ghost
 
 private:
     sf::Texture playerTex;
@@ -39,5 +40,6 @@ private:
     sf::Texture shopTex;
     sf::Texture equipBtnTex;
     sf::Texture buyBtnTex;
-    sf::Texture equippedBtnTex;
+
+    sf::Texture ghostPlayerTex; // Commit Ghost
 };
