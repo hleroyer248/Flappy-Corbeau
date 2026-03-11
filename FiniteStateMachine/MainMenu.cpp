@@ -6,7 +6,9 @@ MainMenu::MainMenu(const RessourcesManager& rm)
     settingsBtn(rm.getSettingsBtnTexture()),
     exitBtn(rm.getExitBtnTexture()),
     title(rm.getFont(), "FLAPPY BIRD", 50),
-    shopButton(rm.getShopTexture()) {
+    shopButton(rm.getShopTexture()), 
+    bestScoreText(rm.getFont(), "", 24),    
+    totalScoreText(rm.getFont(), "", 24) {
 
     title.setPosition({ 230.f, 100.f });
     title.setFillColor(sf::Color::White);
@@ -17,6 +19,17 @@ MainMenu::MainMenu(const RessourcesManager& rm)
     exitBtn.setPosition({ 300.f, 450.f });
     shopButton.setPosition({ 300.f, 400.f });
     shopButton.setScale({1.f,1.f});
+
+        bestScoreText.setFillColor(sf::Color::Red);
+    bestScoreText.setPosition({ 300.f, 20.f });
+
+    totalScoreText.setFillColor(sf::Color::Green);
+    totalScoreText.setPosition({ 10.f, 10.f });
+}
+
+void MainMenu::updateScores(int bestScore, int totalScore) {
+    bestScoreText.setString("Meilleur Score: " + std::to_string(bestScore));
+    totalScoreText.setString("Score Total: " + std::to_string(totalScore));
 }
 
 MainMenu::Action MainMenu::handleEvent(const sf::Event& event) {
@@ -40,4 +53,6 @@ void MainMenu::draw(sf::RenderWindow& window) const {
     window.draw(settingsBtn);
     window.draw(exitBtn);
     window.draw(shopButton);
+    window.draw(bestScoreText);
+    window.draw(totalScoreText);
 }
