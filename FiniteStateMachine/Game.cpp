@@ -47,6 +47,22 @@ player(nullptr) {
 
 void Game::resetGame() {
     player->reset();
+    int skinIndex = save.getEquippedSkin();
+
+    if (skinIndex == 0)
+        player->setSkin(rm.getBirdRedTexture());
+
+    if (skinIndex == 1)
+        player->setSkin(rm.getBirdBlueTexture());
+
+    if (skinIndex == 2)
+        player->setSkin(rm.getBirdGreenTexture());
+
+    if (skinIndex == 3)
+        player->setSkin(rm.getBirdGoldTexture());
+
+    if (skinIndex == 4)
+        player->setSkin(rm.getBirdShadowTexture());
     obstacles.clear();
     score = 0;
     scoreText->setString("Score: 0");

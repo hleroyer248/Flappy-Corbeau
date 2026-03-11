@@ -88,3 +88,8 @@ const sf::Sprite& Player::getSprite() const {
 const sf::Vector2f& Player::getPosition() const {
     return sprite.getPosition();
 }
+
+void Player::setSkin(const sf::Texture& texture)
+{
+    sprite.setTexture(texture);
+}

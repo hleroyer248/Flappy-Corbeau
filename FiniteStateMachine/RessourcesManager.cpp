@@ -24,7 +24,12 @@ bool RessourcesManager::loadAll() {
         !shopTex.loadFromFile(basePath + "UIShop.jpg") ||
         !buyBtnTex.loadFromFile(basePath + "BuyButton.jpg") ||
         !equipBtnTex.loadFromFile(basePath + "EquipButton.png") || 
-        !equippedBtnTex.loadFromFile(basePath + "EquippedButton.png")) {
+        !equippedBtnTex.loadFromFile(basePath + "EquippedButton.png") ||
+        !birdRedTex.loadFromFile(basePath + "BirdRed.png") ||
+        !birdBlueTex.loadFromFile(basePath + "BirdBlue.png") ||
+        !birdGreenTex.loadFromFile(basePath + "BirdGreen.png") ||
+        !birdGoldTex.loadFromFile(basePath + "BirdGold.png") ||
+        !birdShadowTex.loadFromFile(basePath + "BirdShadow.png")){
         std::cerr << "ERREUR: Impossible de charger un ou plusieurs assets png.\n";
         return false;
     }
@@ -47,5 +52,11 @@ const sf::Texture& RessourcesManager::getShopTexture() const { return shopTex; }
 const sf::Texture& RessourcesManager::getBuyBtnTexture() const { return buyBtnTex; }
 const sf::Texture& RessourcesManager::getEquipBtnTexture() const { return equipBtnTex; }
 const sf::Texture& RessourcesManager::getEquippedBtnTexture() const { return equippedBtnTex; }
-
 const sf::Texture& RessourcesManager::getGhostPlayerTexture() const { return ghostPlayerTex; } // Commit Ghost
+
+
+const sf::Texture& RessourcesManager::getBirdRedTexture() const{ return birdRedTex; }
+const sf::Texture& RessourcesManager::getBirdBlueTexture() const{ return birdBlueTex; }
+const sf::Texture& RessourcesManager::getBirdGreenTexture() const{ return birdGreenTex; }
+const sf::Texture& RessourcesManager::getBirdGoldTexture() const{ return birdGoldTex; }
+const sf::Texture& RessourcesManager::getBirdShadowTexture() const{ return birdShadowTex; }

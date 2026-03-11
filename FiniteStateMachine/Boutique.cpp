@@ -43,11 +43,11 @@ Boutique::Boutique(RessourcesManager& rm, Save& save) :
     coinsText.setPosition({ 550.f, 20.f });
     equippedButton.setPosition({ 550.f, 400.f });
 
-    items.emplace_back("Bird Red", 10, rm.getPlayerTexture());
-    items.emplace_back("Bird Blue", 250, rm.getPlayerTexture());
-    items.emplace_back("Bird Green", 350, rm.getPlayerTexture());
-    items.emplace_back("Bird Gold", 550, rm.getPlayerTexture());
-    items.emplace_back("Bird Shadow", 850, rm.getPlayerTexture());
+    items.emplace_back("Bird Red", 10, rm.getBirdRedTexture());
+    items.emplace_back("Bird Blue", 250, rm.getBirdBlueTexture());
+    items.emplace_back("Bird Green", 350, rm.getBirdGreenTexture());
+    items.emplace_back("Bird Gold", 550, rm.getBirdGoldTexture());
+    items.emplace_back("Bird Shadow", 850, rm.getBirdShadowTexture());
 
     int cols = 3;
     int spacing = 20;

@@ -21,6 +21,9 @@ public:
     const sf::Sprite& getSprite() const;
     const sf::Vector2f& getPosition() const;
 
+
+    void setSkin(const sf::Texture& texture);
+
 private:
     sf::Sprite sprite;
     sf::Vector2f velocity;
