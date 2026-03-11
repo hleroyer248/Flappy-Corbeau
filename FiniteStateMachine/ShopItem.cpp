@@ -90,3 +90,13 @@ const sf::Sprite& ShopItem::getSprite() const
 {
     return sprite;
 }
+
+void ShopItem::setEquipped(bool value)
+{
+    equipped = value;
+}
+
+bool ShopItem::isEquipped() const
+{
+    return equipped;
+}

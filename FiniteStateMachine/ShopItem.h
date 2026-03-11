@@ -13,6 +13,7 @@ private:
     bool owned;
     bool selected;
     bool equipped;
+ 
 
     sf::Sprite sprite;
     sf::RectangleShape box;
@@ -36,5 +37,8 @@ public:
     void setSelected(bool value);
 
     const sf::Sprite& getSprite() const;
+
+    void setEquipped(bool value);
+    bool isEquipped() const;
 
 };

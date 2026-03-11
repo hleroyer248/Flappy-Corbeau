@@ -22,23 +22,27 @@
     <ClInclude Include="Boutique.h" />
     <ClInclude Include="CollisionBox.h" />
     <ClInclude Include="Game.h" />
+    <ClInclude Include="GameOverMenu.h" />
     <ClInclude Include="MainMenu.h" />
     <ClInclude Include="Obstacle.h" />
     <ClInclude Include="OptionMenu.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="RessourcesManager.h" />
+    <ClInclude Include="Save.h" />
     <ClInclude Include="ShopItem.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Boutique.cpp" />
     <ClCompile Include="CollisionBox.cpp" />
     <ClCompile Include="Game.cpp" />
+    <ClCompile Include="GameOverMenu.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="MainMenu.cpp" />
     <ClCompile Include="Obstacle.cpp" />
     <ClCompile Include="OptionMenu.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="RessourcesManager.cpp" />
+    <ClCompile Include="Save.cpp" />
     <ClCompile Include="ShopItem.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
