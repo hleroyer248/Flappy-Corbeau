@@ -18,6 +18,8 @@ player(nullptr) {
     gameOverMenu.emplace(rm);
     shop.emplace(rm);
 
+    mainMenu->updateScores(save.getBestScore(), save.getTotalScore());
+
     bg1.emplace(rm.getBgTexture());
     bg2.emplace(rm.getBgTexture());
     bgWidth = static_cast<float>(rm.getBgTexture().getSize().x);
@@ -235,6 +237,8 @@ void Game::update(float dt) {
             std::cout << "          GAME OVER !          \n";
             std::cout << "        Score final : " << score << "\n";
             std::cout << "===============================\n";
+            save.addScore(score);
+            mainMenu->updateScores(save.getBestScore(), save.getTotalScore());
             state = GameState::GameOver;
         }
     }
