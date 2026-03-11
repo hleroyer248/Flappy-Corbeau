@@ -9,7 +9,7 @@ public:
     MainMenu(const RessourcesManager& rm);
     Action handleEvent(const sf::Event& event);
     void draw(sf::RenderWindow& window) const;
-void updateScores(int bestScore, int totalScore);
+    void updateScores(int bestScore, int totalScore); // commit sauvegarde
 
 private:
     sf::Sprite background;
@@ -18,6 +18,7 @@ private:
     sf::Sprite exitBtn;
     sf::Sprite shopButton;
     sf::Text title;
-sf::Text bestScoreText;  
-    sf::Text totalScoreText; 
+
+    sf::Text bestScoreText;  // commit sauvegarde
+    sf::Text totalScoreText; // commit sauvegarde
 };
