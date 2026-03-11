@@ -5,20 +5,21 @@ Game::Game() : window(sf::VideoMode({ 800, 600 }), "Flappy Bird - SFML 3.0.2"),
 state(GameState::MainMenu), score(0), pipeSpawnTimer(0.f), lastPipeWasMoving(false),
 player(nullptr) {
     window.setFramerateLimit(60);
-     window.setKeyRepeatEnabled(false);
+    window.setKeyRepeatEnabled(false);
     if (!rm.loadAll()) {
         std::exit(-1);
     }
 
     player = new Player(rm);
 
-    // Initialisation des menus
     mainMenu.emplace(rm);
     optionMenu.emplace(rm);
     gameOverMenu.emplace(rm);
     shop.emplace(rm);
 
+    // commit sauvegarde
     mainMenu->updateScores(save.getBestScore(), save.getTotalScore());
+    
 
     bg1.emplace(rm.getBgTexture());
     bg2.emplace(rm.getBgTexture());
@@ -162,7 +163,7 @@ void Game::processEvents() {
 
 void Game::update(float dt) {
     if (state == GameState::MainMenu || state == GameState::OptionMenu || state == GameState::GameOver) {
-        return; 
+        return;
     }
     if (state == GameState::Shop)
     {
@@ -192,7 +193,8 @@ void Game::update(float dt) {
             if (!lastPipeWasMoving && chanceDist(gen) < 20.f) {
                 if (chanceDist(gen) < 75.f) {
                     spawnType = ObstacleType::ParMouv;
-                } else {
+                }
+                else {
                     spawnType = ObstacleType::MachMouv;
                 }
             }
@@ -237,9 +239,11 @@ void Game::update(float dt) {
             std::cout << "          GAME OVER !          \n";
             std::cout << "        Score final : " << score << "\n";
             std::cout << "===============================\n";
+            state = GameState::GameOver;
+
+            // commit sauvegarde 
             save.addScore(score);
             mainMenu->updateScores(save.getBestScore(), save.getTotalScore());
-            state = GameState::GameOver;
         }
     }
 }
@@ -257,7 +261,7 @@ void Game::render() {
         gameOverMenu->draw(window);
     }
     else if (state == GameState::Shop) {
-         shop->draw(window);
+        shop->draw(window);
     }
     else {
         window.draw(*bg1);
