@@ -20,6 +20,7 @@ public:
     const sf::Texture& getReturnBtnTexture() const;
     const sf::Texture& getShopTexture() const;
     const sf::Texture& getBuyBtnTexture() const;
+    const sf::Texture& getEquippedBtnTexture() const;
     const sf::Texture& getEquipBtnTexture() const;
 
 private:
@@ -38,4 +39,5 @@ private:
     sf::Texture shopTex;
     sf::Texture equipBtnTex;
     sf::Texture buyBtnTex;
+    sf::Texture equippedBtnTex;
 };
