@@ -10,9 +10,8 @@
 #include "Boutique.h"
 #include "OptionMenu.h"
 #include "GameOverMenu.h"
-#include "Save.h"
+#include "Save.h" // commit sauvegarde
 
-// Ajout des nouveaux états
 enum class GameState { MainMenu, OptionMenu, Shop, Ready, Playing, GameOver };
 
 class Game {
@@ -53,5 +52,6 @@ private:
     std::mt19937 gen;
     std::uniform_real_distribution<float> gapDist;
     std::uniform_real_distribution<float> chanceDist;
-Save save;
+
+    Save save; // commit sauvegarde
 };
