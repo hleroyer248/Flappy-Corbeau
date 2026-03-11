@@ -15,7 +15,7 @@ public:
 private:
     sf::Sprite background;
     sf::Sprite retryBtn;
-    sf::Sprite exitBtn;
+    sf::Sprite returnBtn;
     sf::Text score;
 };
 
