@@ -15,7 +15,12 @@ player(nullptr) {
     // Initialisation des menus
     mainMenu.emplace(rm);
     optionMenu.emplace(rm);
+<<<<<<< Updated upstream
     shop.emplace(rm);
+=======
+    gameOverMenu.emplace(rm);
+    shop.emplace(rm, save);
+>>>>>>> Stashed changes
 
     bg1.emplace(rm.getBgTexture());
     bg2.emplace(rm.getBgTexture());

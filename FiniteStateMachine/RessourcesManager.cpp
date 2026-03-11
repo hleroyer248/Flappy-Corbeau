@@ -44,5 +44,12 @@ const sf::Texture& RessourcesManager::getSettingsBgTexture() const { return sett
 const sf::Texture& RessourcesManager::getReturnBtnTexture() const { return returnBtnTex; }
 const sf::Texture& RessourcesManager::getShopTexture() const{ return shopTex; }
 const sf::Texture& RessourcesManager::getBuyBtnTexture() const { return buyBtnTex; }
+<<<<<<< Updated upstream
 const sf::Texture& RessourcesManager::getEquipBtnTexture() const{ return equipBtnTex; }
 const sf::Texture& RessourcesManager::getEquippedBtnTexture() const{ return equippedBtnTex; }
+=======
+const sf::Texture& RessourcesManager::getEquipBtnTexture() const { return equipBtnTex; }
+const sf::Texture& RessourcesManager::getEquippedBtnTexture() const { return equippedBtnTex; }
+
+const sf::Texture& RessourcesManager::getGhostPlayerTexture() const { return ghostPlayerTex; } // Commit Ghost
+>>>>>>> Stashed changes

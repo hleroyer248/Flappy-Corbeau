@@ -50,4 +50,11 @@ private:
     std::mt19937 gen;
     std::uniform_real_distribution<float> gapDist;
     std::uniform_real_distribution<float> chanceDist;
+<<<<<<< Updated upstream
 };
+=======
+
+    Save save; // commit sauvegarde
+    int coins = save.getTotalScore();
+};
+>>>>>>> Stashed changes

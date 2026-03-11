@@ -1,15 +1,16 @@
 #include "Boutique.h"
 #include <iostream>
-Boutique::Boutique(RessourcesManager& rm) :
+Boutique::Boutique(RessourcesManager& rm, Save& save) :
+    save(save),
     itemNameText(rm.getFont(), "", 24),
     priceText(rm.getFont(), "", 20),
-    returnButton(rm.getReturnBtnTexture()), 
+    returnButton(rm.getReturnBtnTexture()),
     background(rm.getMenuBgTexture()),
     buyButton(rm.getBuyBtnTexture()),
     equipButton(rm.getEquipBtnTexture()),
-    equippedButton(rm.getEquippedBtnTexture())
+    equippedButton(rm.getEquippedBtnTexture()),
+    coinsText(rm.getFont())
 {
-
     handCursor = sf::Cursor::createFromSystem(sf::Cursor::Type::Hand);
     arrowCursor = sf::Cursor::createFromSystem(sf::Cursor::Type::Arrow);
 
@@ -23,10 +24,15 @@ Boutique::Boutique(RessourcesManager& rm) :
     itemNameText.setCharacterSize(24);
     priceText.setFont(font);
     priceText.setCharacterSize(20);
+    coinsText.setFont(rm.getFont());
+    coinsText.setCharacterSize(24);
+
 
     itemNameText.setFillColor(sf::Color::White);
     infoPanel.setFillColor(sf::Color(40, 40, 40));
     priceText.setFillColor(sf::Color::Yellow);
+    coinsText.setFillColor(sf::Color::Yellow);
+
 
     infoPanel.setPosition({ 500.f,0.f });
     returnButton.setPosition({ 20.f,20.f });
@@ -34,6 +40,7 @@ Boutique::Boutique(RessourcesManager& rm) :
     itemNameText.setPosition({ 620,50 });
     priceText.setPosition({ 620.f,100.f });
     equipButton.setPosition({ 550.f, 400.f });
+    coinsText.setPosition({ 550.f, 20.f });
     equippedButton.setPosition({ 550.f, 400.f });
 
     items.emplace_back("Bird Red", 150, rm.getPlayerTexture());
@@ -151,6 +158,7 @@ void Boutique::updateCursor(sf::RenderWindow& window)
 void Boutique::update(sf::RenderWindow& window)
 {
 
+    coinsText.setString("Coins : " + std::to_string(save.getTotalScore()));
     sf::Vector2f mousePos =
         window.mapPixelToCoords(sf::Mouse::getPosition(window));
 
@@ -187,6 +195,7 @@ void Boutique::update(sf::RenderWindow& window)
 void Boutique::draw(sf::RenderWindow& window)
 {
     window.draw(background);
+    window.draw(coinsText);
 
     for (auto& item : items)
     {
