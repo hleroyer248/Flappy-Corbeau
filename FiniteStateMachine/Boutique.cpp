@@ -43,7 +43,7 @@ Boutique::Boutique(RessourcesManager& rm, Save& save) :
     coinsText.setPosition({ 550.f, 20.f });
     equippedButton.setPosition({ 550.f, 400.f });
 
-    items.emplace_back("Bird Red", 150, rm.getPlayerTexture());
+    items.emplace_back("Bird Red", 10, rm.getPlayerTexture());
     items.emplace_back("Bird Blue", 250, rm.getPlayerTexture());
     items.emplace_back("Bird Green", 350, rm.getPlayerTexture());
     items.emplace_back("Bird Gold", 550, rm.getPlayerTexture());
@@ -54,6 +54,11 @@ Boutique::Boutique(RessourcesManager& rm, Save& save) :
 
     for (int i = 0; i < items.size(); i++)
     {
+        if (save.isSkinOwned(i))
+            items[i].setOwned(true);
+
+        if (save.getEquippedSkin() == i)
+            items[i].setEquipped(true);
 
         int x = i % cols;
         int y = i / cols;
@@ -82,7 +87,14 @@ Boutique::Action Boutique::handleClick(sf::Vector2f mousePos)
         !items[selectedItem].isOwned() &&
         buyButton.getGlobalBounds().contains(mousePos))
     {
-        items[selectedItem].setOwned(true);
+        int price = items[selectedItem].getPrice();
+        int coins = save.getTotalScore();
+        if (coins >= price)
+        {
+            save.spendCoins(price);
+            save.buySkin(selectedItem);
+            items[selectedItem].setOwned(true);
+        }
         clickedSomething = true;
     }
 
@@ -95,6 +107,7 @@ Boutique::Action Boutique::handleClick(sf::Vector2f mousePos)
         for (auto& item : items)
             item.setEquipped(false);
 
+        save.equipSkin(selectedItem);
         items[selectedItem].setEquipped(true);
 
         clickedSomething = true;

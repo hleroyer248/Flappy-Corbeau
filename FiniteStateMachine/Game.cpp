@@ -15,7 +15,7 @@ player(nullptr) {
     mainMenu.emplace(rm);
     optionMenu.emplace(rm);
     gameOverMenu.emplace(rm);
-    shop.emplace(rm);
+    shop.emplace(rm, save);
 
     // commit sauvegarde
     mainMenu->updateScores(save.getBestScore(), save.getTotalScore());
