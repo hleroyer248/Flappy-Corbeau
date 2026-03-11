@@ -4,11 +4,14 @@
 #include "ShopItem.h"
 #include "RessourcesManager.h"
 #include <optional>
+#include "Save.h"
 
 class Boutique
 {
 
 private:
+
+    Save& save;
 
     std::vector<ShopItem> items;
 
@@ -25,6 +28,7 @@ private:
     sf::Font font;
     sf::Text itemNameText;
     sf::Text priceText;
+    sf::Text coinsText;
 
 
     std::optional<sf::Cursor> handCursor;
@@ -38,7 +42,7 @@ public:
         Return
     };
 
-    Boutique(RessourcesManager& rm);
+    Boutique(RessourcesManager& rm, Save& save);
 
     Action handleClick(sf::Vector2f mousePos);
 
