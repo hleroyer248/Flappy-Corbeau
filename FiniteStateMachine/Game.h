@@ -10,6 +10,7 @@
 #include "Boutique.h"
 #include "OptionMenu.h"
 #include "GameOverMenu.h"
+#include "Save.h"
 
 // Ajout des nouveaux états
 enum class GameState { MainMenu, OptionMenu, Shop, Ready, Playing, GameOver };
@@ -52,4 +53,5 @@ private:
     std::mt19937 gen;
     std::uniform_real_distribution<float> gapDist;
     std::uniform_real_distribution<float> chanceDist;
+Save save;
 };
