@@ -4,7 +4,7 @@ GameOverMenu::GameOverMenu(const RessourcesManager& rm)
     : background(rm.getMenuBgTexture()),
     retryBtn(rm.getStartBtnTexture()),
     exitBtn(rm.getExitBtnTexture()),
-    score(rm.getFont(), "FLAPPY BIRD", 50)
+    score(rm.getFont(), "Score : 0", 50)
 {
     score.setPosition({ 400.f, 300.f });
     score.setFillColor(sf::Color::White);
@@ -31,4 +31,13 @@ void GameOverMenu::draw(sf::RenderWindow& window) const {
     window.draw(score);
     window.draw(retryBtn);
     window.draw(exitBtn);
+}
+
+void GameOverMenu::updateScoreText(int finalScore)
+{
+    score.setString("Score: " + std::to_string(finalScore));
+
+    sf::FloatRect textRect = score.getLocalBounds();
+    score.setOrigin({ textRect.size.x / 2.f, textRect.size.y / 2.f });
+    score.setPosition({ 400.f, 150.f });
 }

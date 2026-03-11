@@ -10,6 +10,7 @@ public:
     GameOverMenu(const RessourcesManager& rm);
     Action handleEvent(const sf::Event& event);
     void draw(sf::RenderWindow& window) const;
+    void updateScoreText(int finalScore);
 
 private:
     sf::Sprite background;

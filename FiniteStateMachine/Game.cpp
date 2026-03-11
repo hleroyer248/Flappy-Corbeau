@@ -226,11 +226,15 @@ void Game::update(float dt) {
         }
 
         if (collision) {
+            state = GameState::GameOver;
+            gameOverMenu->updateScoreText(score);
+        }
+
+        if (collision) {
             std::cout << "\n===============================\n";
             std::cout << "          GAME OVER !          \n";
             std::cout << "        Score final : " << score << "\n";
             std::cout << "===============================\n";
-            // Retour au menu principal après un Game Over
             state = GameState::GameOver;
         }
     }
@@ -248,8 +252,7 @@ void Game::render() {
     else if (state == GameState::GameOver) {
         gameOverMenu->draw(window);
     }
-    else if (state == GameState::Shop)
-    {
+    else if (state == GameState::Shop) {
          shop->draw(window);
     }
     else {
