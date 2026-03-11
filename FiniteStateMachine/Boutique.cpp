@@ -6,7 +6,8 @@ Boutique::Boutique(RessourcesManager& rm) :
     returnButton(rm.getReturnBtnTexture()), 
     background(rm.getMenuBgTexture()),
     buyButton(rm.getBuyBtnTexture()),
-    equipButton(rm.getEquipBtnTexture())
+    equipButton(rm.getEquipBtnTexture()),
+    equippedButton(rm.getEquippedBtnTexture())
 {
 
     handCursor = sf::Cursor::createFromSystem(sf::Cursor::Type::Hand);
@@ -33,6 +34,7 @@ Boutique::Boutique(RessourcesManager& rm) :
     itemNameText.setPosition({ 620,50 });
     priceText.setPosition({ 620.f,100.f });
     equipButton.setPosition({ 550.f, 400.f });
+    equippedButton.setPosition({ 550.f, 400.f });
 
     items.emplace_back("Bird Red", 150, rm.getPlayerTexture());
     items.emplace_back("Bird Blue", 250, rm.getPlayerTexture());
@@ -60,40 +62,44 @@ Boutique::Boutique(RessourcesManager& rm) :
 Boutique::Action Boutique::handleClick(sf::Vector2f mousePos)
 {
 
+    bool clickedSomething = false;
+
+    // bouton RETURN
     if (returnButton.getGlobalBounds().contains(mousePos))
     {
         return Action::Return;
     }
 
-
-    //bouton buy 
+    // bouton BUY
     if (selectedItem != -1 &&
-        buyButton.getGlobalBounds().contains(mousePos) &&
-        !items[selectedItem].isOwned())
+        !items[selectedItem].isOwned() &&
+        buyButton.getGlobalBounds().contains(mousePos))
     {
         items[selectedItem].setOwned(true);
+        clickedSomething = true;
     }
 
-
-    //bouton equip 
+    // bouton EQUIP
     if (selectedItem != -1 &&
         items[selectedItem].isOwned() &&
+        !items[selectedItem].isEquipped() &&
         equipButton.getGlobalBounds().contains(mousePos))
     {
-
         for (auto& item : items)
             item.setEquipped(false);
 
         items[selectedItem].setEquipped(true);
 
+        clickedSomething = true;
     }
 
-
+    // clic sur un item
     for (int i = 0; i < items.size(); i++)
     {
-
         if (items[i].isClicked(mousePos))
         {
+            clickedSomething = true;
+
             selectedItem = i;
 
             for (auto& item : items)
@@ -101,12 +107,19 @@ Boutique::Action Boutique::handleClick(sf::Vector2f mousePos)
 
             items[i].setSelected(true);
         }
+    }
 
+    // clic dans le vide
+    if (!clickedSomething)
+    {
+        selectedItem = -1;
+
+        for (auto& item : items)
+            item.setSelected(false);
     }
 
     return Action::None;
 }
-
 
 void Boutique::updateCursor(sf::RenderWindow& window)
 {
@@ -189,10 +202,18 @@ void Boutique::draw(sf::RenderWindow& window)
             window.draw(*previewSprite);
         window.draw(itemNameText);
         window.draw(priceText);
-        if (items[selectedItem].isOwned())
-            window.draw(equipButton);
+        if (!items[selectedItem].isOwned())
+        {
+            window.draw(buyButton);
+        }
+        else if (items[selectedItem].isEquipped())
+        {
+            window.draw(equippedButton);
+        }
         else
-        window.draw(buyButton);
+        {
+            window.draw(equipButton);
+        }
     }
 
 }

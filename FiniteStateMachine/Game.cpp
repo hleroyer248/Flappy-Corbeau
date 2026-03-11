@@ -19,7 +19,7 @@ player(nullptr) {
 
     // commit sauvegarde
     mainMenu->updateScores(save.getBestScore(), save.getTotalScore());
-    
+
 
     bg1.emplace(rm.getBgTexture());
     bg2.emplace(rm.getBgTexture());
@@ -144,15 +144,12 @@ void Game::processEvents() {
         else if (state == GameState::Playing) {
             if (const auto* key = event.getIf<sf::Event::KeyPressed>()) {
                 if (key->code == sf::Keyboard::Key::Space) player->flap();
-                if ((key->code == sf::Keyboard::Key::LShift || key->code == sf::Keyboard::Key::RShift) && player->canDash()) {
-                    float dashDist = player->getDashDistance();
-                    bg1->move({ -dashDist, 0.f });
-                    bg2->move({ -dashDist, 0.f });
-                    for (auto& obs : obstacles) {
-                        obs.shift(dashDist);
-                    }
-                    player->dash();
+
+                // Commit Ghost - debut
+                if ((key->code == sf::Keyboard::Key::LShift || key->code == sf::Keyboard::Key::RShift) && player->canActivateGhost()) {
+                    player->activateGhost();
                 }
+                // Commit Ghost - fin
             }
             if (const auto* mouse = event.getIf<sf::Event::MouseButtonReleased>()) {
                 if (mouse->button == sf::Mouse::Button::Left) player->flap();
@@ -194,7 +191,7 @@ void Game::update(float dt) {
 
     if (state == GameState::Playing) {
         player->update(dt);
-        player->updateDashCooldown(dt);
+        player->updateGhost(dt); // Commit Ghost - remplacement de updateDashCooldown
 
         pipeSpawnTimer += dt;
         if (pipeSpawnTimer > 1.5f) {
@@ -227,9 +224,14 @@ void Game::update(float dt) {
         CollisionBox pBox = player->getCollisionBox();
         for (auto it = obstacles.begin(); it != obstacles.end(); ) {
             it->update(dt);
-            if (pBox.intersects(it->getTopCollisionBox()) || pBox.intersects(it->getBottomCollisionBox())) {
-                collision = true;
+
+            // Commit Ghost - debut : Collision vérifiée seulement si on n'est pas un fantôme
+            if (!player->isGhost()) {
+                if (pBox.intersects(it->getTopCollisionBox()) || pBox.intersects(it->getBottomCollisionBox())) {
+                    collision = true;
+                }
             }
+            // Commit Ghost - fin
 
             if (!it->isPassed() && it->getX() + it->getWidth() < player->getPosition().x - (pBox.getRect().size.x / 2.f)) {
                 it->setPassed(true);
@@ -245,14 +247,13 @@ void Game::update(float dt) {
             }
         }
 
-        if (pBox.getRect().position.y < 0.f || pBox.getRect().position.y + pBox.getRect().size.y > 600.f) {
-            collision = true;
+        // Commit Ghost - debut : Collision limites de l'écran ignorée si Ghost
+        if (!player->isGhost()) {
+            if (pBox.getRect().position.y < 0.f || pBox.getRect().position.y + pBox.getRect().size.y > 600.f) {
+                collision = true;
+            }
         }
-
-        if (collision) {
-            state = GameState::GameOver;
-            gameOverMenu->updateScoreText(score);
-        }
+        // Commit Ghost - fin
 
         if (collision) {
             std::cout << "\n===============================\n";
@@ -260,6 +261,7 @@ void Game::update(float dt) {
             std::cout << "        Score final : " << score << "\n";
             std::cout << "===============================\n";
             state = GameState::GameOver;
+            gameOverMenu->updateScoreText(score);
 
             // commit sauvegarde 
             save.addScore(score);

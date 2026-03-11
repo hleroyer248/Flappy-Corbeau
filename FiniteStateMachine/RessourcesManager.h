@@ -22,6 +22,8 @@ public:
     const sf::Texture& getBuyBtnTexture() const;
     const sf::Texture& getEquipBtnTexture() const;
 
+    const sf::Texture& getGhostPlayerTexture() const; // Commit Ghost
+
 private:
     sf::Texture playerTex;
     sf::Texture bgTex;
@@ -38,4 +40,6 @@ private:
     sf::Texture shopTex;
     sf::Texture equipBtnTex;
     sf::Texture buyBtnTex;
+
+    sf::Texture ghostPlayerTex; // Commit Ghost
 };

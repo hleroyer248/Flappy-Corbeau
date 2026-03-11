@@ -20,6 +20,7 @@ private:
     std::optional<sf::Sprite> previewSprite; // visuel du sprite a droite de la boutique 
     sf::Sprite buyButton;
     sf::Sprite equipButton;
+    sf::Sprite equippedButton;
 
     sf::Font font;
     sf::Text itemNameText;
