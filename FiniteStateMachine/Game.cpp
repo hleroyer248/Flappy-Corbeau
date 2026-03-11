@@ -104,19 +104,13 @@ void Game::processEvents() {
                 state = GameState::MainMenu;
             }
         }
-        else if (state == GameState::Shop)
-        {
-            if (const auto* mouse = event.getIf<sf::Event::MouseButtonPressed>())
-            {
-                if (mouse->button == sf::Mouse::Button::Left)
-                {
-                    sf::Vector2f mousePos =
-                        window.mapPixelToCoords(sf::Mouse::getPosition(window));
 
+        else if (state == GameState::Shop) {
+            if (const auto* mouse = event.getIf<sf::Event::MouseButtonPressed>()) {
+                if (mouse->button == sf::Mouse::Button::Left) {
+                    sf::Vector2f mousePos = window.mapPixelToCoords(sf::Mouse::getPosition(window));
                     auto action = shop->handleClick(mousePos);
-
-                    if (action == Boutique::Action::Return)
-                    {
+                    if (action == Boutique::Action::Return) {
                         state = GameState::MainMenu;
                     }
                 }
@@ -130,6 +124,7 @@ void Game::processEvents() {
                 }
             }
         }
+
         else if (state == GameState::Ready) {
             bool startPressed = false;
             if (const auto* key = event.getIf<sf::Event::KeyPressed>()) {
@@ -252,6 +247,7 @@ void Game::render() {
     }
     else if (state == GameState::GameOver) {
         gameOverMenu->draw(window);
+    }
     else if (state == GameState::Shop)
     {
          shop->draw(window);
