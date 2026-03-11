@@ -7,6 +7,7 @@
 #include "Player.h"
 #include "Obstacle.h"
 #include "MainMenu.h"
+#include "Boutique.h"
 #include "OptionMenu.h"
 #include "GameOverMenu.h"
 
@@ -32,6 +33,7 @@ private:
     std::optional<MainMenu> mainMenu;
     std::optional<OptionMenu> optionMenu;
     std::optional<GameOverMenu>gameOverMenu;
+    std::optional<Boutique> shop;
 
     std::optional<sf::Sprite> bg1;
     std::optional<sf::Sprite> bg2;

@@ -3,9 +3,15 @@
 #include "RessourcesManager.h"
 #include "CollisionBox.h"
 
+enum class ObstacleType {
+    Normal,
+    ParMouv,
+    MachMouv
+};
+
 class Obstacle {
 public:
-    Obstacle(float startX, float gapY, float gapHeight, const RessourcesManager& rm, bool moving);
+    Obstacle(float startX, float gapY, float gapHeight, const RessourcesManager& rm, ObstacleType type);
     void updatePositions();
     void update(float dt);
     void shift(float distance);
@@ -24,7 +30,7 @@ private:
     float x;
     bool passed;
     float width;
-    bool isMoving;
+    ObstacleType type;
     float baseGapY;
     float gapHeight;
     float time;

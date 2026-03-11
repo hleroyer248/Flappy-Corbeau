@@ -19,6 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Boutique.h" />
     <ClInclude Include="CollisionBox.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="GameOverMenu.h" />
@@ -27,8 +28,10 @@
     <ClInclude Include="OptionMenu.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="RessourcesManager.h" />
+    <ClInclude Include="ShopItem.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Boutique.cpp" />
     <ClCompile Include="CollisionBox.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="GameOverMenu.cpp" />
@@ -38,6 +41,7 @@
     <ClCompile Include="OptionMenu.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="RessourcesManager.cpp" />
+    <ClCompile Include="ShopItem.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>18.0</VCProjectVersion>

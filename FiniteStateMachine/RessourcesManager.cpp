@@ -4,7 +4,7 @@
 RessourcesManager::RessourcesManager() {}
 
 bool RessourcesManager::loadAll() {
-    const std::string basePath = "../Assets/";
+    const std::string basePath = "Assets/";
 
     if (!font.openFromFile(basePath + "arial.ttf")) {
         std::cerr << "ERREUR: Impossible de charger arial.ttf depuis le dossier Assets.\n";
@@ -19,8 +19,10 @@ bool RessourcesManager::loadAll() {
         !settingsBtnTex.loadFromFile(basePath + "SettingsButton.png") ||
         !exitBtnTex.loadFromFile(basePath + "ExitButton.png") ||
         !settingsBgTex.loadFromFile(basePath + "SettingsBackground.png") ||
-        !returnBtnTex.loadFromFile(basePath + "ReturnButton.png")) {
-        std::cerr << "ERREUR: Impossible de charger un ou plusieurs assets png depuis le dossier Assets.\n";
+        !returnBtnTex.loadFromFile(basePath + "ReturnButton.png") ||
+        !shopTex.loadFromFile(basePath + "UIShop.jpg") ||
+        !buyBtnTex.loadFromFile(basePath + "BuyButton.jpg")) {
+        std::cerr << "ERREUR: Impossible de charger un ou plusieurs assets png.\n";
         return false;
     }
     return true;
@@ -38,3 +40,5 @@ const sf::Texture& RessourcesManager::getSettingsBtnTexture() const { return set
 const sf::Texture& RessourcesManager::getExitBtnTexture() const { return exitBtnTex; }
 const sf::Texture& RessourcesManager::getSettingsBgTexture() const { return settingsBgTex; }
 const sf::Texture& RessourcesManager::getReturnBtnTexture() const { return returnBtnTex; }
+const sf::Texture& RessourcesManager::getShopTexture() const{ return shopTex; }
+const sf::Texture& RessourcesManager::getBuyBtnTexture() const { return buyBtnTex; }

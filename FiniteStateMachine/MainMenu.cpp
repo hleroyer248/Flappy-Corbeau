@@ -5,7 +5,8 @@ MainMenu::MainMenu(const RessourcesManager& rm)
     startBtn(rm.getStartBtnTexture()),
     settingsBtn(rm.getSettingsBtnTexture()),
     exitBtn(rm.getExitBtnTexture()),
-    title(rm.getFont(), "FLAPPY BIRD", 50) {
+    title(rm.getFont(), "FLAPPY BIRD", 50),
+    shopButton(rm.getShopTexture()) {
 
     title.setPosition({ 230.f, 100.f });
     title.setFillColor(sf::Color::White);
@@ -14,6 +15,8 @@ MainMenu::MainMenu(const RessourcesManager& rm)
     startBtn.setPosition({ 300.f, 250.f });
     settingsBtn.setPosition({ 300.f, 350.f });
     exitBtn.setPosition({ 300.f, 450.f });
+    shopButton.setPosition({ 300.f, 400.f });
+    shopButton.setScale({1.f,1.f});
 }
 
 MainMenu::Action MainMenu::handleEvent(const sf::Event& event) {
@@ -24,6 +27,7 @@ MainMenu::Action MainMenu::handleEvent(const sf::Event& event) {
             if (startBtn.getGlobalBounds().contains(mPos)) return Action::Play;
             if (settingsBtn.getGlobalBounds().contains(mPos)) return Action::Options;
             if (exitBtn.getGlobalBounds().contains(mPos)) return Action::Quit;
+            if (shopButton.getGlobalBounds().contains(mPos)) return Action::Shop;
         }
     }
     return Action::None;
@@ -35,4 +39,5 @@ void MainMenu::draw(sf::RenderWindow& window) const {
     window.draw(startBtn);
     window.draw(settingsBtn);
     window.draw(exitBtn);
+    window.draw(shopButton);
 }

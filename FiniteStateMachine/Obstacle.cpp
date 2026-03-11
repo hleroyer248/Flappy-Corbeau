@@ -1,28 +1,40 @@
 #include "Obstacle.h"
 #include <cmath>
 
-Obstacle::Obstacle(float startX, float gapY, float gapH, const RessourcesManager& rm, bool moving)
+Obstacle::Obstacle(float startX, float gapY, float gapH, const RessourcesManager& rm, ObstacleType t)
     : topSprite(rm.getTopPipeTexture()), bottomSprite(rm.getBottomPipeTexture()),
-    x(startX), passed(false), isMoving(moving), baseGapY(gapY), gapHeight(gapH), time(0.f) {
+    x(startX), passed(false), type(t), baseGapY(gapY), gapHeight(gapH), time(0.f) {
     width = static_cast<float>(rm.getTopPipeTexture().getSize().x);
     topTexHeight = static_cast<float>(rm.getTopPipeTexture().getSize().y);
     updatePositions();
 }
 
 void Obstacle::updatePositions() {
-    float currentGapY = baseGapY;
-    if (isMoving) {
-        currentGapY += std::sin(time * 3.f) * 90.f;
+    if (type == ObstacleType::ParMouv) {
+        float currentGapY = baseGapY + std::sin(time * 3.f) * 90.f;
+        float topY = currentGapY - topTexHeight;
+        float bottomY = currentGapY + gapHeight;
+        topSprite.setPosition({ x, topY });
+        bottomSprite.setPosition({ x, bottomY });
     }
-    float topY = currentGapY - topTexHeight;
-    topSprite.setPosition({ x, topY });
-    float bottomY = currentGapY + gapHeight;
-    bottomSprite.setPosition({ x, bottomY });
+    else if (type == ObstacleType::MachMouv) {
+        float offset = std::sin(time * 1.5f) * 70.f;
+        float topY = baseGapY - topTexHeight + offset;
+        float bottomY = baseGapY + gapHeight - offset;
+        topSprite.setPosition({ x, topY });
+        bottomSprite.setPosition({ x, bottomY });
+    }
+    else {
+        float topY = baseGapY - topTexHeight;
+        float bottomY = baseGapY + gapHeight;
+        topSprite.setPosition({ x, topY });
+        bottomSprite.setPosition({ x, bottomY });
+    }
 }
 
 void Obstacle::update(float dt) {
     x -= 200.f * dt;
-    if (isMoving) {
+    if (type != ObstacleType::Normal) {
         time += dt;
     }
     updatePositions();

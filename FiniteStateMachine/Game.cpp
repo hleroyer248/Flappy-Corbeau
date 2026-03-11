@@ -16,6 +16,7 @@ player(nullptr) {
     mainMenu.emplace(rm);
     optionMenu.emplace(rm);
     gameOverMenu.emplace(rm);
+    shop.emplace(rm);
 
     bg1.emplace(rm.getBgTexture());
     bg2.emplace(rm.getBgTexture());
@@ -77,6 +78,10 @@ void Game::processEvents() {
             else if (action == MainMenu::Action::Options) {
                 state = GameState::OptionMenu;
             }
+            else if (action == MainMenu::Action::Shop)
+            {
+                state = GameState::Shop;
+            }
             else if (action == MainMenu::Action::Quit) {
                 window.close();
             }
@@ -99,7 +104,32 @@ void Game::processEvents() {
                 state = GameState::MainMenu;
             }
         }
+        else if (state == GameState::Shop)
+        {
+            if (const auto* mouse = event.getIf<sf::Event::MouseButtonPressed>())
+            {
+                if (mouse->button == sf::Mouse::Button::Left)
+                {
+                    sf::Vector2f mousePos =
+                        window.mapPixelToCoords(sf::Mouse::getPosition(window));
 
+                    auto action = shop->handleClick(mousePos);
+
+                    if (action == Boutique::Action::Return)
+                    {
+                        state = GameState::MainMenu;
+                    }
+                }
+            }
+
+            if (const auto* key = event.getIf<sf::Event::KeyPressed>())
+            {
+                if (key->code == sf::Keyboard::Key::Escape)
+                {
+                    state = GameState::MainMenu;
+                }
+            }
+        }
         else if (state == GameState::Ready) {
             bool startPressed = false;
             if (const auto* key = event.getIf<sf::Event::KeyPressed>()) {
@@ -137,6 +167,12 @@ void Game::update(float dt) {
     if (state == GameState::MainMenu || state == GameState::OptionMenu || state == GameState::GameOver) {
         return; 
     }
+    if (state == GameState::Shop)
+    {
+        shop->update(window);
+        shop->updateCursor(window);
+        return;
+    }
 
     float bgSpeed = 100.f;
     bg1->move({ -bgSpeed * dt, 0.f });
@@ -154,12 +190,17 @@ void Game::update(float dt) {
 
         pipeSpawnTimer += dt;
         if (pipeSpawnTimer > 1.5f) {
-            bool makeMoving = false;
+            ObstacleType spawnType = ObstacleType::Normal;
+
             if (!lastPipeWasMoving && chanceDist(gen) < 20.f) {
-                makeMoving = true;
+                if (chanceDist(gen) < 75.f) {
+                    spawnType = ObstacleType::ParMouv;
+                } else {
+                    spawnType = ObstacleType::MachMouv;
+                }
             }
-            lastPipeWasMoving = makeMoving;
-            obstacles.emplace_back(800.f, gapDist(gen), 150.f, rm, makeMoving);
+            lastPipeWasMoving = (spawnType != ObstacleType::Normal);
+            obstacles.emplace_back(800.f, gapDist(gen), 150.f, rm, spawnType);
             pipeSpawnTimer = 0.f;
         }
 
@@ -211,6 +252,9 @@ void Game::render() {
     }
     else if (state == GameState::GameOver) {
         gameOverMenu->draw(window);
+    else if (state == GameState::Shop)
+    {
+         shop->draw(window);
     }
     else {
         window.draw(*bg1);
