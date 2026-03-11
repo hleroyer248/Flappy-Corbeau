@@ -5,7 +5,8 @@ Boutique::Boutique(RessourcesManager& rm) :
     priceText(rm.getFont(), "", 20),
     returnButton(rm.getReturnBtnTexture()), 
     background(rm.getMenuBgTexture()),
-    buyButton(rm.getBuyBtnTexture())
+    buyButton(rm.getBuyBtnTexture()),
+    equipButton(rm.getEquipBtnTexture())
 {
 
     handCursor = sf::Cursor::createFromSystem(sf::Cursor::Type::Hand);
@@ -15,15 +16,23 @@ Boutique::Boutique(RessourcesManager& rm) :
 
     font = rm.getFont();
 
+    infoPanel.setSize({ 300.f,800.f });
+
     itemNameText.setFont(font);
     itemNameText.setCharacterSize(24);
-    itemNameText.setFillColor(sf::Color::White);
-    itemNameText.setPosition({ 620,50 });
-
     priceText.setFont(font);
     priceText.setCharacterSize(20);
+
+    itemNameText.setFillColor(sf::Color::White);
+    infoPanel.setFillColor(sf::Color(40, 40, 40));
     priceText.setFillColor(sf::Color::Yellow);
+
+    infoPanel.setPosition({ 500.f,0.f });
+    returnButton.setPosition({ 20.f,20.f });
+    buyButton.setPosition({ 550.f, 400.f });
+    itemNameText.setPosition({ 620,50 });
     priceText.setPosition({ 620.f,100.f });
+    equipButton.setPosition({ 550.f, 400.f });
 
     items.emplace_back("Bird Red", 150, rm.getPlayerTexture());
     items.emplace_back("Bird Blue", 250, rm.getPlayerTexture());
@@ -46,17 +55,6 @@ Boutique::Boutique(RessourcesManager& rm) :
         );
 
     }
-
-    infoPanel.setSize({ 300.f,800.f });
-    infoPanel.setPosition({ 500.f,0.f });
-    infoPanel.setFillColor(sf::Color(40, 40, 40));
-
-
-    returnButton.setPosition({20.f,20.f});
-
-
-    buyButton.setPosition({ 550.f, 400.f });
-
 }
 
 Boutique::Action Boutique::handleClick(sf::Vector2f mousePos)
@@ -67,11 +65,27 @@ Boutique::Action Boutique::handleClick(sf::Vector2f mousePos)
         return Action::Return;
     }
 
+
+    //bouton buy 
     if (selectedItem != -1 &&
         buyButton.getGlobalBounds().contains(mousePos) &&
         !items[selectedItem].isOwned())
     {
         items[selectedItem].setOwned(true);
+    }
+
+
+    //bouton equip 
+    if (selectedItem != -1 &&
+        items[selectedItem].isOwned() &&
+        equipButton.getGlobalBounds().contains(mousePos))
+    {
+
+        for (auto& item : items)
+            item.setEquipped(false);
+
+        items[selectedItem].setEquipped(true);
+
     }
 
 
@@ -175,6 +189,9 @@ void Boutique::draw(sf::RenderWindow& window)
             window.draw(*previewSprite);
         window.draw(itemNameText);
         window.draw(priceText);
+        if (items[selectedItem].isOwned())
+            window.draw(equipButton);
+        else
         window.draw(buyButton);
     }
 
