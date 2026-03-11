@@ -16,10 +16,19 @@ player(nullptr) {
     mainMenu.emplace(rm);
     optionMenu.emplace(rm);
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
     shop.emplace(rm);
 =======
     gameOverMenu.emplace(rm);
     shop.emplace(rm, save);
+>>>>>>> Stashed changes
+=======
+    gameOverMenu.emplace(rm);
+    shop.emplace(rm, save);
+
+    // commit sauvegarde
+    mainMenu->updateScores(save.getBestScore(), save.getTotalScore());
+
 >>>>>>> Stashed changes
 
     bg1.emplace(rm.getBgTexture());

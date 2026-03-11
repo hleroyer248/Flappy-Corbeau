@@ -23,6 +23,11 @@ public:
     const sf::Texture& getEquippedBtnTexture() const;
     const sf::Texture& getEquipBtnTexture() const;
     const sf::Texture& getEquippedBtnTexture() const;
+<<<<<<< Updated upstream
+=======
+
+    const sf::Texture& getGhostPlayerTexture() const; // Commit Ghost
+>>>>>>> Stashed changes
 
 private:
     sf::Texture playerTex;
