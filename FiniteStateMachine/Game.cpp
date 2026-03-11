@@ -173,6 +173,7 @@ void Game::update(float dt) {
     }
 
     float bgSpeed = 100.f;
+
     bg1->move({ -bgSpeed * dt, 0.f });
     bg2->move({ -bgSpeed * dt, 0.f });
     if (bg1->getPosition().x <= -bgWidth) {
