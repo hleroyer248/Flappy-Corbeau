@@ -1,4 +1,3 @@
-
 #include "Game.h"
 #include <iostream>
 
@@ -16,6 +15,7 @@ player(nullptr) {
     // Initialisation des menus
     mainMenu.emplace(rm);
     optionMenu.emplace(rm);
+    gameOverMenu.emplace(rm);
 
     bg1.emplace(rm.getBgTexture());
     bg2.emplace(rm.getBgTexture());
@@ -81,12 +81,25 @@ void Game::processEvents() {
                 window.close();
             }
         }
+
+        else if (state == GameState::GameOver) {
+            auto action = gameOverMenu->handleEvent(event);
+            if (action == GameOverMenu::Action::Retry) {
+                state = GameState::Ready;
+                resetGame();
+            }
+            else if (action == GameOverMenu::Action::Quit) {
+                state = GameState::MainMenu;
+            }
+        }
+
         else if (state == GameState::OptionMenu) {
             auto action = optionMenu->handleEvent(event);
             if (action == OptionMenu::Action::Return) {
                 state = GameState::MainMenu;
             }
         }
+
         else if (state == GameState::Ready) {
             bool startPressed = false;
             if (const auto* key = event.getIf<sf::Event::KeyPressed>()) {
@@ -99,6 +112,7 @@ void Game::processEvents() {
                 state = GameState::Playing;
             }
         }
+
         else if (state == GameState::Playing) {
             if (const auto* key = event.getIf<sf::Event::KeyPressed>()) {
                 if (key->code == sf::Keyboard::Key::Space) player->flap();
@@ -120,7 +134,7 @@ void Game::processEvents() {
 }
 
 void Game::update(float dt) {
-    if (state == GameState::MainMenu || state == GameState::OptionMenu) {
+    if (state == GameState::MainMenu || state == GameState::OptionMenu || state == GameState::GameOver) {
         return; 
     }
 
@@ -181,7 +195,7 @@ void Game::update(float dt) {
             std::cout << "        Score final : " << score << "\n";
             std::cout << "===============================\n";
             // Retour au menu principal après un Game Over
-            state = GameState::MainMenu;
+            state = GameState::GameOver;
         }
     }
 }
@@ -194,6 +208,9 @@ void Game::render() {
     }
     else if (state == GameState::OptionMenu) {
         optionMenu->draw(window);
+    }
+    else if (state == GameState::GameOver) {
+        gameOverMenu->draw(window);
     }
     else {
         window.draw(*bg1);

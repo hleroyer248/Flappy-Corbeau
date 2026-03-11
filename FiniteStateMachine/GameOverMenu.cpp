@@ -1,6 +1,5 @@
 #include "GameOverMenu.h"
 
-
 GameOverMenu::GameOverMenu(const RessourcesManager& rm) 
     : background(rm.getMenuBgTexture()),
     retryBtn(rm.getStartBtnTexture()),
