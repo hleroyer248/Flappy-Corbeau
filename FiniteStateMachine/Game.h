@@ -9,9 +9,10 @@
 #include "MainMenu.h"
 #include "Boutique.h"
 #include "OptionMenu.h"
+#include "GameOverMenu.h"
+#include "Save.h" // commit sauvegarde
 
-// Ajout des nouveaux états
-enum class GameState { MainMenu, OptionMenu, Shop, Ready, Playing };
+enum class GameState { MainMenu, OptionMenu, Shop, Ready, Playing, GameOver };
 
 class Game {
 public:
@@ -31,6 +32,7 @@ private:
 
     std::optional<MainMenu> mainMenu;
     std::optional<OptionMenu> optionMenu;
+    std::optional<GameOverMenu>gameOverMenu;
     std::optional<Boutique> shop;
 
     std::optional<sf::Sprite> bg1;
@@ -50,11 +52,6 @@ private:
     std::mt19937 gen;
     std::uniform_real_distribution<float> gapDist;
     std::uniform_real_distribution<float> chanceDist;
-<<<<<<< Updated upstream
-};
-=======
 
     Save save; // commit sauvegarde
-    int coins = save.getTotalScore();
 };
->>>>>>> Stashed changes

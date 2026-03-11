@@ -5,34 +5,21 @@ Game::Game() : window(sf::VideoMode({ 800, 600 }), "Flappy Bird - SFML 3.0.2"),
 state(GameState::MainMenu), score(0), pipeSpawnTimer(0.f), lastPipeWasMoving(false),
 player(nullptr) {
     window.setFramerateLimit(60);
-     window.setKeyRepeatEnabled(false);
+    window.setKeyRepeatEnabled(false);
     if (!rm.loadAll()) {
         std::exit(-1);
     }
 
     player = new Player(rm);
 
-    // Initialisation des menus
     mainMenu.emplace(rm);
     optionMenu.emplace(rm);
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
+    gameOverMenu.emplace(rm);
     shop.emplace(rm);
-=======
-    gameOverMenu.emplace(rm);
-    shop.emplace(rm, save);
->>>>>>> Stashed changes
-=======
-=======
->>>>>>> Stashed changes
-    gameOverMenu.emplace(rm);
-    shop.emplace(rm, save);
 
     // commit sauvegarde
     mainMenu->updateScores(save.getBestScore(), save.getTotalScore());
 
->>>>>>> Stashed changes
 
     bg1.emplace(rm.getBgTexture());
     bg2.emplace(rm.getBgTexture());
@@ -102,25 +89,31 @@ void Game::processEvents() {
                 window.close();
             }
         }
+
+        else if (state == GameState::GameOver) {
+            auto action = gameOverMenu->handleEvent(event);
+            if (action == GameOverMenu::Action::Retry) {
+                state = GameState::Ready;
+                resetGame();
+            }
+            else if (action == GameOverMenu::Action::Quit) {
+                state = GameState::MainMenu;
+            }
+        }
+
         else if (state == GameState::OptionMenu) {
             auto action = optionMenu->handleEvent(event);
             if (action == OptionMenu::Action::Return) {
                 state = GameState::MainMenu;
             }
         }
-        else if (state == GameState::Shop)
-        {
-            if (const auto* mouse = event.getIf<sf::Event::MouseButtonPressed>())
-            {
-                if (mouse->button == sf::Mouse::Button::Left)
-                {
-                    sf::Vector2f mousePos =
-                        window.mapPixelToCoords(sf::Mouse::getPosition(window));
 
+        else if (state == GameState::Shop) {
+            if (const auto* mouse = event.getIf<sf::Event::MouseButtonPressed>()) {
+                if (mouse->button == sf::Mouse::Button::Left) {
+                    sf::Vector2f mousePos = window.mapPixelToCoords(sf::Mouse::getPosition(window));
                     auto action = shop->handleClick(mousePos);
-
-                    if (action == Boutique::Action::Return)
-                    {
+                    if (action == Boutique::Action::Return) {
                         state = GameState::MainMenu;
                     }
                 }
@@ -134,6 +127,7 @@ void Game::processEvents() {
                 }
             }
         }
+
         else if (state == GameState::Ready) {
             bool startPressed = false;
             if (const auto* key = event.getIf<sf::Event::KeyPressed>()) {
@@ -146,18 +140,16 @@ void Game::processEvents() {
                 state = GameState::Playing;
             }
         }
+
         else if (state == GameState::Playing) {
             if (const auto* key = event.getIf<sf::Event::KeyPressed>()) {
                 if (key->code == sf::Keyboard::Key::Space) player->flap();
-                if ((key->code == sf::Keyboard::Key::LShift || key->code == sf::Keyboard::Key::RShift) && player->canDash()) {
-                    float dashDist = player->getDashDistance();
-                    bg1->move({ -dashDist, 0.f });
-                    bg2->move({ -dashDist, 0.f });
-                    for (auto& obs : obstacles) {
-                        obs.shift(dashDist);
-                    }
-                    player->dash();
+
+                // Commit Ghost - debut
+                if ((key->code == sf::Keyboard::Key::LShift || key->code == sf::Keyboard::Key::RShift) && player->canActivateGhost()) {
+                    player->activateGhost();
                 }
+                // Commit Ghost - fin
             }
             if (const auto* mouse = event.getIf<sf::Event::MouseButtonReleased>()) {
                 if (mouse->button == sf::Mouse::Button::Left) player->flap();
@@ -167,8 +159,8 @@ void Game::processEvents() {
 }
 
 void Game::update(float dt) {
-    if (state == GameState::MainMenu || state == GameState::OptionMenu) {
-        return; 
+    if (state == GameState::MainMenu || state == GameState::OptionMenu || state == GameState::GameOver) {
+        return;
     }
     if (state == GameState::Shop)
     {
@@ -189,7 +181,7 @@ void Game::update(float dt) {
 
     if (state == GameState::Playing) {
         player->update(dt);
-        player->updateDashCooldown(dt);
+        player->updateGhost(dt); // Commit Ghost - remplacement de updateDashCooldown
 
         pipeSpawnTimer += dt;
         if (pipeSpawnTimer > 1.5f) {
@@ -198,7 +190,8 @@ void Game::update(float dt) {
             if (!lastPipeWasMoving && chanceDist(gen) < 20.f) {
                 if (chanceDist(gen) < 75.f) {
                     spawnType = ObstacleType::ParMouv;
-                } else {
+                }
+                else {
                     spawnType = ObstacleType::MachMouv;
                 }
             }
@@ -211,9 +204,14 @@ void Game::update(float dt) {
         CollisionBox pBox = player->getCollisionBox();
         for (auto it = obstacles.begin(); it != obstacles.end(); ) {
             it->update(dt);
-            if (pBox.intersects(it->getTopCollisionBox()) || pBox.intersects(it->getBottomCollisionBox())) {
-                collision = true;
+
+            // Commit Ghost - debut : Collision vérifiée seulement si on n'est pas un fantôme
+            if (!player->isGhost()) {
+                if (pBox.intersects(it->getTopCollisionBox()) || pBox.intersects(it->getBottomCollisionBox())) {
+                    collision = true;
+                }
             }
+            // Commit Ghost - fin
 
             if (!it->isPassed() && it->getX() + it->getWidth() < player->getPosition().x - (pBox.getRect().size.x / 2.f)) {
                 it->setPassed(true);
@@ -229,17 +227,25 @@ void Game::update(float dt) {
             }
         }
 
-        if (pBox.getRect().position.y < 0.f || pBox.getRect().position.y + pBox.getRect().size.y > 600.f) {
-            collision = true;
+        // Commit Ghost - debut : Collision limites de l'écran ignorée si Ghost
+        if (!player->isGhost()) {
+            if (pBox.getRect().position.y < 0.f || pBox.getRect().position.y + pBox.getRect().size.y > 600.f) {
+                collision = true;
+            }
         }
+        // Commit Ghost - fin
 
         if (collision) {
             std::cout << "\n===============================\n";
             std::cout << "          GAME OVER !          \n";
             std::cout << "        Score final : " << score << "\n";
             std::cout << "===============================\n";
-            // Retour au menu principal après un Game Over
-            state = GameState::MainMenu;
+            state = GameState::GameOver;
+            gameOverMenu->updateScoreText(score);
+
+            // commit sauvegarde 
+            save.addScore(score);
+            mainMenu->updateScores(save.getBestScore(), save.getTotalScore());
         }
     }
 }
@@ -253,9 +259,11 @@ void Game::render() {
     else if (state == GameState::OptionMenu) {
         optionMenu->draw(window);
     }
-    else if (state == GameState::Shop)
-    {
-         shop->draw(window);
+    else if (state == GameState::GameOver) {
+        gameOverMenu->draw(window);
+    }
+    else if (state == GameState::Shop) {
+        shop->draw(window);
     }
     else {
         window.draw(*bg1);

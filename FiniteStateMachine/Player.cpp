@@ -3,13 +3,29 @@
 Player::Player(const RessourcesManager& rm) : sprite(rm.getPlayerTexture()) {
     sf::Vector2u size = rm.getPlayerTexture().getSize();
     sprite.setOrigin({ size.x / 2.f, size.y / 2.f });
+
+    // Commit Ghost - debut
+    normalTexture = &rm.getPlayerTexture();
+    ghostTexture = &rm.getGhostPlayerTexture();
+    ghostActive = false;
+    ghostTimer = 0.f;
+    ghostCooldownTimer = 0.f;
+    // Commit Ghost - fin
+
     reset();
 }
 
 void Player::reset() {
     sprite.setPosition({ 100.f, 300.f });
     velocity = { 0.f, 0.f };
-    dashCooldownTimer = 0.f;
+
+    // Commit Ghost - debut
+    sprite.setTexture(*normalTexture);
+    sprite.setColor(sf::Color(255, 255, 255, 255));
+    ghostActive = false;
+    ghostTimer = 0.f;
+    ghostCooldownTimer = 0.f;
+    // Commit Ghost - fin
 }
 
 void Player::flap() {
@@ -21,23 +37,45 @@ void Player::update(float dt) {
     sprite.move(velocity * dt);
 }
 
-void Player::dash() {
-    dashCooldownTimer = DASH_COOLDOWN_MAX;
+// Commit Ghost - debut
+void Player::activateGhost() {
+    ghostActive = true;
+    ghostTimer = GHOST_DURATION;
+    sprite.setTexture(*ghostTexture);
 }
 
-void Player::updateDashCooldown(float dt) {
-    if (dashCooldownTimer > 0.f) {
-        dashCooldownTimer -= dt;
+void Player::updateGhost(float dt) {
+    if (ghostActive) {
+        ghostTimer -= dt;
+
+        if (ghostTimer <= 0.f) {
+            ghostActive = false;
+            ghostCooldownTimer = GHOST_COOLDOWN_MAX;
+            sprite.setTexture(*normalTexture);
+            sprite.setColor(sf::Color(255, 255, 255, 255)); 
+        }
+        else if (ghostTimer <= 2.0f) {
+            if (static_cast<int>(ghostTimer * 10) % 2 == 0) {
+                sprite.setColor(sf::Color(255, 255, 255, 128)); // Semi-transparent
+            }
+            else {
+                sprite.setColor(sf::Color(255, 255, 255, 255)); // Opaque
+            }
+        }
+    }
+    else if (ghostCooldownTimer > 0.f) {
+        ghostCooldownTimer -= dt;
     }
 }
 
-bool Player::canDash() const {
-    return dashCooldownTimer <= 0.f;
+bool Player::isGhost() const {
+    return ghostActive;
 }
 
-float Player::getDashDistance() const {
-    return DASH_DISTANCE;
+bool Player::canActivateGhost() const {
+    return !ghostActive && ghostCooldownTimer <= 0.f;
 }
+// Commit Ghost - fin
 
 CollisionBox Player::getCollisionBox() const {
     return CollisionBox(sprite.getGlobalBounds());

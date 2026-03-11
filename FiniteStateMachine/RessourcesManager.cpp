@@ -11,6 +11,7 @@ bool RessourcesManager::loadAll() {
         return false;
     }
     if (!playerTex.loadFromFile(basePath + "Player.png") ||
+        !ghostPlayerTex.loadFromFile(basePath + "Ghost-Player.png") || // Commit Ghost
         !bgTex.loadFromFile(basePath + "Background.png") ||
         !topPipeTex.loadFromFile(basePath + "Hobstacle.png") ||
         !bottomPipeTex.loadFromFile(basePath + "Bobstacle.png") ||
@@ -22,8 +23,7 @@ bool RessourcesManager::loadAll() {
         !returnBtnTex.loadFromFile(basePath + "ReturnButton.png") ||
         !shopTex.loadFromFile(basePath + "UIShop.jpg") ||
         !buyBtnTex.loadFromFile(basePath + "BuyButton.jpg") ||
-        !equipBtnTex.loadFromFile(basePath + "EquipButton.png") ||
-        !equippedBtnTex.loadFromFile(basePath + "EquippedButton.png")) {
+        !equipBtnTex.loadFromFile(basePath + "EquipButton.png")) {
         std::cerr << "ERREUR: Impossible de charger un ou plusieurs assets png.\n";
         return false;
     }
@@ -42,14 +42,8 @@ const sf::Texture& RessourcesManager::getSettingsBtnTexture() const { return set
 const sf::Texture& RessourcesManager::getExitBtnTexture() const { return exitBtnTex; }
 const sf::Texture& RessourcesManager::getSettingsBgTexture() const { return settingsBgTex; }
 const sf::Texture& RessourcesManager::getReturnBtnTexture() const { return returnBtnTex; }
-const sf::Texture& RessourcesManager::getShopTexture() const{ return shopTex; }
+const sf::Texture& RessourcesManager::getShopTexture() const { return shopTex; }
 const sf::Texture& RessourcesManager::getBuyBtnTexture() const { return buyBtnTex; }
-<<<<<<< Updated upstream
-const sf::Texture& RessourcesManager::getEquipBtnTexture() const{ return equipBtnTex; }
-const sf::Texture& RessourcesManager::getEquippedBtnTexture() const{ return equippedBtnTex; }
-=======
 const sf::Texture& RessourcesManager::getEquipBtnTexture() const { return equipBtnTex; }
-const sf::Texture& RessourcesManager::getEquippedBtnTexture() const { return equippedBtnTex; }
 
 const sf::Texture& RessourcesManager::getGhostPlayerTexture() const { return ghostPlayerTex; } // Commit Ghost
->>>>>>> Stashed changes
