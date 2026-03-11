@@ -17,12 +17,15 @@ player(nullptr) {
     optionMenu.emplace(rm);
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
     shop.emplace(rm);
 =======
     gameOverMenu.emplace(rm);
     shop.emplace(rm, save);
 >>>>>>> Stashed changes
 =======
+=======
+>>>>>>> Stashed changes
     gameOverMenu.emplace(rm);
     shop.emplace(rm, save);
 
