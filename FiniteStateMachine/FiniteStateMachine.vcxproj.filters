@@ -36,6 +36,7 @@
     <ClInclude Include="RessourcesManager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="GameOverMenu.h">
     <ClInclude Include="ShopItem.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -68,6 +69,7 @@
     <ClCompile Include="main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="GameOverMenu.cpp">
     <ClCompile Include="ShopItem.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
