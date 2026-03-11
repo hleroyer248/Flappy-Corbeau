@@ -172,7 +172,15 @@ void Game::update(float dt) {
         return;
     }
 
+  /*  //commence à 1.0, et on ajoute 0.1 tous les 5 points par exemple
+    float difficultyMultiplier = 1.0f + (static_cast<float>(score) / 3.0f) * 1.0f;
+
+    // max 2x la vitesse
+    if (difficultyMultiplier > 27.0f) difficultyMultiplier = 27.0f;
+    */
     float bgSpeed = 100.f;
+
+
     bg1->move({ -bgSpeed * dt, 0.f });
     bg2->move({ -bgSpeed * dt, 0.f });
     if (bg1->getPosition().x <= -bgWidth) {
@@ -181,6 +189,8 @@ void Game::update(float dt) {
     if (bg2->getPosition().x <= -bgWidth) {
         bg2->setPosition({ bg1->getPosition().x + bgWidth, 0.f });
     }
+
+ 
 
     if (state == GameState::Playing) {
         player->update(dt);
@@ -202,6 +212,16 @@ void Game::update(float dt) {
             obstacles.emplace_back(800.f, gapDist(gen), 150.f, rm, spawnType);
             pipeSpawnTimer = 0.f;
         }
+
+      /*  //défilement
+        float baseBgSpeed = 100.f;
+        float currentBgSpeed = baseBgSpeed * difficultyMultiplier; // La vitesse augmente !
+
+        bg1->move({ -currentBgSpeed * dt, 0.f });
+        bg2->move({ -currentBgSpeed * dt, 0.f });
+        // ... (Logique de reset du fond bg1/bg2 inchangée) ..
+
+        */ // il va falloir faire une classe Event pour gerer la difficulté au fur et à mesure du temps
 
         bool collision = false;
         CollisionBox pBox = player->getCollisionBox();
