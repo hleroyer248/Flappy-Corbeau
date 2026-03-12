@@ -43,6 +43,7 @@ Boutique::Boutique(RessourcesManager& rm, Save& save) :
     coinsText.setPosition({ 550.f, 20.f });
     equippedButton.setPosition({ 550.f, 400.f });
 
+    items.emplace_back("Default Bird", 0, rm.getPlayerTexture());
     items.emplace_back("Bird Red", 10, rm.getBirdRedTexture());
     items.emplace_back("Bird Blue", 250, rm.getBirdBlueTexture());
     items.emplace_back("Bird Green", 350, rm.getBirdGreenTexture());
@@ -69,6 +70,7 @@ Boutique::Boutique(RessourcesManager& rm, Save& save) :
         );
 
     }
+
 }
 
 Boutique::Action Boutique::handleClick(sf::Vector2f mousePos)

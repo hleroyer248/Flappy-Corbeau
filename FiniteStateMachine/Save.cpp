@@ -2,7 +2,7 @@
 #include <fstream>
 
 Save::Save() : bestScore(0), totalScore(0), filename("save.txt"), equippedSkin(-1) {
-    ownedSkins.resize(5, false);
+    ownedSkins.resize(6, false);
     load();
 }
 
