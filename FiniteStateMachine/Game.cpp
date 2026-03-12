@@ -6,15 +6,20 @@ state(GameState::MainMenu), score(0), pipeSpawnTimer(0.f), lastPipeWasMoving(fal
 player(nullptr) {
     window.setFramerateLimit(60);
     window.setKeyRepeatEnabled(false);
+
     if (!rm.loadAll()) {
         std::exit(-1);
     }
 
+    // Commit Add Sound - debut
+    if (!am.loadAll()) {
+        std::exit(-1);
+    }
+    // Commit Add Sound - fin
+
     player = new Player(rm);
 
     // Commit Player Default - debut
-    // On force le jeu à déséquiper tout skin au lancement de l'application
-    // Ainsi, tu commences toujours avec Player.png !
     save.equipSkin(-1);
     // Commit Player Default - fin
 
@@ -61,21 +66,18 @@ void Game::resetGame() {
     // Commit Player Default - fin
 
     if (skinIndex == 0)
-        player->setSkin(rm.getPlayerTexture());
-
-    if (skinIndex == 1)
         player->setSkin(rm.getBirdRedTexture());
 
-    if (skinIndex == 2)
+    if (skinIndex == 1)
         player->setSkin(rm.getBirdBlueTexture());
 
-    if (skinIndex == 3)
+    if (skinIndex == 2)
         player->setSkin(rm.getBirdGreenTexture());
 
-    if (skinIndex == 4)
+    if (skinIndex == 3)
         player->setSkin(rm.getBirdGoldTexture());
 
-    if (skinIndex == 5)
+    if (skinIndex == 4)
         player->setSkin(rm.getBirdShadowTexture());
 
     obstacles.clear();
@@ -169,21 +171,34 @@ void Game::processEvents() {
             }
             if (startPressed) {
                 state = GameState::Playing;
+
+                // Commit Add Sound - debut
+                am.playMusic();     // Lance la musique
+                am.playJumpSound(); // Le premier saut produit aussi un son !
+                // Commit Add Sound - fin
             }
         }
 
         else if (state == GameState::Playing) {
             if (const auto* key = event.getIf<sf::Event::KeyPressed>()) {
-                if (key->code == sf::Keyboard::Key::Space) player->flap();
+                if (key->code == sf::Keyboard::Key::Space) {
+                    player->flap();
+                    // Commit Add Sound - debut
+                    am.playJumpSound();
+                    // Commit Add Sound - fin
+                }
 
-                // Commit Ghost - debut
                 if ((key->code == sf::Keyboard::Key::LShift || key->code == sf::Keyboard::Key::RShift) && player->canActivateGhost()) {
                     player->activateGhost();
                 }
-                // Commit Ghost - fin
             }
             if (const auto* mouse = event.getIf<sf::Event::MouseButtonReleased>()) {
-                if (mouse->button == sf::Mouse::Button::Left) player->flap();
+                if (mouse->button == sf::Mouse::Button::Left) {
+                    player->flap();
+                    // Commit Add Sound - debut
+                    am.playJumpSound();
+                    // Commit Add Sound - fin
+                }
             }
         }
     }
@@ -200,14 +215,7 @@ void Game::update(float dt) {
         return;
     }
 
-  /*  //commence à 1.0, et on ajoute 0.1 tous les 5 points par exemple
-    float difficultyMultiplier = 1.0f + (static_cast<float>(score) / 3.0f) * 1.0f;
-
-    // max 2x la vitesse
-    if (difficultyMultiplier > 27.0f) difficultyMultiplier = 27.0f;
-    */
     float bgSpeed = 100.f;
-
 
     bg1->move({ -bgSpeed * dt, 0.f });
     bg2->move({ -bgSpeed * dt, 0.f });
@@ -218,11 +226,9 @@ void Game::update(float dt) {
         bg2->setPosition({ bg1->getPosition().x + bgWidth, 0.f });
     }
 
- 
-
     if (state == GameState::Playing) {
         player->update(dt);
-        player->updateGhost(dt); // Commit Ghost - remplacement de updateDashCooldown
+        player->updateGhost(dt);
 
         pipeSpawnTimer += dt;
         if (pipeSpawnTimer > 1.5f) {
@@ -241,28 +247,16 @@ void Game::update(float dt) {
             pipeSpawnTimer = 0.f;
         }
 
-      /*  //défilement
-        float baseBgSpeed = 100.f;
-        float currentBgSpeed = baseBgSpeed * difficultyMultiplier; // La vitesse augmente !
-
-        bg1->move({ -currentBgSpeed * dt, 0.f });
-        bg2->move({ -currentBgSpeed * dt, 0.f });
-        // ... (Logique de reset du fond bg1/bg2 inchangée) ..
-
-        */ // il va falloir faire une classe Event pour gerer la difficulté au fur et à mesure du temps
-
         bool collision = false;
         CollisionBox pBox = player->getCollisionBox();
         for (auto it = obstacles.begin(); it != obstacles.end(); ) {
             it->update(dt);
 
-            // Commit Ghost - debut : Collision vÃ©rifiÃ©e seulement si on n'est pas un fantÃ´me
             if (!player->isGhost()) {
                 if (pBox.intersects(it->getTopCollisionBox()) || pBox.intersects(it->getBottomCollisionBox())) {
                     collision = true;
                 }
             }
-            // Commit Ghost - fin
 
             if (!it->isPassed() && it->getX() + it->getWidth() < player->getPosition().x - (pBox.getRect().size.x / 2.f)) {
                 it->setPassed(true);
@@ -278,23 +272,26 @@ void Game::update(float dt) {
             }
         }
 
-        // Commit Ghost - debut : Collision limites de l'Ã©cran ignorÃ©e si Ghost
         if (!player->isGhost()) {
             if (pBox.getRect().position.y < 0.f || pBox.getRect().position.y + pBox.getRect().size.y > 600.f) {
                 collision = true;
             }
         }
-        // Commit Ghost - fin
 
         if (collision) {
             std::cout << "\n===============================\n";
             std::cout << "          GAME OVER !          \n";
             std::cout << "        Score final : " << score << "\n";
             std::cout << "===============================\n";
+
+            // Commit Add Sound - debut
+            am.stopMusic();       // Arr�te la musique de fond
+            am.playDeathSound();  // Joue le son de d�faite
+            // Commit Add Sound - fin
+
             state = GameState::GameOver;
             gameOverMenu->updateScoreText(score);
 
-            // commit sauvegarde 
             save.addScore(score);
             mainMenu->updateScores(save.getBestScore(), save.getTotalScore());
         }
