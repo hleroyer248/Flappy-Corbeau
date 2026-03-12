@@ -31,11 +31,10 @@ player(nullptr) {
     // commit sauvegarde
     mainMenu->updateScores(save.getBestScore(), save.getTotalScore());
 
-    bg1.emplace(rm.getBgTexture());
-    bg2.emplace(rm.getBgTexture());
-    bgWidth = static_cast<float>(rm.getBgTexture().getSize().x);
-    bg1->setPosition({ 0.f, 0.f });
-    bg2->setPosition({ bgWidth, 0.f });
+    //commit Parallax
+    backLayers.emplace_back(rm.getBgTexture(), 0.3f);
+    backLayers.emplace_back(rm.getMidBgTexture(), 0.6f);
+    frontLayers.emplace_back(rm.getFrontBgTexture(), 1.5f);
 
     menuTitle.emplace(rm.getFont(), "FLAPPY BIRD", 50);
     menuTitle->setPosition({ 230.f, 150.f });
@@ -215,15 +214,16 @@ void Game::update(float dt) {
         return;
     }
 
-    float bgSpeed = 100.f;
+    float baseSpeed = 100.f;
 
-    bg1->move({ -bgSpeed * dt, 0.f });
-    bg2->move({ -bgSpeed * dt, 0.f });
-    if (bg1->getPosition().x <= -bgWidth) {
-        bg1->setPosition({ bg2->getPosition().x + bgWidth, 0.f });
+    // Mise à jour de tous les plans de fond
+    for (auto& layer : backLayers) {
+        layer.update(dt, baseSpeed);
     }
-    if (bg2->getPosition().x <= -bgWidth) {
-        bg2->setPosition({ bg1->getPosition().x + bgWidth, 0.f });
+
+    // Mise à jour des plans de devant
+    for (auto& layer : frontLayers) {
+        layer.update(dt, baseSpeed);
     }
 
     if (state == GameState::Playing) {
@@ -313,19 +313,28 @@ void Game::render() {
     else if (state == GameState::Shop) {
         shop->draw(window);
     }
+    // défini l'ordre pour dessiner les plan un à un
     else {
-        window.draw(*bg1);
-        window.draw(*bg2);
-
-        if (state == GameState::Ready) {
-            window.draw(*startButton);
+        for (const auto& layer : backLayers) {
+            layer.draw(window);
         }
-        else if (state == GameState::Playing) {
+
+        if (state == GameState::Playing || state == GameState::Ready) {
             for (const auto& obs : obstacles) {
                 window.draw(obs.getTopSprite());
                 window.draw(obs.getBottomSprite());
             }
             window.draw(player->getSprite());
+        }
+
+        for (const auto& layer : frontLayers) {
+            layer.draw(window);
+        }
+
+        if (state == GameState::Ready) {
+            window.draw(*startButton);
+        }
+        else if (state == GameState::Playing) {
             window.draw(*scoreText);
         }
     }

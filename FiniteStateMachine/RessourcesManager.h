@@ -10,6 +10,8 @@ public:
     bool loadAll();
     const sf::Texture& getPlayerTexture() const;
     const sf::Texture& getBgTexture() const;
+    const sf::Texture& getMidBgTexture() const;
+    const sf::Texture& getFrontBgTexture() const;
     const sf::Texture& getTopPipeTexture() const;
     const sf::Texture& getBottomPipeTexture() const;
     const sf::Font& getFont() const;
@@ -35,6 +37,8 @@ public:
 private:
     sf::Texture playerTex;
     sf::Texture bgTex;
+    sf::Texture midBgTex;
+    sf::Texture frontBgTex;
     sf::Texture topPipeTex;
     sf::Texture bottomPipeTex;
     sf::Font font;

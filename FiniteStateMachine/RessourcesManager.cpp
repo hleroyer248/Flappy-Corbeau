@@ -13,6 +13,8 @@ bool RessourcesManager::loadAll() {
     if (!playerTex.loadFromFile(basePath + "Player.png") ||
         !ghostPlayerTex.loadFromFile(basePath + "Ghost-Player.png") || // Commit Ghost
         !bgTex.loadFromFile(basePath + "Background.png") ||
+        !midBgTex.loadFromFile(basePath + "Plan1A.png") ||
+        !frontBgTex.loadFromFile(basePath + "Plan2C.png") ||
         !topPipeTex.loadFromFile(basePath + "Hobstacle.png") ||
         !bottomPipeTex.loadFromFile(basePath + "Bobstacle.png") ||
         !menuBgTex.loadFromFile(basePath + "MenuBackground.png") ||
@@ -42,6 +44,8 @@ bool RessourcesManager::loadAll() {
 
 const sf::Texture& RessourcesManager::getPlayerTexture() const { return playerTex; }
 const sf::Texture& RessourcesManager::getBgTexture() const { return bgTex; }
+const sf::Texture& RessourcesManager::getMidBgTexture() const { return midBgTex; }
+const sf::Texture& RessourcesManager::getFrontBgTexture() const { return frontBgTex; }
 const sf::Texture& RessourcesManager::getTopPipeTexture() const { return topPipeTex; }
 const sf::Texture& RessourcesManager::getBottomPipeTexture() const { return bottomPipeTex; }
 const sf::Font& RessourcesManager::getFont() const { return font; }

@@ -13,6 +13,7 @@
 #include "Boutique.h"
 #include "OptionMenu.h"
 #include "GameOverMenu.h"
+#include "ParallaxLayer.h"
 #include "Save.h" // commit sauvegarde
 
 enum class GameState { MainMenu, OptionMenu, Shop, Ready, Playing, GameOver };
@@ -38,6 +39,9 @@ private:
 
     Player* player;
     std::vector<Obstacle> obstacles;
+
+    std::vector<ParallaxLayer> backLayers;
+    std::vector<ParallaxLayer> frontLayers;
 
     std::optional<MainMenu> mainMenu;
     std::optional<OptionMenu> optionMenu;
