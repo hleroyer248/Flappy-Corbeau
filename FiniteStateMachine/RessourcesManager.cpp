@@ -31,7 +31,6 @@ bool RessourcesManager::loadAll() {
 
 const sf::Texture& RessourcesManager::getPlayerTexture() const { return playerTex; }
 const sf::Texture& RessourcesManager::getBgTexture() const { return bgTex; }
-
 const sf::Texture& RessourcesManager::getTopPipeTexture() const { return topPipeTex; }
 const sf::Texture& RessourcesManager::getBottomPipeTexture() const { return bottomPipeTex; }
 const sf::Font& RessourcesManager::getFont() const { return font; }
