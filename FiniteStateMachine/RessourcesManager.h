@@ -1,9 +1,11 @@
 #pragma once
 #include <SFML/Graphics.hpp>
 #include <string>
+#include <vector>
 
 class RessourcesManager {
 public:
+
     RessourcesManager();
     bool loadAll();
     const sf::Texture& getPlayerTexture() const;
@@ -21,6 +23,14 @@ public:
     const sf::Texture& getShopTexture() const;
     const sf::Texture& getBuyBtnTexture() const;
     const sf::Texture& getEquipBtnTexture() const;
+    const sf::Texture& getEquippedBtnTexture() const;
+    const sf::Texture& getGhostPlayerTexture() const; // Commit Ghost
+    const sf::Texture& getBirdRedTexture() const;
+    const sf::Texture& getBirdBlueTexture() const;
+    const sf::Texture& getBirdGreenTexture() const;
+    const sf::Texture& getBirdGoldTexture() const;
+    const sf::Texture& getBirdShadowTexture() const;
+    const sf::Texture& getDefaultBirdTexture() const;
 
 private:
     sf::Texture playerTex;
@@ -37,5 +47,13 @@ private:
     sf::Texture returnBtnTex;
     sf::Texture shopTex;
     sf::Texture equipBtnTex;
+    sf::Texture equippedBtnTex;
     sf::Texture buyBtnTex;
+    sf::Texture ghostPlayerTex; // Commit Ghost
+    sf::Texture birdRedTex;
+    sf::Texture birdBlueTex;
+    sf::Texture birdGreenTex;
+    sf::Texture birdGoldTex;
+    sf::Texture birdShadowTex;
+    sf::Texture defaultBirdTex;
 };

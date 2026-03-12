@@ -14,10 +14,10 @@ MainMenu::MainMenu(const RessourcesManager& rm)
     title.setPosition({ 230.f, 100.f });
     title.setFillColor(sf::Color::White);
 
-    startBtn.setPosition({ 300.f, 250.f });
-    settingsBtn.setPosition({ 300.f, 350.f });
+    startBtn.setPosition({ 300.f, 270.f }); //c'était a 250.f si vous voulez le remettre comme avant
+    settingsBtn.setPosition({ 305.f, 330.f });
     exitBtn.setPosition({ 300.f, 450.f });
-    shopButton.setPosition({ 300.f, 400.f });
+    shopButton.setPosition({ 355.f, 395.f });
     shopButton.setScale({ 1.f,1.f });
 
     // commit sauvegarde 

@@ -12,14 +12,19 @@ player(nullptr) {
 
     player = new Player(rm);
 
+    // Commit Player Default - debut
+    // On force le jeu à déséquiper tout skin au lancement de l'application
+    // Ainsi, tu commences toujours avec Player.png !
+    save.equipSkin(-1);
+    // Commit Player Default - fin
+
     mainMenu.emplace(rm);
     optionMenu.emplace(rm);
     gameOverMenu.emplace(rm);
-    shop.emplace(rm);
+    shop.emplace(rm, save);
 
     // commit sauvegarde
     mainMenu->updateScores(save.getBestScore(), save.getTotalScore());
-    
 
     bg1.emplace(rm.getBgTexture());
     bg2.emplace(rm.getBgTexture());
@@ -47,6 +52,32 @@ player(nullptr) {
 
 void Game::resetGame() {
     player->reset();
+    int skinIndex = save.getEquippedSkin();
+
+    // Commit Player Default - debut
+    if (skinIndex == -1) {
+        player->setSkin(rm.getPlayerTexture());
+    }
+    // Commit Player Default - fin
+
+    if (skinIndex == 0)
+        player->setSkin(rm.getPlayerTexture());
+
+    if (skinIndex == 1)
+        player->setSkin(rm.getBirdRedTexture());
+
+    if (skinIndex == 2)
+        player->setSkin(rm.getBirdBlueTexture());
+
+    if (skinIndex == 3)
+        player->setSkin(rm.getBirdGreenTexture());
+
+    if (skinIndex == 4)
+        player->setSkin(rm.getBirdGoldTexture());
+
+    if (skinIndex == 5)
+        player->setSkin(rm.getBirdShadowTexture());
+
     obstacles.clear();
     score = 0;
     scoreText->setString("Score: 0");
@@ -144,15 +175,12 @@ void Game::processEvents() {
         else if (state == GameState::Playing) {
             if (const auto* key = event.getIf<sf::Event::KeyPressed>()) {
                 if (key->code == sf::Keyboard::Key::Space) player->flap();
-                if ((key->code == sf::Keyboard::Key::LShift || key->code == sf::Keyboard::Key::RShift) && player->canDash()) {
-                    float dashDist = player->getDashDistance();
-                    bg1->move({ -dashDist, 0.f });
-                    bg2->move({ -dashDist, 0.f });
-                    for (auto& obs : obstacles) {
-                        obs.shift(dashDist);
-                    }
-                    player->dash();
+
+                // Commit Ghost - debut
+                if ((key->code == sf::Keyboard::Key::LShift || key->code == sf::Keyboard::Key::RShift) && player->canActivateGhost()) {
+                    player->activateGhost();
                 }
+                // Commit Ghost - fin
             }
             if (const auto* mouse = event.getIf<sf::Event::MouseButtonReleased>()) {
                 if (mouse->button == sf::Mouse::Button::Left) player->flap();
@@ -172,7 +200,14 @@ void Game::update(float dt) {
         return;
     }
 
+  /*  //commence à 1.0, et on ajoute 0.1 tous les 5 points par exemple
+    float difficultyMultiplier = 1.0f + (static_cast<float>(score) / 3.0f) * 1.0f;
+
+    // max 2x la vitesse
+    if (difficultyMultiplier > 27.0f) difficultyMultiplier = 27.0f;
+    */
     float bgSpeed = 100.f;
+
 
     bg1->move({ -bgSpeed * dt, 0.f });
     bg2->move({ -bgSpeed * dt, 0.f });
@@ -183,9 +218,11 @@ void Game::update(float dt) {
         bg2->setPosition({ bg1->getPosition().x + bgWidth, 0.f });
     }
 
+ 
+
     if (state == GameState::Playing) {
         player->update(dt);
-        player->updateDashCooldown(dt);
+        player->updateGhost(dt); // Commit Ghost - remplacement de updateDashCooldown
 
         pipeSpawnTimer += dt;
         if (pipeSpawnTimer > 1.5f) {
@@ -204,13 +241,28 @@ void Game::update(float dt) {
             pipeSpawnTimer = 0.f;
         }
 
+      /*  //défilement
+        float baseBgSpeed = 100.f;
+        float currentBgSpeed = baseBgSpeed * difficultyMultiplier; // La vitesse augmente !
+
+        bg1->move({ -currentBgSpeed * dt, 0.f });
+        bg2->move({ -currentBgSpeed * dt, 0.f });
+        // ... (Logique de reset du fond bg1/bg2 inchangée) ..
+
+        */ // il va falloir faire une classe Event pour gerer la difficulté au fur et à mesure du temps
+
         bool collision = false;
         CollisionBox pBox = player->getCollisionBox();
         for (auto it = obstacles.begin(); it != obstacles.end(); ) {
             it->update(dt);
-            if (pBox.intersects(it->getTopCollisionBox()) || pBox.intersects(it->getBottomCollisionBox())) {
-                collision = true;
+
+            // Commit Ghost - debut : Collision vÃ©rifiÃ©e seulement si on n'est pas un fantÃ´me
+            if (!player->isGhost()) {
+                if (pBox.intersects(it->getTopCollisionBox()) || pBox.intersects(it->getBottomCollisionBox())) {
+                    collision = true;
+                }
             }
+            // Commit Ghost - fin
 
             if (!it->isPassed() && it->getX() + it->getWidth() < player->getPosition().x - (pBox.getRect().size.x / 2.f)) {
                 it->setPassed(true);
@@ -226,14 +278,13 @@ void Game::update(float dt) {
             }
         }
 
-        if (pBox.getRect().position.y < 0.f || pBox.getRect().position.y + pBox.getRect().size.y > 600.f) {
-            collision = true;
+        // Commit Ghost - debut : Collision limites de l'Ã©cran ignorÃ©e si Ghost
+        if (!player->isGhost()) {
+            if (pBox.getRect().position.y < 0.f || pBox.getRect().position.y + pBox.getRect().size.y > 600.f) {
+                collision = true;
+            }
         }
-
-        if (collision) {
-            state = GameState::GameOver;
-            gameOverMenu->updateScoreText(score);
-        }
+        // Commit Ghost - fin
 
         if (collision) {
             std::cout << "\n===============================\n";
@@ -241,6 +292,7 @@ void Game::update(float dt) {
             std::cout << "        Score final : " << score << "\n";
             std::cout << "===============================\n";
             state = GameState::GameOver;
+            gameOverMenu->updateScoreText(score);
 
             // commit sauvegarde 
             save.addScore(score);

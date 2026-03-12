@@ -1,14 +1,16 @@
 #include "Boutique.h"
 #include <iostream>
-Boutique::Boutique(RessourcesManager& rm) :
+Boutique::Boutique(RessourcesManager& rm, Save& save) :
+    save(save),
     itemNameText(rm.getFont(), "", 24),
     priceText(rm.getFont(), "", 20),
-    returnButton(rm.getReturnBtnTexture()), 
+    returnButton(rm.getReturnBtnTexture()),
     background(rm.getMenuBgTexture()),
     buyButton(rm.getBuyBtnTexture()),
-    equipButton(rm.getEquipBtnTexture())
+    equipButton(rm.getEquipBtnTexture()),
+    equippedButton(rm.getEquippedBtnTexture()),
+    coinsText(rm.getFont())
 {
-
     handCursor = sf::Cursor::createFromSystem(sf::Cursor::Type::Hand);
     arrowCursor = sf::Cursor::createFromSystem(sf::Cursor::Type::Arrow);
 
@@ -22,10 +24,15 @@ Boutique::Boutique(RessourcesManager& rm) :
     itemNameText.setCharacterSize(24);
     priceText.setFont(font);
     priceText.setCharacterSize(20);
+    coinsText.setFont(rm.getFont());
+    coinsText.setCharacterSize(24);
+
 
     itemNameText.setFillColor(sf::Color::White);
     infoPanel.setFillColor(sf::Color(40, 40, 40));
     priceText.setFillColor(sf::Color::Yellow);
+    coinsText.setFillColor(sf::Color::Yellow);
+
 
     infoPanel.setPosition({ 500.f,0.f });
     returnButton.setPosition({ 20.f,20.f });
@@ -33,18 +40,26 @@ Boutique::Boutique(RessourcesManager& rm) :
     itemNameText.setPosition({ 620,50 });
     priceText.setPosition({ 620.f,100.f });
     equipButton.setPosition({ 550.f, 400.f });
+    coinsText.setPosition({ 550.f, 20.f });
+    equippedButton.setPosition({ 550.f, 400.f });
 
-    items.emplace_back("Bird Red", 150, rm.getPlayerTexture());
-    items.emplace_back("Bird Blue", 250, rm.getPlayerTexture());
-    items.emplace_back("Bird Green", 350, rm.getPlayerTexture());
-    items.emplace_back("Bird Gold", 550, rm.getPlayerTexture());
-    items.emplace_back("Bird Shadow", 850, rm.getPlayerTexture());
+    items.emplace_back("Default Bird", 0, rm.getDefaultBirdTexture());
+    items.emplace_back("Bird Red", 10, rm.getBirdRedTexture());
+    items.emplace_back("Bird Blue", 250, rm.getBirdBlueTexture());
+    items.emplace_back("Bird Green", 350, rm.getBirdGreenTexture());
+    items.emplace_back("Bird Gold", 550, rm.getBirdGoldTexture());
+    items.emplace_back("Bird Shadow", 850, rm.getBirdShadowTexture());
 
     int cols = 3;
     int spacing = 20;
 
     for (int i = 0; i < items.size(); i++)
     {
+        if (save.isSkinOwned(i))
+            items[i].setOwned(true);
+
+        if (save.getEquippedSkin() == i)
+            items[i].setEquipped(true);
 
         int x = i % cols;
         int y = i / cols;
@@ -55,45 +70,58 @@ Boutique::Boutique(RessourcesManager& rm) :
         );
 
     }
+
 }
 
 Boutique::Action Boutique::handleClick(sf::Vector2f mousePos)
 {
 
+    bool clickedSomething = false;
+
+    // bouton RETURN
     if (returnButton.getGlobalBounds().contains(mousePos))
     {
         return Action::Return;
     }
 
-
-    //bouton buy 
+    // bouton BUY
     if (selectedItem != -1 &&
-        buyButton.getGlobalBounds().contains(mousePos) &&
-        !items[selectedItem].isOwned())
+        !items[selectedItem].isOwned() &&
+        buyButton.getGlobalBounds().contains(mousePos))
     {
-        items[selectedItem].setOwned(true);
+        int price = items[selectedItem].getPrice();
+        int coins = save.getTotalScore();
+        if (coins >= price)
+        {
+            save.spendCoins(price);
+            save.buySkin(selectedItem);
+            items[selectedItem].setOwned(true);
+        }
+        clickedSomething = true;
     }
 
-
-    //bouton equip 
+    // bouton EQUIP
     if (selectedItem != -1 &&
         items[selectedItem].isOwned() &&
+        !items[selectedItem].isEquipped() &&
         equipButton.getGlobalBounds().contains(mousePos))
     {
-
         for (auto& item : items)
             item.setEquipped(false);
 
+        save.equipSkin(selectedItem);
         items[selectedItem].setEquipped(true);
 
+        clickedSomething = true;
     }
 
-
+    // clic sur un item
     for (int i = 0; i < items.size(); i++)
     {
-
         if (items[i].isClicked(mousePos))
         {
+            clickedSomething = true;
+
             selectedItem = i;
 
             for (auto& item : items)
@@ -101,12 +129,19 @@ Boutique::Action Boutique::handleClick(sf::Vector2f mousePos)
 
             items[i].setSelected(true);
         }
+    }
 
+    // clic dans le vide
+    if (!clickedSomething)
+    {
+        selectedItem = -1;
+
+        for (auto& item : items)
+            item.setSelected(false);
     }
 
     return Action::None;
 }
-
 
 void Boutique::updateCursor(sf::RenderWindow& window)
 {
@@ -138,6 +173,7 @@ void Boutique::updateCursor(sf::RenderWindow& window)
 void Boutique::update(sf::RenderWindow& window)
 {
 
+    coinsText.setString("Coins : " + std::to_string(save.getTotalScore()));
     sf::Vector2f mousePos =
         window.mapPixelToCoords(sf::Mouse::getPosition(window));
 
@@ -174,6 +210,7 @@ void Boutique::update(sf::RenderWindow& window)
 void Boutique::draw(sf::RenderWindow& window)
 {
     window.draw(background);
+    window.draw(coinsText);
 
     for (auto& item : items)
     {
@@ -189,10 +226,18 @@ void Boutique::draw(sf::RenderWindow& window)
             window.draw(*previewSprite);
         window.draw(itemNameText);
         window.draw(priceText);
-        if (items[selectedItem].isOwned())
-            window.draw(equipButton);
+        if (!items[selectedItem].isOwned())
+        {
+            window.draw(buyButton);
+        }
+        else if (items[selectedItem].isEquipped())
+        {
+            window.draw(equippedButton);
+        }
         else
-        window.draw(buyButton);
+        {
+            window.draw(equipButton);
+        }
     }
 
 }

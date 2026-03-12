@@ -32,6 +32,7 @@ OptionMenu::OptionMenu(const RessourcesManager& rm)
     sliderCursor.setFillColor(sf::Color::White);
     sliderCursor.setPosition({ 400.f, 355.f });
 
+
 //bouton de retour
   returnBtn.setPosition({ 600.f, 500.f });
 }
