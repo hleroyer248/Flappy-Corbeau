@@ -19,7 +19,9 @@ public:
 
     CollisionBox getCollisionBox() const;
     const sf::Sprite& getSprite() const;
-    const sf::Vector2f& getPosition() const;
+
+    // Correction SFML 3.0 : Retourne une valeur et non une référence
+    sf::Vector2f getPosition() const;
 
     void setSkin(const sf::Texture& texture);
 
@@ -48,7 +50,12 @@ private:
     int frameHeight;
     int totalFrames;
 
-    // Méthode utilitaire pour appliquer correctement l'animation et le scale
     void applyCurrentTexture(const sf::Texture* tex);
     // Commit Crow - fin
+
+    // Commit Pixel-Perfect - debut
+    sf::Image normalImage;
+    sf::Image ghostImage;
+    const sf::Image* currentImage;
+    // Commit Pixel-Perfect - fin
 };

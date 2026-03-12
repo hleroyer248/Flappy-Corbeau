@@ -10,8 +10,12 @@ public:
     bool loadAll();
     const sf::Texture& getPlayerTexture() const;
     const sf::Texture& getBgTexture() const;
+
+    // Commit Parallax - debut
     const sf::Texture& getMidBgTexture() const;
     const sf::Texture& getFrontBgTexture() const;
+    // Commit Parallax - fin
+
     const sf::Texture& getTopPipeTexture() const;
     const sf::Texture& getBottomPipeTexture() const;
     const sf::Font& getFont() const;
@@ -32,13 +36,21 @@ public:
     const sf::Texture& getBirdGreenTexture() const;
     const sf::Texture& getBirdGoldTexture() const;
     const sf::Texture& getBirdShadowTexture() const;
-    const sf::Texture& getDefaultBirdTexture() const;
+
+    // Commit Pixel-Perfect - debut
+    const sf::Image& getTopPipeImage() const;
+    const sf::Image& getBottomPipeImage() const;
+    // Commit Pixel-Perfect - fin
 
 private:
     sf::Texture playerTex;
     sf::Texture bgTex;
+
+    // Commit Parallax - debut
     sf::Texture midBgTex;
     sf::Texture frontBgTex;
+    // Commit Parallax - fin
+
     sf::Texture topPipeTex;
     sf::Texture bottomPipeTex;
     sf::Font font;
@@ -59,5 +71,9 @@ private:
     sf::Texture birdGreenTex;
     sf::Texture birdGoldTex;
     sf::Texture birdShadowTex;
-    sf::Texture defaultBirdTex;
+
+    // Commit Pixel-Perfect - debut
+    sf::Image topPipeImg;
+    sf::Image bottomPipeImg;
+    // Commit Pixel-Perfect - fin
 };
