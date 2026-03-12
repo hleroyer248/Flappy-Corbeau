@@ -33,6 +33,9 @@ public:
     const sf::Texture& getBirdGoldTexture() const;
     const sf::Texture& getBirdShadowTexture() const;
     const sf::Texture& getDefaultBirdTexture() const;
+    const sf::Texture& getStatue1Texture() const;
+    const sf::Texture& getStatue2Texture() const;
+    const sf::Texture& getStatue3Texture() const;
 
 private:
     sf::Texture playerTex;
@@ -60,4 +63,8 @@ private:
     sf::Texture birdGoldTex;
     sf::Texture birdShadowTex;
     sf::Texture defaultBirdTex;
+    sf::Texture statue1Tex;
+    sf::Texture statue2Tex;
+    sf::Texture statue3Tex;
+
 };

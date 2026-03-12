@@ -32,6 +32,9 @@ bool RessourcesManager::loadAll() {
         !birdGreenTex.loadFromFile(basePath + "BirdGreen.png") ||
         !birdGoldTex.loadFromFile(basePath + "BirdGold.png") ||
         !defaultBirdTex.loadFromFile(basePath + "defaultBird.png") ||
+        !statue1Tex.loadFromFile(basePath + "Statue1.png") ||
+        !statue2Tex.loadFromFile(basePath + "Statue2.png") ||
+        !statue3Tex.loadFromFile(basePath + "Statue3.png") ||
         !birdShadowTex.loadFromFile(basePath + "BirdShadow.png")){
         std::cerr << "ERREUR: Impossible de charger un ou plusieurs assets png.\n";
         return false;
@@ -63,3 +66,6 @@ const sf::Texture& RessourcesManager::getBirdGreenTexture() const{ return birdGr
 const sf::Texture& RessourcesManager::getBirdGoldTexture() const{ return birdGoldTex; }
 const sf::Texture& RessourcesManager::getBirdShadowTexture() const{ return birdShadowTex; }
 const sf::Texture& RessourcesManager::getDefaultBirdTexture() const{ return defaultBirdTex; }
+const sf::Texture& RessourcesManager::getStatue1Texture() const{ return statue1Tex; }
+const sf::Texture& RessourcesManager::getStatue2Texture() const{ return statue2Tex; }
+const sf::Texture& RessourcesManager::getStatue3Texture() const{ return statue3Tex; }
