@@ -21,7 +21,6 @@ public:
     const sf::Sprite& getSprite() const;
     const sf::Vector2f& getPosition() const;
 
-
     void setSkin(const sf::Texture& texture);
 
 private:
@@ -38,4 +37,18 @@ private:
     const float GHOST_DURATION = 5.0f;
     const float GHOST_COOLDOWN_MAX = 1.0f;
     // Commit Ghost - fin
+
+    // Commit Crow - debut
+    const sf::Texture* defaultPlayerTexture; // Pour identifier l'image de base animée
+    bool isAnimated;
+    int currentFrame;
+    float animationTimer;
+    float frameDuration;
+    int frameWidth;
+    int frameHeight;
+    int totalFrames;
+
+    // Méthode utilitaire pour appliquer correctement l'animation et le scale
+    void applyCurrentTexture(const sf::Texture* tex);
+    // Commit Crow - fin
 };

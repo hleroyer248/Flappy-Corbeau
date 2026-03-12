@@ -12,6 +12,12 @@ player(nullptr) {
 
     player = new Player(rm);
 
+    // Commit Player Default - debut
+    // On force le jeu à déséquiper tout skin au lancement de l'application
+    // Ainsi, tu commences toujours avec Player.png !
+    save.equipSkin(-1);
+    // Commit Player Default - fin
+
     mainMenu.emplace(rm);
     optionMenu.emplace(rm);
     gameOverMenu.emplace(rm);
@@ -19,7 +25,6 @@ player(nullptr) {
 
     // commit sauvegarde
     mainMenu->updateScores(save.getBestScore(), save.getTotalScore());
-
 
     bg1.emplace(rm.getBgTexture());
     bg2.emplace(rm.getBgTexture());
@@ -49,6 +54,12 @@ void Game::resetGame() {
     player->reset();
     int skinIndex = save.getEquippedSkin();
 
+    // Commit Player Default - debut
+    if (skinIndex == -1) {
+        player->setSkin(rm.getPlayerTexture());
+    }
+    // Commit Player Default - fin
+
     if (skinIndex == 0)
         player->setSkin(rm.getPlayerTexture());
 
@@ -66,6 +77,7 @@ void Game::resetGame() {
 
     if (skinIndex == 5)
         player->setSkin(rm.getBirdShadowTexture());
+
     obstacles.clear();
     score = 0;
     scoreText->setString("Score: 0");
