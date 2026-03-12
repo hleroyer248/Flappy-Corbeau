@@ -13,7 +13,7 @@ player(nullptr) {
     player = new Player(rm);
 
     // Commit Player Default - debut
-    // On force le jeu � d�s�quiper tout skin au lancement de l'application
+    // On force le jeu à déséquiper tout skin au lancement de l'application
     // Ainsi, tu commences toujours avec Player.png !
     save.equipSkin(-1);
     // Commit Player Default - fin
@@ -200,7 +200,7 @@ void Game::update(float dt) {
         return;
     }
 
-  /*  //commence � 1.0, et on ajoute 0.1 tous les 5 points par exemple
+  /*  //commence à 1.0, et on ajoute 0.1 tous les 5 points par exemple
     float difficultyMultiplier = 1.0f + (static_cast<float>(score) / 3.0f) * 1.0f;
 
     // max 2x la vitesse
@@ -241,22 +241,22 @@ void Game::update(float dt) {
             pipeSpawnTimer = 0.f;
         }
 
-      /*  //d�filement
+      /*  //défilement
         float baseBgSpeed = 100.f;
         float currentBgSpeed = baseBgSpeed * difficultyMultiplier; // La vitesse augmente !
 
         bg1->move({ -currentBgSpeed * dt, 0.f });
         bg2->move({ -currentBgSpeed * dt, 0.f });
-        // ... (Logique de reset du fond bg1/bg2 inchang�e) ..
+        // ... (Logique de reset du fond bg1/bg2 inchangée) ..
 
-        */ // il va falloir faire une classe Event pour gerer la difficult� au fur et � mesure du temps
+        */ // il va falloir faire une classe Event pour gerer la difficulté au fur et à mesure du temps
 
         bool collision = false;
         CollisionBox pBox = player->getCollisionBox();
         for (auto it = obstacles.begin(); it != obstacles.end(); ) {
             it->update(dt);
 
-            // Commit Ghost - debut : Collision vérifiée seulement si on n'est pas un fantôme
+            // Commit Ghost - debut : Collision vÃ©rifiÃ©e seulement si on n'est pas un fantÃ´me
             if (!player->isGhost()) {
                 if (pBox.intersects(it->getTopCollisionBox()) || pBox.intersects(it->getBottomCollisionBox())) {
                     collision = true;
@@ -278,7 +278,7 @@ void Game::update(float dt) {
             }
         }
 
-        // Commit Ghost - debut : Collision limites de l'écran ignorée si Ghost
+        // Commit Ghost - debut : Collision limites de l'Ã©cran ignorÃ©e si Ghost
         if (!player->isGhost()) {
             if (pBox.getRect().position.y < 0.f || pBox.getRect().position.y + pBox.getRect().size.y > 600.f) {
                 collision = true;
