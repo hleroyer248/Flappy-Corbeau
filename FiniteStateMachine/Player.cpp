@@ -53,7 +53,7 @@ void Player::applyCurrentTexture(const sf::Texture* tex) {
     sprite.setOrigin({ frameWidth / 2.f, frameHeight / 2.f });
 
     // Commit Visual Size - debut
-    // On force la taille du sprite à une taille plus grande (ex: 64x64 pixels)
+    // On force la taille du sprite ï¿½ une taille plus grande (ex: 64x64 pixels)
     // Tu peux changer cette valeur (ex: 48.f, 80.f) pour affiner le rendu
     float visualSize = 64.f;
     sprite.setScale({ visualSize / frameWidth, visualSize / frameHeight });
