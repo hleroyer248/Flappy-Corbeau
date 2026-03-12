@@ -37,6 +37,7 @@ public:
     void setSelected(bool value);
 
     const sf::Sprite& getSprite() const;
+    const sf::Texture& getTexture() const;
 
     void setEquipped(bool value);
     bool isEquipped() const;

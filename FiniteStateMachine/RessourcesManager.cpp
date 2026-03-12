@@ -31,6 +31,8 @@ bool RessourcesManager::loadAll() {
         !birdBlueTex.loadFromFile(basePath + "BirdBlue.png") ||
         !birdGreenTex.loadFromFile(basePath + "BirdGreen.png") ||
         !birdGoldTex.loadFromFile(basePath + "BirdGold.png") ||
+        !defaultBirdTex.loadFromFile(basePath + "defaultBird.png") ||
+
         !defaultBirdTex.loadFromFile(basePath + "defaultBird.jpeg") ||
         !birdShadowTex.loadFromFile(basePath + "BirdShadow.png")){
         std::cerr << "ERREUR: Impossible de charger un ou plusieurs assets png.\n";

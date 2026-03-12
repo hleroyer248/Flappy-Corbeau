@@ -193,7 +193,7 @@ void Boutique::update(sf::RenderWindow& window)
         previewSprite = sf::Sprite(items[selectedItem].getSprite().getTexture());
 
         previewSprite->setPosition({ 550.f,200.f });
-        previewSprite->setScale({ 3.f,3.f });
+        previewSprite->setScale({ 0.04f,0.04f });
         if (items[selectedItem].isOwned())
         {
             buyButton.setColor(sf::Color(150, 150, 150)); // bouton grisé
