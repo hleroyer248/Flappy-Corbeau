@@ -52,7 +52,7 @@ void Player::updateGhost(float dt) {
             ghostActive = false;
             ghostCooldownTimer = GHOST_COOLDOWN_MAX;
             sprite.setTexture(*normalTexture);
-            sprite.setColor(sf::Color(255, 255, 255, 255)); 
+            sprite.setColor(sf::Color(255, 255, 255, 255));
         }
         else if (ghostTimer <= 2.0f) {
             if (static_cast<int>(ghostTimer * 10) % 2 == 0) {
@@ -91,5 +91,9 @@ const sf::Vector2f& Player::getPosition() const {
 
 void Player::setSkin(const sf::Texture& texture)
 {
+    // Commit BugFix Ghost - debut
+    normalTexture = &texture;
+    // Commit BugFix Ghost - fin
+
     sprite.setTexture(texture);
 }
