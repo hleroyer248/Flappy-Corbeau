@@ -32,15 +32,10 @@ bool RessourcesManager::loadAll() {
         !birdGreenTex.loadFromFile(basePath + "BirdGreen.png") ||
         !birdGoldTex.loadFromFile(basePath + "BirdGold.png") ||
         !defaultBirdTex.loadFromFile(basePath + "defaultBird.png") ||
-
-        !defaultBirdTex.loadFromFile(basePath + "defaultBird.jpeg") ||
         !birdShadowTex.loadFromFile(basePath + "BirdShadow.png")){
         std::cerr << "ERREUR: Impossible de charger un ou plusieurs assets png.\n";
         return false;
     }
-    std::cout << "DefaultBird size: "
-        << defaultBirdTex.getSize().x << " "
-        << defaultBirdTex.getSize().y << std::endl;
     return true;
 }
 

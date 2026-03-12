@@ -239,5 +239,4 @@ void Boutique::draw(sf::RenderWindow& window)
             window.draw(equipButton);
         }
     }
-
 }

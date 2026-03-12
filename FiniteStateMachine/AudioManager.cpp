@@ -18,14 +18,14 @@ bool AudioManager::loadAll() {
         return false;
     }
     jumpSound.emplace(jumpBuffer);
-    jumpSound->setVolume(100.f);
+    jumpSound->setVolume(30.f);
 
     if (!deathBuffer.loadFromFile(basePath + "Dead.mp3")) {
         std::cerr << "ERREUR: Impossible de charger Dead.mp3.\n";
         return false;
     }
     deathSound.emplace(deathBuffer);
-    deathSound->setVolume(30.f);
+    deathSound->setVolume(50.f);
 
     std::cout << "[Audio] Fichiers charges avec succes !" << std::endl;
     return true;
