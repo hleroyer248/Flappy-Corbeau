@@ -25,7 +25,6 @@ public:
     const sf::Texture& getEquipBtnTexture() const;
     const sf::Texture& getEquippedBtnTexture() const;
     const sf::Texture& getGhostPlayerTexture() const; // Commit Ghost
-    const sf::Texture& getGhostPlayerTexture() const; // Commit Ghost
     const sf::Texture& getBirdRedTexture() const;
     const sf::Texture& getBirdBlueTexture() const;
     const sf::Texture& getBirdGreenTexture() const;
