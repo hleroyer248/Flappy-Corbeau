@@ -11,7 +11,7 @@ sprite(texture), selected(false)
     equipped = false;
 
     sprite.setTexture(texture);
-    sprite.setScale({ 2.f, 2.f });
+    sprite.setScale({ 0.04f, 0.04f });
 
     box.setSize({ 120.f, 120.f });
     box.setFillColor(sf::Color(70, 70, 70));
@@ -108,4 +108,9 @@ void ShopItem::setEquipped(bool value)
 bool ShopItem::isEquipped() const
 {
     return equipped;
+}
+
+const sf::Texture& ShopItem::getTexture() const
+{
+    return sprite.getTexture();
 }
