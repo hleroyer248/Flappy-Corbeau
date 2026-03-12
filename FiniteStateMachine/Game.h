@@ -4,12 +4,16 @@
 #include <random>
 #include <optional>
 #include "RessourcesManager.h"
+// Commit Add Sound - debut
+#include "AudioManager.h"
+// Commit Add Sound - fin
 #include "Player.h"
 #include "Obstacle.h"
 #include "MainMenu.h"
 #include "Boutique.h"
 #include "OptionMenu.h"
 #include "GameOverMenu.h"
+#include "ParallaxLayer.h"
 #include "Save.h" // commit sauvegarde
 
 enum class GameState { MainMenu, OptionMenu, Shop, Ready, Playing, GameOver };
@@ -28,8 +32,16 @@ private:
 
     sf::RenderWindow window;
     RessourcesManager rm;
+
+    // Commit Add Sound - debut
+    AudioManager am;
+    // Commit Add Sound - fin
+
     Player* player;
     std::vector<Obstacle> obstacles;
+
+    std::vector<ParallaxLayer> backLayers;
+    std::vector<ParallaxLayer> frontLayers;
 
     std::optional<MainMenu> mainMenu;
     std::optional<OptionMenu> optionMenu;
@@ -55,4 +67,4 @@ private:
     std::uniform_real_distribution<float> chanceDist;
 
     Save save; // commit sauvegarde
-};
+};  
