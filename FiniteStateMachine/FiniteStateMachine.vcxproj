@@ -27,6 +27,7 @@
     <ClInclude Include="MainMenu.h" />
     <ClInclude Include="Obstacle.h" />
     <ClInclude Include="OptionMenu.h" />
+    <ClInclude Include="ParallaxLayer.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="RessourcesManager.h" />
     <ClInclude Include="Save.h" />
@@ -42,6 +43,7 @@
     <ClCompile Include="MainMenu.cpp" />
     <ClCompile Include="Obstacle.cpp" />
     <ClCompile Include="OptionMenu.cpp" />
+    <ClCompile Include="ParallaxLayer.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="RessourcesManager.cpp" />
     <ClCompile Include="Save.cpp" />

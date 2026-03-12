@@ -285,8 +285,8 @@ void Game::update(float dt) {
             std::cout << "===============================\n";
 
             // Commit Add Sound - debut
-            am.stopMusic();       // Arrête la musique de fond
-            am.playDeathSound();  // Joue le son de défaite
+            am.stopMusic();       // Arrï¿½te la musique de fond
+            am.playDeathSound();  // Joue le son de dï¿½faite
             // Commit Add Sound - fin
 
             state = GameState::GameOver;
