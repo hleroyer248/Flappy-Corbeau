@@ -4,6 +4,9 @@
 #include <random>
 #include <optional>
 #include "RessourcesManager.h"
+// Commit Add Sound - debut
+#include "AudioManager.h"
+// Commit Add Sound - fin
 #include "Player.h"
 #include "Obstacle.h"
 #include "MainMenu.h"
@@ -28,6 +31,11 @@ private:
 
     sf::RenderWindow window;
     RessourcesManager rm;
+
+    // Commit Add Sound - debut
+    AudioManager am;
+    // Commit Add Sound - fin
+
     Player* player;
     std::vector<Obstacle> obstacles;
 
@@ -55,4 +63,4 @@ private:
     std::uniform_real_distribution<float> chanceDist;
 
     Save save; // commit sauvegarde
-};
+};  
