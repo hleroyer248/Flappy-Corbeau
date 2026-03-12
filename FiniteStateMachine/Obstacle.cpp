@@ -22,8 +22,7 @@ Obstacle::Obstacle(float startX, float gapY, float gapH, const RessourcesManager
         bottomSprite.setTexture(rm.getStatue2Texture());
     else
         bottomSprite.setTexture(rm.getStatue3Texture());
-    bottomSprite.setScale({ 0.1f, 0.1f });
-
+ 
     updatePositions();
 }
 
@@ -31,22 +30,22 @@ void Obstacle::updatePositions() {
     if (type == ObstacleType::ParMouv) {
         float currentGapY = baseGapY + std::sin(time * 3.f) * 90.f;
         float topY = currentGapY - topTexHeight;
-        float groundY = 600.f - bottomSprite.getGlobalBounds().size.y;
-        bottomSprite.setPosition({ x, groundY });
+        float bottomY = currentGapY + gapHeight;
         topSprite.setPosition({ x, topY });
+        bottomSprite.setPosition({ x, bottomY });
     }
     else if (type == ObstacleType::MachMouv) {
         float offset = std::sin(time * 1.5f) * 70.f;
         float topY = baseGapY - topTexHeight + offset;
-        float groundY = 600.f - bottomSprite.getGlobalBounds().size.y;
-        bottomSprite.setPosition({ x, groundY });
+        float bottomY = baseGapY + gapHeight - offset;
         topSprite.setPosition({ x, topY });
+        bottomSprite.setPosition({ x, bottomY });
     }
     else {
         float topY = baseGapY - topTexHeight;
         float bottomY = baseGapY + gapHeight;
-        float groundY = 600.f - bottomSprite.getGlobalBounds().size.y;
-        bottomSprite.setPosition({ x, groundY });
+        topSprite.setPosition({ x, topY });
+        bottomSprite.setPosition({ x, bottomY });
     }
 }
 
