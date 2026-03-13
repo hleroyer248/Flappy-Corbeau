@@ -6,7 +6,7 @@ GameEvent::GameEvent(RessourcesManager& rm) :
 
     rm(rm), spawnTimer(0.f), 
     spawnInterval(1.5f), elapsedTime(0.f),
-    baseSpeed(100.f), speedMultiplier(1.f), maxSpeedMultiplier(3.5),
+    baseSpeed(100.f), speedMultiplier(1.f), maxSpeedMultiplier(4.0),
 
     gapDist(100.f, 350.f), chanceDist(0.f, 100.f) {
 
