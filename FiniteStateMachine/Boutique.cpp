@@ -65,8 +65,8 @@ Boutique::Boutique(RessourcesManager& rm, Save& save) :
         int y = i / cols;
 
         items[i].setPosition(
-            50 + x * (120 + spacing),
-            100 + y * (120 + spacing)
+            50.f + x * (120.f + spacing),
+            100.f + y * (120.f + spacing)
         );
 
     }
