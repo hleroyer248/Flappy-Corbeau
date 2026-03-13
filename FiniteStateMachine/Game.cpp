@@ -290,6 +290,7 @@ void Game::update(float dt) {
             gameOverMenu->updateScoreText(score);
 
             save.addScore(score);
+            gameOverMenu->updateBestScore(save.getBestScore());
             mainMenu->updateScores(save.getBestScore(), save.getTotalScore());
         }
     }
