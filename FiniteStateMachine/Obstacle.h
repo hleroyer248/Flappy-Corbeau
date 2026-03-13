@@ -35,4 +35,9 @@ private:
     float gapHeight;
     float time;
     float topTexHeight;
+
+    // Commit Pixel-Perfect - debut
+    const sf::Image* topImage;
+    const sf::Image* bottomImage;
+    // Commit Pixel-Perfect - fin
 };

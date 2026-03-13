@@ -6,6 +6,12 @@ Obstacle::Obstacle(float startX, float gapY, float gapH, const RessourcesManager
     x(startX), passed(false), type(t), baseGapY(gapY), gapHeight(gapH), time(0.f) {
     width = static_cast<float>(rm.getTopPipeTexture().getSize().x);
     topTexHeight = static_cast<float>(rm.getTopPipeTexture().getSize().y);
+
+    // Commit Pixel-Perfect - debut
+    topImage = &rm.getTopPipeImage();
+    bottomImage = &rm.getBottomPipeImage();
+    // Commit Pixel-Perfect - fin
+
     updatePositions();
 }
 
@@ -46,11 +52,15 @@ void Obstacle::shift(float distance) {
 }
 
 CollisionBox Obstacle::getTopCollisionBox() const {
-    return CollisionBox(topSprite.getGlobalBounds());
+    // Commit Pixel-Perfect - debut
+    return CollisionBox(topSprite, *topImage);
+    // Commit Pixel-Perfect - fin
 }
 
 CollisionBox Obstacle::getBottomCollisionBox() const {
-    return CollisionBox(bottomSprite.getGlobalBounds());
+    // Commit Pixel-Perfect - debut
+    return CollisionBox(bottomSprite, *bottomImage);
+    // Commit Pixel-Perfect - fin
 }
 
 const sf::Sprite& Obstacle::getTopSprite() const { return topSprite; }

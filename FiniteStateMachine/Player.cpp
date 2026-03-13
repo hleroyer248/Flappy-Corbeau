@@ -19,12 +19,23 @@ Player::Player(const RessourcesManager& rm) : sprite(rm.getPlayerTexture()) {
     frameDuration = 0.08f;
     // Commit Crow - fin
 
+    // Commit Pixel-Perfect - debut
+    normalImage = normalTexture->copyToImage();
+    ghostImage = ghostTexture->copyToImage();
+    currentImage = &normalImage;
+    // Commit Pixel-Perfect - fin
+
     reset();
 }
 
 void Player::applyCurrentTexture(const sf::Texture* tex) {
     sprite.setTexture(*tex);
     sf::Vector2u size = tex->getSize();
+
+    // Commit Pixel-Perfect - debut
+    if (tex == ghostTexture) currentImage = &ghostImage;
+    else currentImage = &normalImage;
+    // Commit Pixel-Perfect - fin
 
     if (tex == defaultPlayerTexture) {
         isAnimated = true;
@@ -53,8 +64,6 @@ void Player::applyCurrentTexture(const sf::Texture* tex) {
     sprite.setOrigin({ frameWidth / 2.f, frameHeight / 2.f });
 
     // Commit Visual Size - debut
-    // On force la taille du sprite � une taille plus grande (ex: 64x64 pixels)
-    // Tu peux changer cette valeur (ex: 48.f, 80.f) pour affiner le rendu
     float visualSize = 64.f;
     sprite.setScale({ visualSize / frameWidth, visualSize / frameHeight });
     // Commit Visual Size - fin
@@ -145,17 +154,17 @@ bool Player::canActivateGhost() const {
 // Commit Ghost - fin
 
 CollisionBox Player::getCollisionBox() const {
-    // Commit Visual Size - debut
-    sf::Vector2f pos = sprite.getPosition();
-    return CollisionBox(sf::FloatRect({ pos.x - 16.f, pos.y - 16.f }, { 32.f, 32.f }));
-    // Commit Visual Size - fin
+    // Commit Pixel-Perfect - debut
+    return CollisionBox(sprite, *currentImage);
+    // Commit Pixel-Perfect - fin
 }
 
 const sf::Sprite& Player::getSprite() const {
     return sprite;
 }
 
-const sf::Vector2f& Player::getPosition() const {
+// Correction SFML 3.0 : Retourne une valeur et non une référence
+sf::Vector2f Player::getPosition() const {
     return sprite.getPosition();
 }
 
@@ -164,6 +173,10 @@ void Player::setSkin(const sf::Texture& texture)
     // Commit BugFix Ghost - debut
     normalTexture = &texture;
     // Commit BugFix Ghost - fin
+
+    // Commit Pixel-Perfect - debut
+    normalImage = texture.copyToImage();
+    // Commit Pixel-Perfect - fin
 
     // Commit Crow - debut
     if (!ghostActive) {
