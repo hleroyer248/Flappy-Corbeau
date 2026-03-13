@@ -1,17 +1,19 @@
 #include "GameOverMenu.h"
 
-GameOverMenu::GameOverMenu(const RessourcesManager& rm) 
+GameOverMenu::GameOverMenu(const RessourcesManager& rm)
     : background(rm.getMenuBgTexture()),
     retryBtn(rm.getStartBtnTexture()),
     returnBtn(rm.getReturnBtnTexture()),
-    score(rm.getFont(), "Score : 0", 50)
+    score(rm.getFont(), "Score : 0", 80)
 {
-    score.setPosition({ 400.f, 300.f });
-    score.setFillColor(sf::Color::White);
+    // Etirement du background
+    float scaleX = 1920.f / rm.getMenuBgTexture().getSize().x;
+    float scaleY = 1080.f / rm.getMenuBgTexture().getSize().y;
+    background.setScale({ scaleX, scaleY });
 
-    // Positions pour centrer les boutons (à ajuster selon la taille de tes images)
-    retryBtn.setPosition({ 300.f, 250.f });
-    returnBtn.setPosition({ 300.f, 450.f });
+    score.setFillColor(sf::Color::White);
+    retryBtn.setPosition({ 760.f, 500.f });
+    returnBtn.setPosition({ 760.f, 700.f });
 }
 
 GameOverMenu::Action GameOverMenu::handleEvent(const sf::Event& event) {
@@ -39,5 +41,5 @@ void GameOverMenu::updateScoreText(int finalScore)
 
     sf::FloatRect textRect = score.getLocalBounds();
     score.setOrigin({ textRect.size.x / 2.f, textRect.size.y / 2.f });
-    score.setPosition({ 400.f, 150.f });
+    score.setPosition({ 960.f, 300.f });
 }
