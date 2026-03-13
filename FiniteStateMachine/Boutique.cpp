@@ -1,5 +1,6 @@
 #include "Boutique.h"
 #include <iostream>
+
 Boutique::Boutique(RessourcesManager& rm, Save& save) :
     save(save),
     itemNameText(rm.getFont(), "", 24),
@@ -43,7 +44,8 @@ Boutique::Boutique(RessourcesManager& rm, Save& save) :
     coinsText.setPosition({ 550.f, 20.f });
     equippedButton.setPosition({ 550.f, 400.f });
 
-    items.emplace_back("Default Bird", 0, rm.getDefaultBirdTexture());
+    // Ligne corrigée : Utilisation de getPlayerTexture() à la place de getDefaultBirdTexture
+    items.emplace_back("Bird Default", 0, rm.getPlayerTexture());
     items.emplace_back("Bird Red", 10, rm.getBirdRedTexture());
     items.emplace_back("Bird Blue", 250, rm.getBirdBlueTexture());
     items.emplace_back("Bird Green", 350, rm.getBirdGreenTexture());
@@ -70,7 +72,6 @@ Boutique::Boutique(RessourcesManager& rm, Save& save) :
         );
 
     }
-
 }
 
 Boutique::Action Boutique::handleClick(sf::Vector2f mousePos)
@@ -193,7 +194,7 @@ void Boutique::update(sf::RenderWindow& window)
         previewSprite = sf::Sprite(items[selectedItem].getSprite().getTexture());
 
         previewSprite->setPosition({ 550.f,200.f });
-        previewSprite->setScale({ 0.04f,0.04f });
+        previewSprite->setScale({ 3.f,3.f });
         if (items[selectedItem].isOwned())
         {
             buyButton.setColor(sf::Color(150, 150, 150)); // bouton grisé
@@ -239,4 +240,5 @@ void Boutique::draw(sf::RenderWindow& window)
             window.draw(equipButton);
         }
     }
+
 }
