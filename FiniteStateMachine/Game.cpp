@@ -189,6 +189,19 @@ void Game::update(float dt) {
         gameEvent.update(dt, obstacles //, player->getPosition().x, score
         );
 
+        if (gameEvent.shouldClearObstacles)
+        {
+            obstacles.clear();
+            gameEvent.shouldClearObstacles = false;
+        }
+
+        if (gameEvent.laserDodgedThisFrame)
+        {
+            score++;
+            scoreText->setString("Score: " + std::to_string(score));
+            gameEvent.laserDodgedThisFrame = false;
+        }
+
         //pipeSpawnTimer += dt;
         //if (pipeSpawnTimer > 1.5f) {
         //    ObstacleType spawnType = ObstacleType::Normal;
@@ -226,6 +239,7 @@ void Game::update(float dt) {
                 it->setPassed(true);
                 score++;
                 scoreText->setString("Score: " + std::to_string(score));
+                gameEvent.addObstaclePassed(obstacles);
             }
 
             if (it->getX() + it->getWidth() < 0.f) it = obstacles.erase(it);
@@ -281,6 +295,7 @@ void Game::render() {
                 window.draw(obs.getBottomSprite());
             }
             window.draw(player->getSprite());
+            gameEvent.draw(window);
 
         }
         if (state == GameState::Ready) {

@@ -41,6 +41,7 @@ public:
     // Nouveaux getters d'images Pixel-Perfect
     const sf::Image& getTopPipeImage(int index) const;
     const sf::Image& getBottomPipeImage(int index) const;
+    const sf::Texture& getLaserTexture() const;
 
 private:
     sf::Texture playerTex;
@@ -76,4 +77,5 @@ private:
     // Tableaux pour stocker les 3 images Pixel-Perfect
     sf::Image topPipeImg[3];
     sf::Image bottomPipeImg[3];
+    sf::Texture laserTex;
 };

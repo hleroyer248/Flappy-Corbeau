@@ -45,6 +45,7 @@ bool RessourcesManager::loadAll() {
         !birdGreenTex.loadFromFile(basePath + "BirdGreen.png") ||
         !birdGoldTex.loadFromFile(basePath + "BirdGold.png") ||
         !bgGameOverTex.loadFromFile(basePath + "BgGameOver.png") ||
+        !laserTex.loadFromFile(basePath + "Laser.png") ||
         !birdShadowTex.loadFromFile(basePath + "BirdShadow.png")) {
         std::cerr << "ERREUR: Impossible de charger un ou plusieurs assets png.\n";
         return false;
@@ -86,3 +87,4 @@ const sf::Image& RessourcesManager::getBottomPipeImage(int index) const { return
 // Commit Pixel-Perfect - fin
 
 const sf::Texture& RessourcesManager::getBgGameOverTexture() const{ return bgGameOverTex;}
+const sf::Texture& RessourcesManager::getLaserTexture() const{ return laserTex; }
