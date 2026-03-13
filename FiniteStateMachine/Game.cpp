@@ -331,18 +331,20 @@ void Game::render() {
             layer.draw(window);
         }
 
+        // 
+
+        for (const auto& layer : frontLayers) {
+            layer.draw(window);
+        }
+
         if (state == GameState::Playing || state == GameState::Ready) {
             for (const auto& obs : obstacles) {
                 window.draw(obs.getTopSprite());
                 window.draw(obs.getBottomSprite());
             }
             window.draw(player->getSprite());
-        }
 
-        for (const auto& layer : frontLayers) {
-            layer.draw(window);
         }
-
         if (state == GameState::Ready) {
             window.draw(*startButton);
         }
