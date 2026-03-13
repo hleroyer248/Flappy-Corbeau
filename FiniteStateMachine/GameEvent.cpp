@@ -53,7 +53,7 @@ void GameEvent::update(float dt, std::vector<Obstacle>& obstacles)
     spawnTimer += dt;
 
     // Augmentation progressive de la vitesse
-    speedMultiplier = 1.f + elapsedTime / 60.f;
+    speedMultiplier = 1.f + elapsedTime / 50.f;
 
     // Limite de vitesse
     if (speedMultiplier > maxSpeedMultiplier)
