@@ -64,13 +64,13 @@ void Player::applyCurrentTexture(const sf::Texture* tex) {
     sprite.setOrigin({ frameWidth / 2.f, frameHeight / 2.f });
 
     // Commit Visual Size - debut
-    float visualSize = 64.f;
+    float visualSize = 115.f;
     sprite.setScale({ visualSize / frameWidth, visualSize / frameHeight });
     // Commit Visual Size - fin
 }
 
 void Player::reset() {
-    sprite.setPosition({ 100.f, 300.f });
+    sprite.setPosition({ 300.f, 540.f });
     velocity = { 0.f, 0.f };
 
     // Commit Ghost - debut
@@ -88,11 +88,11 @@ void Player::reset() {
 }
 
 void Player::flap() {
-    velocity.y = -350.f;
+    velocity.y = -650.f;
 }
 
 void Player::update(float dt) {
-    velocity.y += 1200.f * dt;
+    velocity.y += 2200.f * dt;
     sprite.move(velocity * dt);
 
     // Commit Crow - debut

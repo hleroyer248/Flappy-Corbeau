@@ -11,7 +11,8 @@ enum class ObstacleType {
 
 class Obstacle {
 public:
-    Obstacle(float startX, float gapY, float gapHeight, const RessourcesManager& rm, ObstacleType type);
+    // Ajout des index topIdx et botIdx au constructeur
+    Obstacle(float startX, float gapY, float gapHeight, const RessourcesManager& rm, ObstacleType type, int topIdx, int botIdx);
     void updatePositions();
     void update(float dt);
     void shift(float distance);
@@ -36,8 +37,6 @@ private:
     float time;
     float topTexHeight;
 
-    // Commit Pixel-Perfect - debut
     const sf::Image* topImage;
     const sf::Image* bottomImage;
-    // Commit Pixel-Perfect - fin
 };

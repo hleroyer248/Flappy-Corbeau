@@ -10,7 +10,7 @@ GameOverMenu::GameOverMenu(const RessourcesManager& rm)
     score.setPosition({ 1000.f, 800.f });
     score.setFillColor(sf::Color::White);
 
-    // Positions pour centrer les boutons (à ajuster selon la taille de tes images)
+    // Positions pour centrer les boutons (ï¿½ ajuster selon la taille de tes images)
     retryBtn.setPosition({ 300.f, 250.f });
     returnBtn.setPosition({ 300.f, 450.f });
 

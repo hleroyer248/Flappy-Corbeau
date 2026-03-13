@@ -5,30 +5,31 @@ MainMenu::MainMenu(const RessourcesManager& rm)
     startBtn(rm.getStartBtnTexture()),
     settingsBtn(rm.getSettingsBtnTexture()),
     exitBtn(rm.getExitBtnTexture()),
-    title(rm.getFont(), "FLAPPY BIRD", 50),
-    shopButton(rm.getShopTexture()), // commit sauvegarde 
-    bestScoreText(rm.getFont(), "", 24),    // commit sauvegarde
-    totalScoreText(rm.getFont(), "", 24)    // commit sauvegarde
+    title(rm.getFont(), "FLAPPY BIRD", 90),
+    shopButton(rm.getShopTexture()),
+    bestScoreText(rm.getFont(), "", 40),
+    totalScoreText(rm.getFont(), "", 40)
 {
+    // Etirement du background
+    float scaleX = 1920.f / rm.getMenuBgTexture().getSize().x;
+    float scaleY = 1080.f / rm.getMenuBgTexture().getSize().y;
+    background.setScale({ scaleX, scaleY });
 
-    title.setPosition({ 230.f, 100.f });
+    title.setPosition({ 700.f, 200.f });
     title.setFillColor(sf::Color::White);
 
-    startBtn.setPosition({ 300.f, 270.f }); //c'était a 250.f si vous voulez le remettre comme avant
-    settingsBtn.setPosition({ 305.f, 330.f });
-    exitBtn.setPosition({ 300.f, 450.f });
-    shopButton.setPosition({ 355.f, 395.f });
-    shopButton.setScale({ 1.f,1.f });
+    startBtn.setPosition({ 760.f, 400.f });
+    settingsBtn.setPosition({ 760.f, 550.f });
+    shopButton.setPosition({ 760.f, 700.f });
+    exitBtn.setPosition({ 760.f, 850.f });
 
-    // commit sauvegarde 
     bestScoreText.setFillColor(sf::Color::Red);
-    bestScoreText.setPosition({ 300.f, 20.f });
+    bestScoreText.setPosition({ 1500.f, 30.f });
 
     totalScoreText.setFillColor(sf::Color::Green);
-    totalScoreText.setPosition({ 10.f, 10.f });
+    totalScoreText.setPosition({ 30.f, 30.f });
 }
 
-// commit sauvegarde 
 void MainMenu::updateScores(int bestScore, int totalScore) {
     bestScoreText.setString("Meilleur Score: " + std::to_string(bestScore));
     totalScoreText.setString("Score Total: " + std::to_string(totalScore));
@@ -56,7 +57,6 @@ void MainMenu::draw(sf::RenderWindow& window) const {
     window.draw(exitBtn);
     window.draw(shopButton);
 
-    // commit sauvegarde 
     window.draw(bestScoreText);
     window.draw(totalScoreText);
 }

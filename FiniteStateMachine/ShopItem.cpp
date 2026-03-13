@@ -1,7 +1,7 @@
 #include "ShopItem.h"
 
-ShopItem::ShopItem(const std::string& name, int price, const sf::Texture& texture):
-sprite(texture), selected(false)
+ShopItem::ShopItem(const std::string& name, int price, const sf::Texture& texture) :
+    sprite(texture), selected(false)
 {
 
     this->name = name;
@@ -11,9 +11,9 @@ sprite(texture), selected(false)
     equipped = false;
 
     sprite.setTexture(texture);
-    sprite.setScale({ 0.04f, 0.04f });
+    sprite.setScale({ 0.08f, 0.08f });
 
-    box.setSize({ 120.f, 120.f });
+    box.setSize({ 200.f, 200.f });
     box.setFillColor(sf::Color(70, 70, 70));
 
 }
@@ -21,8 +21,8 @@ sprite(texture), selected(false)
 void ShopItem::setPosition(float x, float y)
 {
 
-    box.setPosition({ x,y });
-    sprite.setPosition({ x + 20,y + 20 });
+    box.setPosition({ x, y });
+    sprite.setPosition({ x + 35.f, y + 35.f });
 
 }
 
