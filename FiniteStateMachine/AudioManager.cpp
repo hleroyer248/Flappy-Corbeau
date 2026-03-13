@@ -11,14 +11,14 @@ bool AudioManager::loadAll() {
         return false;
     }
     bgMusic.setLooping(true);
-    bgMusic.setVolume(20.f); // On force le volume à fond
+    bgMusic.setVolume(100.f); // On force le volume à fond
 
     if (!jumpBuffer.loadFromFile(basePath + "Crow.mp3")) {
         std::cerr << "ERREUR: Impossible de charger Crow.mp3.\n";
         return false;
     }
     jumpSound.emplace(jumpBuffer);
-    jumpSound->setVolume(30.f);
+    jumpSound->setVolume(20.f);
 
     if (!deathBuffer.loadFromFile(basePath + "Dead.mp3")) {
         std::cerr << "ERREUR: Impossible de charger Dead.mp3.\n";

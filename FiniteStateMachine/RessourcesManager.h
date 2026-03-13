@@ -36,6 +36,7 @@ public:
     const sf::Texture& getBirdGreenTexture() const;
     const sf::Texture& getBirdGoldTexture() const;
     const sf::Texture& getBirdShadowTexture() const;
+    const sf::Texture& getBgGameOverTexture() const;
 
     // Nouveaux getters d'images Pixel-Perfect
     const sf::Image& getTopPipeImage(int index) const;
@@ -70,6 +71,7 @@ private:
     sf::Texture birdGreenTex;
     sf::Texture birdGoldTex;
     sf::Texture birdShadowTex;
+    sf::Texture bgGameOverTex;
 
     // Tableaux pour stocker les 3 images Pixel-Perfect
     sf::Image topPipeImg[3];

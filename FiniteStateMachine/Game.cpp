@@ -167,9 +167,11 @@ void Game::processEvents() {
 }
 
 void Game::update(float dt) {
-    if (state == GameState::MainMenu || state == GameState::OptionMenu || state == GameState::GameOver) return;
-
-    if (state == GameState::Shop) {
+    if (state == GameState::MainMenu || state == GameState::OptionMenu) {
+        return;
+    }
+    if (state == GameState::Shop)
+    {
         shop->update(window);
         shop->updateCursor(window);
         return;
@@ -244,6 +246,7 @@ void Game::update(float dt) {
             state = GameState::GameOver;
             gameOverMenu->updateScoreText(score);
             save.addScore(score);
+            gameOverMenu->updateBestScore(save.getBestScore());
             mainMenu->updateScores(save.getBestScore(), save.getTotalScore());
         }
     }
@@ -252,10 +255,19 @@ void Game::update(float dt) {
 void Game::render() {
     window.clear();
 
-    if (state == GameState::MainMenu) mainMenu->draw(window);
-    else if (state == GameState::OptionMenu) optionMenu->draw(window);
-    else if (state == GameState::GameOver) gameOverMenu->draw(window);
-    else if (state == GameState::Shop) shop->draw(window);
+    if (state == GameState::MainMenu) {
+        mainMenu->draw(window);
+    }
+    else if (state == GameState::OptionMenu) {
+        optionMenu->draw(window);
+    }
+   /* else if (state == GameState::GameOver) {
+        gameOverMenu->draw(window);
+    }*/
+    else if (state == GameState::Shop) {
+        shop->draw(window);
+    }
+    // défini l'ordre pour dessiner les plan un à un
     else {
         for (const auto& layer : backLayers) layer.draw(window);
 
@@ -265,7 +277,7 @@ void Game::render() {
             layer.draw(window);
         }
 
-        if (state == GameState::Playing || state == GameState::Ready) {
+        if (state == GameState::Playing || state == GameState::Ready || state == GameState::GameOver) {
             for (const auto& obs : obstacles) {
                 window.draw(obs.getTopSprite());
                 window.draw(obs.getBottomSprite());
@@ -278,6 +290,9 @@ void Game::render() {
         }
         else if (state == GameState::Playing) {
             window.draw(*scoreText);
+        }
+        if (state == GameState::GameOver) {
+            gameOverMenu->draw(window);
         }
     }
 
