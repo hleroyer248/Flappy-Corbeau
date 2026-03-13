@@ -10,13 +10,26 @@ bool RessourcesManager::loadAll() {
         std::cerr << "ERREUR: Impossible de charger arial.ttf depuis le dossier Assets.\n";
         return false;
     }
+
+     for (int i = 0; i < 3; ++i) {
+        std::string topName = "Hobstacle" + std::to_string(i + 1) + ".png";
+        std::string botName = "Bobstacle" + std::to_string(i + 1) + ".png";
+
+        if (!topPipeTex[i].loadFromFile(basePath + topName) ||
+            !bottomPipeTex[i].loadFromFile(basePath + botName)) {
+            std::cerr << "ERREUR: Impossible de charger " << topName << " ou " << botName << "\n";
+            return false;
+        }
+
+        topPipeImg[i] = topPipeTex[i].copyToImage();
+        bottomPipeImg[i] = bottomPipeTex[i].copyToImage();
+    }
+
     if (!playerTex.loadFromFile(basePath + "Player.png") ||
-        !ghostPlayerTex.loadFromFile(basePath + "Ghost-Player.png") || // Commit Ghost
+        !ghostPlayerTex.loadFromFile(basePath + "Ghost-Player.png") ||
         !bgTex.loadFromFile(basePath + "Background.png") ||
-        !midBgTex.loadFromFile(basePath + "MidBackground.png") ||      // Commit Parallax
-        !frontBgTex.loadFromFile(basePath + "FrontBackground.png") ||  // Commit Parallax
-        !topPipeTex.loadFromFile(basePath + "Hobstacle.png") ||
-        !bottomPipeTex.loadFromFile(basePath + "Bobstacle.png") ||
+        !midBgTex.loadFromFile(basePath + "MidBackground.png") ||
+        !frontBgTex.loadFromFile(basePath + "FrontBackground.png") ||
         !menuBgTex.loadFromFile(basePath + "MenuBackground.png") ||
         !startBtnTex.loadFromFile(basePath + "StartButton.png") ||
         !settingsBtnTex.loadFromFile(basePath + "SettingsButton.png") ||
@@ -36,24 +49,17 @@ bool RessourcesManager::loadAll() {
         return false;
     }
 
-    // Commit Pixel-Perfect - debut
-    topPipeImg = topPipeTex.copyToImage();
-    bottomPipeImg = bottomPipeTex.copyToImage();
-    // Commit Pixel-Perfect - fin
-
     return true;
 }
 
 const sf::Texture& RessourcesManager::getPlayerTexture() const { return playerTex; }
 const sf::Texture& RessourcesManager::getBgTexture() const { return bgTex; }
-
-// Commit Parallax - debut
 const sf::Texture& RessourcesManager::getMidBgTexture() const { return midBgTex; }
 const sf::Texture& RessourcesManager::getFrontBgTexture() const { return frontBgTex; }
-// Commit Parallax - fin
 
-const sf::Texture& RessourcesManager::getTopPipeTexture() const { return topPipeTex; }
-const sf::Texture& RessourcesManager::getBottomPipeTexture() const { return bottomPipeTex; }
+const sf::Texture& RessourcesManager::getTopPipeTexture(int index) const { return topPipeTex[index]; }
+const sf::Texture& RessourcesManager::getBottomPipeTexture(int index) const { return bottomPipeTex[index]; }
+
 const sf::Font& RessourcesManager::getFont() const { return font; }
 
 const sf::Texture& RessourcesManager::getMenuBgTexture() const { return menuBgTex; }
@@ -66,15 +72,12 @@ const sf::Texture& RessourcesManager::getShopTexture() const { return shopTex; }
 const sf::Texture& RessourcesManager::getBuyBtnTexture() const { return buyBtnTex; }
 const sf::Texture& RessourcesManager::getEquipBtnTexture() const { return equipBtnTex; }
 const sf::Texture& RessourcesManager::getEquippedBtnTexture() const { return equippedBtnTex; }
-const sf::Texture& RessourcesManager::getGhostPlayerTexture() const { return ghostPlayerTex; } // Commit Ghost
-
+const sf::Texture& RessourcesManager::getGhostPlayerTexture() const { return ghostPlayerTex; }
 const sf::Texture& RessourcesManager::getBirdRedTexture() const { return birdRedTex; }
 const sf::Texture& RessourcesManager::getBirdBlueTexture() const { return birdBlueTex; }
 const sf::Texture& RessourcesManager::getBirdGreenTexture() const { return birdGreenTex; }
 const sf::Texture& RessourcesManager::getBirdGoldTexture() const { return birdGoldTex; }
 const sf::Texture& RessourcesManager::getBirdShadowTexture() const { return birdShadowTex; }
 
-// Commit Pixel-Perfect - debut
-const sf::Image& RessourcesManager::getTopPipeImage() const { return topPipeImg; }
-const sf::Image& RessourcesManager::getBottomPipeImage() const { return bottomPipeImg; }
-// Commit Pixel-Perfect - fin
+const sf::Image& RessourcesManager::getTopPipeImage(int index) const { return topPipeImg[index]; }
+const sf::Image& RessourcesManager::getBottomPipeImage(int index) const { return bottomPipeImg[index]; }

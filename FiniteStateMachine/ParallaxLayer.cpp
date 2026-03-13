@@ -1,11 +1,18 @@
 #include "ParallaxLayer.h"
 
 ParallaxLayer::ParallaxLayer(const sf::Texture& tex, float speedFactor)
-	: factor(speedFactor),
+    : factor(speedFactor),
     s1(tex),
     s2(tex)
 {
-    width = static_cast<float>(tex.getSize().x);
+    // On étire la texture pour qu'elle remplisse parfaitement le 1920x1080
+    float scaleX = 1920.f / tex.getSize().x;
+    float scaleY = 1080.f / tex.getSize().y;
+
+    s1.setScale({ scaleX, scaleY });
+    s2.setScale({ scaleX, scaleY });
+
+    width = tex.getSize().x * scaleX;
 
     s1.setPosition({ 0.f, 0.f });
     s2.setPosition({ width, 0.f });
