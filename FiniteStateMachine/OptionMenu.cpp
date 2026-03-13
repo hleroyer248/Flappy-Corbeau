@@ -37,7 +37,6 @@ OptionMenu::OptionMenu(const RessourcesManager& rm)
   returnBtn.setPosition({ 600.f, 500.f });
 }
 
-
 OptionMenu::Action OptionMenu::handleEvent(const sf::Event& event) {
 
     //Action de retour avec le bouton
@@ -111,4 +110,3 @@ void OptionMenu::draw(sf::RenderWindow& window) const {
     window.draw(returnBtn);
 
 }
-
