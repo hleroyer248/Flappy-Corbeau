@@ -3,7 +3,7 @@
 
 Game::Game() : window(sf::VideoMode({ 1920, 1080 }), "Flappy Bird - SFML 3.0.2", sf::State::Fullscreen),
 state(GameState::MainMenu), score(0), pipeSpawnTimer(0.f), lastPipeWasMoving(false),
-player(nullptr) {
+player(nullptr), gameEvent(rm) {
     window.setFramerateLimit(60);
     window.setKeyRepeatEnabled(false);
 
@@ -45,14 +45,35 @@ player(nullptr) {
 
 void Game::resetGame() {
     player->reset();
+
+    gameEvent.reset();
+
+    obstacles.clear();
+    score = 0;
+    scoreText->setString("Score: 0");
+
     int skinIndex = save.getEquippedSkin();
 
-    if (skinIndex == 0) player->setSkin(rm.getPlayerTexture());
-    if (skinIndex == 1) player->setSkin(rm.getBirdRedTexture());
-    if (skinIndex == 2) player->setSkin(rm.getBirdBlueTexture());
-    if (skinIndex == 3) player->setSkin(rm.getBirdGreenTexture());
-    if (skinIndex == 4) player->setSkin(rm.getBirdGoldTexture());
-    if (skinIndex == 5) player->setSkin(rm.getBirdShadowTexture());
+    // Commit Player Default - debut
+    if (skinIndex == -1) {
+        player->setSkin(rm.getPlayerTexture());
+    }
+    // Commit Player Default - fin
+
+    if (skinIndex == 0)
+        player->setSkin(rm.getBirdRedTexture());  
+
+    if (skinIndex == 1)
+        player->setSkin(rm.getBirdBlueTexture());
+
+    if (skinIndex == 2)
+        player->setSkin(rm.getBirdGreenTexture());
+
+    if (skinIndex == 3)
+        player->setSkin(rm.getBirdGoldTexture());
+
+    if (skinIndex == 4)
+        player->setSkin(rm.getBirdShadowTexture());
 
     obstacles.clear();
     score = 0;
@@ -163,6 +184,11 @@ void Game::update(float dt) {
         player->update(dt);
         player->updateGhost(dt);
 
+        gameEvent.update(dt, obstacles //, player->getPosition().x, score
+        );
+        
+            /*
+
         pipeSpawnTimer += dt;
         if (pipeSpawnTimer > 1.5f) {
             ObstacleType spawnType = ObstacleType::Normal;
@@ -183,12 +209,12 @@ void Game::update(float dt) {
 
             obstacles.emplace_back(1920.f, gapDist(gen), gapHeight, rm, spawnType, topIdx, botIdx);
             pipeSpawnTimer = 0.f;
-        }
+        }*/
 
         bool collision = false;
         CollisionBox pBox = player->getCollisionBox();
         for (auto it = obstacles.begin(); it != obstacles.end(); ) {
-            it->update(dt);
+            //it->update(dt);
 
             if (!player->isGhost()) {
                 if (pBox.intersects(it->getTopCollisionBox()) || pBox.intersects(it->getBottomCollisionBox())) {
@@ -233,18 +259,26 @@ void Game::render() {
     else {
         for (const auto& layer : backLayers) layer.draw(window);
 
+        // 
+
+        for (const auto& layer : frontLayers) {
+            layer.draw(window);
+        }
+
         if (state == GameState::Playing || state == GameState::Ready) {
             for (const auto& obs : obstacles) {
                 window.draw(obs.getTopSprite());
                 window.draw(obs.getBottomSprite());
             }
             window.draw(player->getSprite());
+
         }
-
-        for (const auto& layer : frontLayers) layer.draw(window);
-
-        if (state == GameState::Ready) window.draw(*startButton);
-        else if (state == GameState::Playing) window.draw(*scoreText);
+        if (state == GameState::Ready) {
+            window.draw(*startButton);
+        }
+        else if (state == GameState::Playing) {
+            window.draw(*scoreText);
+        }
     }
 
     window.display();

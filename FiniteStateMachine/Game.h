@@ -16,6 +16,8 @@
 #include "ParallaxLayer.h"
 #include "Save.h" // commit sauvegarde
 
+#include "GameEvent.h"
+
 enum class GameState { MainMenu, OptionMenu, Shop, Ready, Playing, GameOver };
 
 class Game {
@@ -24,6 +26,9 @@ public:
     void run();
 
 private:
+
+    GameEvent gameEvent;
+
     void processEvents();
     void update(float dt);
     void render();

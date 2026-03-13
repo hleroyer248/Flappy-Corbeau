@@ -83,4 +83,5 @@ void OptionMenu::draw(sf::RenderWindow& window) const {
     window.draw(sliderCursor);
     window.draw(VolumeText);
     window.draw(returnBtn);
+
 }
