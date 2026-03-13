@@ -28,7 +28,6 @@ private:
     void update(float dt);
     void render();
     void resetGame();
-    void update2(float dt);
 
     sf::RenderWindow window;
     RessourcesManager rm;
