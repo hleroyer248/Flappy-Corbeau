@@ -36,6 +36,7 @@ public:
     const sf::Texture& getBirdGreenTexture() const;
     const sf::Texture& getBirdGoldTexture() const;
     const sf::Texture& getBirdShadowTexture() const;
+    const sf::Texture& getBgGameOverTexture() const;
 
     // Commit Pixel-Perfect - debut
     const sf::Image& getTopPipeImage() const;
@@ -71,6 +72,7 @@ private:
     sf::Texture birdGreenTex;
     sf::Texture birdGoldTex;
     sf::Texture birdShadowTex;
+    sf::Texture bgGameOverTex;
 
     // Commit Pixel-Perfect - debut
     sf::Image topPipeImg;

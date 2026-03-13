@@ -201,7 +201,7 @@ void Game::processEvents() {
 }
 
 void Game::update(float dt) {
-    if (state == GameState::MainMenu || state == GameState::OptionMenu || state == GameState::GameOver) {
+    if (state == GameState::MainMenu || state == GameState::OptionMenu) {
         return;
     }
     if (state == GameState::Shop)
@@ -304,9 +304,9 @@ void Game::render() {
     else if (state == GameState::OptionMenu) {
         optionMenu->draw(window);
     }
-    else if (state == GameState::GameOver) {
+   /* else if (state == GameState::GameOver) {
         gameOverMenu->draw(window);
-    }
+    }*/
     else if (state == GameState::Shop) {
         shop->draw(window);
     }
@@ -316,7 +316,7 @@ void Game::render() {
             layer.draw(window);
         }
 
-        if (state == GameState::Playing || state == GameState::Ready) {
+        if (state == GameState::Playing || state == GameState::Ready || state == GameState::GameOver) {
             for (const auto& obs : obstacles) {
                 window.draw(obs.getTopSprite());
                 window.draw(obs.getBottomSprite());
@@ -333,6 +333,9 @@ void Game::render() {
         }
         else if (state == GameState::Playing) {
             window.draw(*scoreText);
+        }
+        if (state == GameState::GameOver) {
+            gameOverMenu->draw(window);
         }
     }
 
