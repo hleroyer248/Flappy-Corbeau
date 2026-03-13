@@ -230,6 +230,10 @@ void Game::update(float dt) {
         player->update(dt);
         player->updateGhost(dt);
 
+        gameEvent.update(dt, obstacles, player->getPosition().x, score);
+
+            /*
+
         pipeSpawnTimer += dt;
         if (pipeSpawnTimer > 1.5f) {
             ObstacleType spawnType = ObstacleType::Normal;
@@ -245,12 +249,12 @@ void Game::update(float dt) {
             lastPipeWasMoving = (spawnType != ObstacleType::Normal);
             obstacles.emplace_back(800.f, gapDist(gen), 150.f, rm, spawnType);
             pipeSpawnTimer = 0.f;
-        }
+        }*/
 
         bool collision = false;
         CollisionBox pBox = player->getCollisionBox();
         for (auto it = obstacles.begin(); it != obstacles.end(); ) {
-            it->update(dt);
+            //it->update(dt);
 
             if (!player->isGhost()) {
                 if (pBox.intersects(it->getTopCollisionBox()) || pBox.intersects(it->getBottomCollisionBox())) {
