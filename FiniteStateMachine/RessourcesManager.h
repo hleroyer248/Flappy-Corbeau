@@ -11,13 +11,13 @@ public:
     const sf::Texture& getPlayerTexture() const;
     const sf::Texture& getBgTexture() const;
 
-    // Commit Parallax - debut
     const sf::Texture& getMidBgTexture() const;
     const sf::Texture& getFrontBgTexture() const;
-    // Commit Parallax - fin
 
-    const sf::Texture& getTopPipeTexture() const;
-    const sf::Texture& getBottomPipeTexture() const;
+    // Nouveaux getters pour les 3 variations de tuyaux
+    const sf::Texture& getTopPipeTexture(int index) const;
+    const sf::Texture& getBottomPipeTexture(int index) const;
+
     const sf::Font& getFont() const;
 
     const sf::Texture& getMenuBgTexture() const;
@@ -30,29 +30,28 @@ public:
     const sf::Texture& getBuyBtnTexture() const;
     const sf::Texture& getEquipBtnTexture() const;
     const sf::Texture& getEquippedBtnTexture() const;
-    const sf::Texture& getGhostPlayerTexture() const; // Commit Ghost
+    const sf::Texture& getGhostPlayerTexture() const;
     const sf::Texture& getBirdRedTexture() const;
     const sf::Texture& getBirdBlueTexture() const;
     const sf::Texture& getBirdGreenTexture() const;
     const sf::Texture& getBirdGoldTexture() const;
     const sf::Texture& getBirdShadowTexture() const;
 
-    // Commit Pixel-Perfect - debut
-    const sf::Image& getTopPipeImage() const;
-    const sf::Image& getBottomPipeImage() const;
-    // Commit Pixel-Perfect - fin
+    // Nouveaux getters d'images Pixel-Perfect
+    const sf::Image& getTopPipeImage(int index) const;
+    const sf::Image& getBottomPipeImage(int index) const;
 
 private:
     sf::Texture playerTex;
     sf::Texture bgTex;
 
-    // Commit Parallax - debut
     sf::Texture midBgTex;
     sf::Texture frontBgTex;
-    // Commit Parallax - fin
 
-    sf::Texture topPipeTex;
-    sf::Texture bottomPipeTex;
+    // Tableaux pour stocker les 3 textures différentes
+    sf::Texture topPipeTex[3];
+    sf::Texture bottomPipeTex[3];
+
     sf::Font font;
 
     sf::Texture menuBgTex;
@@ -65,15 +64,14 @@ private:
     sf::Texture equipBtnTex;
     sf::Texture equippedBtnTex;
     sf::Texture buyBtnTex;
-    sf::Texture ghostPlayerTex; // Commit Ghost
+    sf::Texture ghostPlayerTex;
     sf::Texture birdRedTex;
     sf::Texture birdBlueTex;
     sf::Texture birdGreenTex;
     sf::Texture birdGoldTex;
     sf::Texture birdShadowTex;
 
-    // Commit Pixel-Perfect - debut
-    sf::Image topPipeImg;
-    sf::Image bottomPipeImg;
-    // Commit Pixel-Perfect - fin
+    // Tableaux pour stocker les 3 images Pixel-Perfect
+    sf::Image topPipeImg[3];
+    sf::Image bottomPipeImg[3];
 };
