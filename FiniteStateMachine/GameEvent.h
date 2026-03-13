@@ -18,9 +18,14 @@ public:
 
 GameEvent(RessourcesManager& rm);
 
-void update(float dt, std::vector<Obstacle>& obstacles, float playerX, int score);
+
+void update(float dt, std::vector<Obstacle>& obstacles);
+void reset();
+
+//void update(float dt, std::vector<Obstacle>& obstacles, float playerX, int score);
 
 private:
+
     RessourcesManager& rm;
     float spawnTimer;
     float spawnInterval;
@@ -28,6 +33,7 @@ private:
 
     float baseSpeed;
     float speedMultiplier;
+    float maxSpeedMultiplier;
 
     std::mt19937 gen;
     std::uniform_real_distribution<float> gapDist;

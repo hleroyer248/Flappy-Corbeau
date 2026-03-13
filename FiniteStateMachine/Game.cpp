@@ -56,6 +56,13 @@ player(nullptr), gameEvent(rm) {
 
 void Game::resetGame() {
     player->reset();
+
+    gameEvent.reset();
+
+    obstacles.clear();
+    score = 0;
+    scoreText->setString("Score: 0");
+
     int skinIndex = save.getEquippedSkin();
 
     // Commit Player Default - debut
@@ -65,7 +72,7 @@ void Game::resetGame() {
     // Commit Player Default - fin
 
     if (skinIndex == 0)
-        player->setSkin(rm.getBirdRedTexture());
+        player->setSkin(rm.getBirdRedTexture());  
 
     if (skinIndex == 1)
         player->setSkin(rm.getBirdBlueTexture());
@@ -230,8 +237,9 @@ void Game::update(float dt) {
         player->update(dt);
         player->updateGhost(dt);
 
-        gameEvent.update(dt, obstacles, player->getPosition().x, score);
-
+        gameEvent.update(dt, obstacles //, player->getPosition().x, score
+        );
+        
             /*
 
         pipeSpawnTimer += dt;
