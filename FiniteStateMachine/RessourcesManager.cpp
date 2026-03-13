@@ -23,7 +23,7 @@ bool RessourcesManager::loadAll() {
         !exitBtnTex.loadFromFile(basePath + "ExitButton.png") ||
         !settingsBgTex.loadFromFile(basePath + "SettingsBackground.png") ||
         !returnBtnTex.loadFromFile(basePath + "ReturnButton.png") ||
-        !shopTex.loadFromFile(basePath + "UIShop.jpg") ||
+        !shopTex.loadFromFile(basePath + "ShopButton.png") ||
         !buyBtnTex.loadFromFile(basePath + "BuyButton.jpg") ||
         !equipBtnTex.loadFromFile(basePath + "EquipButton.png") ||
         !equippedBtnTex.loadFromFile(basePath + "EquippedButton.png") ||
