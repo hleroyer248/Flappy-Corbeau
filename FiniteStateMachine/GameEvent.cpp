@@ -118,5 +118,19 @@ void GameEvent::spawnObstacle(std::vector<Obstacle>& obstacles)
 
     float gap = gapDist(gen);
 
-    obstacles.emplace_back(800.f, gap, 150.f, rm, type);
+    // Choix aléatoire du style de tuyau
+    std::uniform_int_distribution<int> pipeDist(0, 2);
+
+    int topIdx = pipeDist(gen);
+    int botIdx = pipeDist(gen);
+
+    obstacles.emplace_back(
+        1950.f,
+        gap,
+        150.f,
+        rm,
+        type,
+        topIdx,
+        botIdx
+    );
 }

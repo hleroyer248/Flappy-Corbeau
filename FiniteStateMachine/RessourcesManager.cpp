@@ -81,8 +81,8 @@ const sf::Texture& RessourcesManager::getBirdGoldTexture() const { return birdGo
 const sf::Texture& RessourcesManager::getBirdShadowTexture() const { return birdShadowTex; }
 
 // Commit Pixel-Perfect - debut
-const sf::Image& RessourcesManager::getTopPipeImage() const { return topPipeImg; }
-const sf::Image& RessourcesManager::getBottomPipeImage() const { return bottomPipeImg; }
+const sf::Image& RessourcesManager::getTopPipeImage(int index) const { return topPipeImg[index]; }
+const sf::Image& RessourcesManager::getBottomPipeImage(int index) const { return bottomPipeImg[index]; }
 // Commit Pixel-Perfect - fin
 
 const sf::Texture& RessourcesManager::getBgGameOverTexture() const{ return bgGameOverTex;}

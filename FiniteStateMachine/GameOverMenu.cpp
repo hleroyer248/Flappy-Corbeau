@@ -7,16 +7,19 @@ GameOverMenu::GameOverMenu(const RessourcesManager& rm)
     score(rm.getFont(), " 0", 50),
     bestScoreText(rm.getFont(), "Best : 0", 40)
 {
-    score.setPosition({ 1000.f, 800.f });
-    score.setFillColor(sf::Color::White);
 
     // Positions pour centrer les boutons (� ajuster selon la taille de tes images)
-    retryBtn.setPosition({ 300.f, 250.f });
-    returnBtn.setPosition({ 300.f, 450.f });
+    retryBtn.setPosition({ 450.f, 450.f });
+    retryBtn.setScale({ 1.0f, 1.0f });
+    returnBtn.setPosition({ 550.f, 700.f });
+    returnBtn.setScale({ 2.f, 2.f });
 
    
-    bestScoreText.setPosition({ 560.f, 420.f });
+    bestScoreText.setPosition({ 1200.f, 850.f });
     bestScoreText.setFillColor(sf::Color::White);
+
+    background.setScale({ 2.0f, 2.0f });
+    background.setPosition({ 100.f, 0.f });
 
 }
 
@@ -46,7 +49,7 @@ void GameOverMenu::updateScoreText(int finalScore)
 
     sf::FloatRect textRect = score.getLocalBounds();
     score.setOrigin({ textRect.size.x / 2.f, textRect.size.y / 2.f });
-    score.setPosition({ 580.f, 315.f });
+    score.setPosition({ 1250.f, 640.f });
 }
 
 void GameOverMenu::updateBestScore(int best)

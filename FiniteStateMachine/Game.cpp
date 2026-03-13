@@ -188,30 +188,28 @@ void Game::update(float dt) {
 
         gameEvent.update(dt, obstacles //, player->getPosition().x, score
         );
-        
-            /*
 
-        pipeSpawnTimer += dt;
-        if (pipeSpawnTimer > 1.5f) {
-            ObstacleType spawnType = ObstacleType::Normal;
-            if (!lastPipeWasMoving && chanceDist(gen) < 20.f) {
-                if (chanceDist(gen) < 75.f) spawnType = ObstacleType::ParMouv;
-                else spawnType = ObstacleType::MachMouv;
-            }
-            lastPipeWasMoving = (spawnType != ObstacleType::Normal);
+        //pipeSpawnTimer += dt;
+        //if (pipeSpawnTimer > 1.5f) {
+        //    ObstacleType spawnType = ObstacleType::Normal;
+        //    if (!lastPipeWasMoving && chanceDist(gen) < 20.f) {
+        //        if (chanceDist(gen) < 75.f) spawnType = ObstacleType::ParMouv;
+        //        else spawnType = ObstacleType::MachMouv;
+        //    }
+        //    lastPipeWasMoving = (spawnType != ObstacleType::Normal);
 
-            float playerSize = 115.f;
+        //    float playerSize = 115.f;
 
-            // MODIFICATION ICI : On réduit l'écart entre les tuyaux (de 2.0f à 1.6f)
-            float gapHeight = playerSize * 1.4f;
+        //    // MODIFICATION ICI : On réduit l'écart entre les tuyaux (de 2.0f à 1.6f)
+        //    float gapHeight = playerSize * 1.4f;
 
-            std::uniform_int_distribution<> pipeDist(0, 2);
-            int topIdx = pipeDist(gen);
-            int botIdx = pipeDist(gen);
+        //    std::uniform_int_distribution<> pipeDist(0, 2);
+        //    int topIdx = pipeDist(gen);
+        //    int botIdx = pipeDist(gen);
 
-            obstacles.emplace_back(1920.f, gapDist(gen), gapHeight, rm, spawnType, topIdx, botIdx);
-            pipeSpawnTimer = 0.f;
-        }*/
+        //    obstacles.emplace_back(1920.f, gapDist(gen), gapHeight, rm, spawnType, topIdx, botIdx);
+        //    pipeSpawnTimer = 0.f;
+        //}
 
         bool collision = false;
         CollisionBox pBox = player->getCollisionBox();
