@@ -1,5 +1,5 @@
 #include "GameEvent.h"
-
+#include <iostream>
 #include <chrono>
 
 GameEvent::GameEvent(RessourcesManager& rm) :
@@ -21,6 +21,8 @@ GameEvent::GameEvent(RessourcesManager& rm) :
     laserTimer(0.f),
     laserSprite(rm.getLaserTexture()){
 
+    laserSprite.setTexture(rm.getLaserTexture(), true);
+
     std::random_device rd;
     gen = std::mt19937(rd());
 
@@ -30,8 +32,9 @@ GameEvent::GameEvent(RessourcesManager& rm) :
     warningRect.setPosition({ 0.f, 500.f });
 
     // LASER SPRITE
-    laserSprite.setPosition({ 0.f, 500.f });
+    laserSprite.setPosition({ 300.f, 500.f });
     laserDodgedThisFrame = false;
+    laserSprite.setScale({ 2.f, 2.f });
 }
 
 
@@ -108,7 +111,7 @@ void GameEvent::update(float dt, std::vector<Obstacle>& obstacles)
     {
         warningTimer += dt;
 
-        if (warningTimer >= 0.5f)
+        if (warningTimer >= 1.5f)
         {
             state = EventState::Laser;
             laserTimer = 0.f;
@@ -119,7 +122,7 @@ void GameEvent::update(float dt, std::vector<Obstacle>& obstacles)
     {
         laserTimer += dt;
 
-        if (laserTimer >= 0.5f)
+        if (laserTimer >= 2.5f)
         {
             lasersDodged++;
 
