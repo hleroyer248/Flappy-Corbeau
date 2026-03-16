@@ -9,9 +9,9 @@ GameEvent::GameEvent(RessourcesManager& rm) :
     baseSpeed(100.f), 
     speedMultiplier(1.f), 
     maxSpeedMultiplier(4.0),
-    gapDist(100.f, 350.f),
+    gapDist(250.f, 650.f),
     chanceDist(0.f, 100.f),
-    laserYDist(100.f, 800.f), // Ajusté pour éviter que le laser sorte trop de l'écran
+    laserYDist(100.f, 800.f), // AjustÃ© pour Ã©viter que le laser sorte trop de l'Ã©cran
     state(EventState::Normal),
     obstaclesPassed(0),
     lasersDodged(0),
