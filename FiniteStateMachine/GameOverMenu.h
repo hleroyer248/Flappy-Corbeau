@@ -19,5 +19,7 @@ private:
     sf::Sprite returnBtn;
     sf::Text score;
     sf::Text bestScoreText;
+    sf::FloatRect retryHitbox;
+    sf::FloatRect returnHitbox;
 };
 

@@ -32,7 +32,7 @@ Boutique::Boutique(RessourcesManager& rm, Save& save) :
     coinsText.setFillColor(sf::Color::Yellow);
     coinsText.setCharacterSize(40);
 
-    returnButton.setPosition({ 40.f, 40.f });
+    returnButton.setPosition({ 10.f, 20.f });
     returnButton.setScale({ 0.09f, 0.09f });
 
     buyButton.setPosition({ 1420.f, 700.f });
