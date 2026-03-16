@@ -23,7 +23,7 @@ bool RessourcesManager::loadAll() {
 
         topPipeImg[i] = topPipeTex[i].copyToImage();
         bottomPipeImg[i] = bottomPipeTex[i].copyToImage();
-    }
+     }
 
     if (!loadTexture(playerTex, basePath + "Player.png")) return false;
     if (!loadTexture(ghostPlayerTex, basePath + "Ghost-Player.png")) return false;

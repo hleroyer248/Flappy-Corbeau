@@ -18,13 +18,6 @@ MainMenu::MainMenu(const RessourcesManager& rm)
     title.setPosition({ 450.f, -50.f });
     title.setScale({ 0.30f, 0.30f });
 
-<<<<<<< Updated upstream
-    startBtn.setPosition({ 760.f, 400.f });
-    settingsBtn.setPosition({ 780.f, 500.f });
-    settingsBtn.setScale({ 0.09f, 0.09f });
-    shopButton.setPosition({ 760.f, 700.f });
-    exitBtn.setPosition({ 760.f, 850.f });
-=======
     startBtn.setPosition({ 760.f, 430.f });
     startBtn.setScale({ 0.11f, 0.11f });
     settingsBtn.setPosition({ 795.f, 580.f });
@@ -38,7 +31,7 @@ MainMenu::MainMenu(const RessourcesManager& rm)
     settingsHitbox = sf::FloatRect({ 820.f, 645.f }, { 265.f, 80.f });
     shopHitbox = sf::FloatRect({ 885.f, 750.f }, { 158.f, 88.f });
     exitHitbox = sf::FloatRect({ 880.f, 850.f }, { 150.f, 90.f });
->>>>>>> Stashed changes
+
 
     bestScoreText.setFillColor(sf::Color::Red);
     bestScoreText.setPosition({ 1500.f, 30.f });

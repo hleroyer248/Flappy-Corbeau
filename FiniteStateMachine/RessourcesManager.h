@@ -45,10 +45,9 @@ public:
     // Obstacles Texture 
     const sf::Image& getTopPipeImage(int index) const;
     const sf::Image& getBottomPipeImage(int index) const;
-	
+
     const sf::Texture& getLaserTexture() const;
     const sf::Texture& getTitleTexture() const;
-
 
 private:
     sf::Texture playerTex;
@@ -87,4 +86,8 @@ private:
 	
     sf::Texture laserTex;
     sf::Texture titleTex;
+
+
+    bool loadTexture(sf::Texture& tex, const std::string& path);
+
 };
