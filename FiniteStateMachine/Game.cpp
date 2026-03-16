@@ -19,8 +19,6 @@ player(nullptr) {
     gameOverMenu.emplace(rm);
     shop.emplace(rm, save);
 
-    mainMenu->updateScores(save.getBestScore(), save.getTotalScore());
-
     backLayers.emplace_back(rm.getBgTexture(), 0.3f);
     backLayers.emplace_back(rm.getMidBgTexture(), 0.6f);
     frontLayers.emplace_back(rm.getFrontBgTexture(), 1.5f);
@@ -223,7 +221,6 @@ void Game::update(float dt) {
             gameOverMenu->updateScoreText(score);
             save.addScore(score);
             gameOverMenu->updateBestScore(save.getBestScore());
-            mainMenu->updateScores(save.getBestScore(), save.getTotalScore());
         }
     }
 }

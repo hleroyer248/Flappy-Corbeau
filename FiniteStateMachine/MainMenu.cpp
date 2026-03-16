@@ -45,11 +45,6 @@ MainMenu::MainMenu(const RessourcesManager& rm)
     totalScoreText.setPosition({ 30.f, 30.f });
 }
 
-void MainMenu::updateScores(int bestScore, int totalScore) {
-    bestScoreText.setString("Meilleur Score: " + std::to_string(bestScore));
-    totalScoreText.setString("Score Total: " + std::to_string(totalScore));
-}
-
 MainMenu::Action MainMenu::handleEvent(const sf::Event& event) {
     if (const auto* mouse = event.getIf<sf::Event::MouseButtonReleased>()) {
         if (mouse->button == sf::Mouse::Button::Left) {

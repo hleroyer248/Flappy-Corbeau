@@ -9,7 +9,6 @@ public:
     MainMenu(const RessourcesManager& rm);
     Action handleEvent(const sf::Event& event);
     void draw(sf::RenderWindow& window) const;
-    void updateScores(int bestScore, int totalScore); // commit sauvegarde
 
 private:
     sf::Sprite background;
