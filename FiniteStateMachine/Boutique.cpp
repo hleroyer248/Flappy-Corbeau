@@ -33,6 +33,8 @@ Boutique::Boutique(RessourcesManager& rm, Save& save) :
     coinsText.setCharacterSize(40);
 
     returnButton.setPosition({ 40.f, 40.f });
+    returnButton.setScale({ 0.09f, 0.09f });
+
     buyButton.setPosition({ 1420.f, 700.f });
     equipButton.setPosition({ 1420.f, 700.f });
     equippedButton.setPosition({ 1420.f, 700.f });

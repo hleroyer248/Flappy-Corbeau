@@ -23,7 +23,7 @@ bool RessourcesManager::loadAll() {
 
         topPipeImg[i] = topPipeTex[i].copyToImage();
         bottomPipeImg[i] = bottomPipeTex[i].copyToImage();
-    }
+     }
 
     if (!loadTexture(playerTex, basePath + "Player.png")) return false;
     if (!loadTexture(ghostPlayerTex, basePath + "Ghost-Player.png")) return false;
@@ -47,6 +47,8 @@ bool RessourcesManager::loadAll() {
     if (!loadTexture(bgGameOverTex, basePath + "BgGameOver.png")) return false;
     if (!loadTexture(laserTex, basePath + "Laser.png")) return false;
     if (!loadTexture(birdShadowTex, basePath + "BirdShadow.png")) return false;
+    if (!loadTexture(titleTex, basePath + "Title.png")) return false;
+    if (!loadTexture(shopBgTex, basePath + "ShopButtonBG.png")) return false;
 
     return true;
 }
@@ -97,4 +99,8 @@ const sf::Image& RessourcesManager::getBottomPipeImage(int index) const { return
 // Commit Pixel-Perfect - fin
 
 const sf::Texture& RessourcesManager::getBgGameOverTexture() const{ return bgGameOverTex;}
+
 const sf::Texture& RessourcesManager::getLaserTexture() const{ return laserTex; }
+const sf::Texture& RessourcesManager::getTitleTexture() const{ return titleTex; }
+const sf::Texture& RessourcesManager::getShopBgTexture() const{ return shopBgTex; }
+
