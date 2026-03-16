@@ -1,9 +1,7 @@
 #include "GameEvent.h"
 #include <iostream>
-#include <chrono>
 
 GameEvent::GameEvent(RessourcesManager& rm) :
-
     rm(rm), 
     spawnTimer(0.f), 
     spawnInterval(1.5f),
@@ -11,142 +9,88 @@ GameEvent::GameEvent(RessourcesManager& rm) :
     baseSpeed(100.f), 
     speedMultiplier(1.f), 
     maxSpeedMultiplier(4.0),
-
     gapDist(100.f, 350.f),
     chanceDist(0.f, 100.f),
-    laserYDist(100.f, 980.f),
+    laserYDist(100.f, 800.f), // Ajusté pour éviter que le laser sorte trop de l'écran
     state(EventState::Normal),
     obstaclesPassed(0),
     lasersDodged(0),
     warningTimer(0.f),
     laserTimer(0.f),
-    laserSprite(rm.getLaserTexture()){
+    laserSprite(rm.getLaserTexture()) {
 
     laserSprite.setTexture(rm.getLaserTexture(), true);
-    laserSprite.setPosition({ 0.f, 500.f });
+    
     float screenWidth = 1920.f;
     float textureWidth = rm.getLaserTexture().getSize().x;
-
     laserSprite.setScale({ screenWidth / textureWidth, 1.f });
 
     std::random_device rd;
     gen = std::mt19937(rd());
 
-    // WARNING RECTANGLE
+    // Configuration initiale du rectangle d'alerte
     warningRect.setSize({ 1920.f, 100.f });
     warningRect.setFillColor(sf::Color(255, 0, 0, 150));
-    warningRect.setPosition({ 0.f, 500.f });
-
-    // LASER SPRITE
+    
     laserDodgedThisFrame = false;
 }
 
-
-void GameEvent::reset()
-{
+void GameEvent::reset() {
     spawnTimer = 0.f;
     elapsedTime = 0.f;
     speedMultiplier = 1.f;
-
     state = EventState::Normal;
     obstaclesPassed = 0;
     lasersDodged = 0;
-
     warningTimer = 0.f;
     laserTimer = 0.f;
+    shouldClearObstacles = false;
 }
 
-/*
-void GameEvent::update(float dt, std::vector<Obstacle>& obstacles, float playerX, int score) {
-
+void GameEvent::update(float dt, std::vector<Obstacle>& obstacles) {
     elapsedTime += dt;
-    spawnTimer += dt;
+    speedMultiplier = std::min(1.f + elapsedTime / 50.f, maxSpeedMultiplier);
+    float currentInterval = std::max(spawnInterval - elapsedTime / 120.f, 0.6f);
 
-    // Augmente la vitesse progressivement
-    speedMultiplier = 1.f + elapsedTime / 30.f; // +1x toutes les 60s
-
-    // Diminue progressivement l'intervalle d'apparition
-    float currentInterval = spawnInterval - elapsedTime / 80.f; // 120s
-    if (currentInterval < 0.5f) currentInterval = 0.5f;
-
-    if (spawnTimer >= currentInterval) {
-        spawnObstacle(obstacles);
-        spawnTimer = 0.f;
-    }
-
-    // Mise à jour des obstacles
-    for (auto& obs : obstacles) {
-        obs.update(dt * speedMultiplier);
-    }
-} */
-
-
-void GameEvent::update(float dt, std::vector<Obstacle>& obstacles)
-{
-    elapsedTime += dt;
-
-    speedMultiplier = 1.f + elapsedTime / 50.f;
-
-    if (speedMultiplier > maxSpeedMultiplier)
-        speedMultiplier = maxSpeedMultiplier;
-
-    float currentInterval = spawnInterval - elapsedTime / 120.f;
-
-    if (currentInterval < 0.6f)
-        currentInterval = 0.6f;
-
-    if (state == EventState::Normal)
-    {
+    if (state == EventState::Normal) {
         spawnTimer += dt;
-
-        if (spawnTimer >= currentInterval)
-        {
+        if (spawnTimer >= currentInterval) {
             spawnObstacle(obstacles);
             spawnTimer = 0.f;
         }
-
-        for (auto& obs : obstacles)
-        {
+        for (auto& obs : obstacles) {
             obs.update(dt * speedMultiplier);
         }
     }
-
-    else if (state == EventState::Warning)
-    {
+    else if (state == EventState::Warning) {
         warningTimer += dt;
-
-        if (warningTimer == 0.f)
-        {
-            float randomY = laserYDist(gen);
-
-            warningRect.setPosition({ 0.f, randomY });
-            laserSprite.setPosition({ 0.f, randomY });
-        }
-
-        if (warningTimer >= 1.5f)
-        {
+        if (warningTimer >= 1.5f) {
             state = EventState::Laser;
             laserTimer = 0.f;
         }
     }
-
-    else if (state == EventState::Laser)
-    {
+    else if (state == EventState::Laser) {
         laserTimer += dt;
-
-        if (laserTimer >= 2.5f)
-        {
+        if (laserTimer >= 2.5f) {
             lasersDodged++;
+            laserDodgedThisFrame = true;
 
-            laserDodgedThisFrame = true; 
-
-            if (lasersDodged >= 10)
-            {
+            if (lasersDodged >= 10) {
                 lasersDodged = 0;
                 state = EventState::Normal;
             }
-            else
-            {
+            else {
+                float oldY = laserSprite.getPosition().y;
+                float newY;
+                float minDistance = 250.f;
+
+                do {
+                    newY = laserYDist(gen);
+                } while (std::abs(newY - oldY) < minDistance);
+
+                warningRect.setPosition({ 0.f, newY });
+                laserSprite.setPosition({ 0.f, newY });
+
                 state = EventState::Warning;
                 warningTimer = 0.f;
             }
@@ -154,96 +98,49 @@ void GameEvent::update(float dt, std::vector<Obstacle>& obstacles)
     }
 }
 
-/*void GameEvent::spawnObstacle(std::vector<Obstacle>& obstacles) {
+void GameEvent::addObstaclePassed(std::vector<Obstacle>& obstacles) {
+    obstaclesPassed++;
 
+    if (obstaclesPassed >= 1 && state == EventState::Normal) {
+        state = EventState::Warning;
+        warningTimer = 0.f;
+        obstaclesPassed = 0;
+        shouldClearObstacles = true;
+
+        float oldY = laserSprite.getPosition().y;
+        float newY;
+
+        do {
+            newY = laserYDist(gen);
+        } while (std::abs(newY - oldY) < 250.f);
+
+        warningRect.setPosition({ 0.f, newY });
+        laserSprite.setPosition({ 0.f, newY });
+    }
+}
+
+void GameEvent::draw(sf::RenderWindow& window) {
+    if (state == EventState::Warning) window.draw(warningRect);
+    if (state == EventState::Laser) window.draw(laserSprite);
+}
+
+CollisionBox GameEvent::getLaserCollisionBox() const {
+    return CollisionBox(laserSprite.getGlobalBounds());
+}
+
+bool GameEvent::isLaserActive() const {
+    return state == EventState::Laser;
+}
+
+void GameEvent::spawnObstacle(std::vector<Obstacle>& obstacles) {
     ObstacleType type = ObstacleType::Normal;
-
-    // Chance augmentée pour les obstacles spéciaux
-    float specialChance = 15.f + elapsedTime / 15.f; // +1% toutes les 30s
-    if (specialChance > 60.f) specialChance = 60.f;
-
+    float specialChance = std::min(15.f + elapsedTime / 20.f, 50.f);
     float roll = chanceDist(gen);
+
     if (roll < specialChance) {
         type = (roll < specialChance / 2.f) ? ObstacleType::ParMouv : ObstacleType::MachMouv;
     }
 
-    float gap = gapDist(gen);
-    obstacles.emplace_back(800.f, gap, 150.f, rm, type);
-}
-*/
-
-void GameEvent::spawnObstacle(std::vector<Obstacle>& obstacles)
-{
-    ObstacleType type = ObstacleType::Normal;
-
-    float specialChance = 15.f + elapsedTime / 20.f;
-
-    if (specialChance > 50.f)
-        specialChance = 50.f;
-
-    float roll = chanceDist(gen);
-
-    if (roll < specialChance)
-    {
-        if (roll < specialChance / 2.f)
-            type = ObstacleType::ParMouv;
-        else
-            type = ObstacleType::MachMouv;
-    }
-
-    float gap = gapDist(gen);
-
-    // Choix aléatoire du style de tuyau
     std::uniform_int_distribution<int> pipeDist(0, 2);
-
-    int topIdx = pipeDist(gen);
-    int botIdx = pipeDist(gen);
-
-    obstacles.emplace_back(
-        1950.f,
-        gap,
-        150.f,
-        rm,
-        type,
-        topIdx,
-        botIdx
-    );
-}
-
-void GameEvent::addObstaclePassed(std::vector<Obstacle>& obstacles)
-{
-    obstaclesPassed++;
-
-    if (obstaclesPassed >= 10 && state == EventState::Normal)
-    {
-        state = EventState::Warning;
-        warningTimer = 0.f;
-        obstaclesPassed = 0;
-
-        shouldClearObstacles = true;
-    }
-}
-
-void GameEvent::draw(sf::RenderWindow& window)
-{
-    if (state == EventState::Warning)
-    {
-        window.draw(warningRect);
-    }
-
-    if (state == EventState::Laser)
-    {
-        window.draw(laserSprite);
-    }
-}
-
-CollisionBox GameEvent::getLaserCollisionBox() const
-{
-    sf::FloatRect rect = laserSprite.getGlobalBounds();
-    return CollisionBox(rect);
-}
-
-bool GameEvent::isLaserActive() const
-{
-    return state == EventState::Laser;
+    obstacles.emplace_back(1950.f, gapDist(gen), 150.f, rm, type, pipeDist(gen), pipeDist(gen));
 }

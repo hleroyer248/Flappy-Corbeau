@@ -229,13 +229,13 @@ void Game::update(float dt) {
 
         bool collision = false;
         CollisionBox pBox = player->getCollisionBox();
-        if (gameEvent->isLaserActive())
-        {
-            if (pBox.intersects(gameEvent->getLaserCollisionBox()))
-            {
+
+        if (gameEvent->isLaserActive() && !player->isGhost()) {
+            if (pBox.intersects(gameEvent->getLaserCollisionBox())) {
                 collision = true;
             }
         }
+
         for (auto it = obstacles.begin(); it != obstacles.end(); ) {
             //it->update(dt);
 
