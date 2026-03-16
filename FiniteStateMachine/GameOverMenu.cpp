@@ -27,8 +27,9 @@ GameOverMenu::Action GameOverMenu::handleEvent(const sf::Event& event) {
         if (mouse->button == sf::Mouse::Button::Left) {
             sf::Vector2f mPos(static_cast<float>(mouse->position.x), static_cast<float>(mouse->position.y));
 
-            if (retryHitbox.contains(mPos)) return Action::Retry;
-            if (returnHitbox.contains(mPos)) return Action::Quit;
+            // CORRECTION ICI : On utilise la hitbox automatique des sprites
+            if (retryBtn.getGlobalBounds().contains(mPos)) return Action::Retry;
+            if (returnBtn.getGlobalBounds().contains(mPos)) return Action::Quit;
         }
     }
     return Action::None;
