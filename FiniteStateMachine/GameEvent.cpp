@@ -22,7 +22,7 @@ GameEvent::GameEvent(RessourcesManager& rm) :
     laserSprite.setTexture(rm.getLaserTexture(), true);
     
     float screenWidth = 1920.f;
-    float textureWidth = rm.getLaserTexture().getSize().x;
+   float textureWidth = static_cast<float>(rm.getLaserTexture().getSize().x);
     laserSprite.setScale({ screenWidth / textureWidth, 1.f });
 
     std::random_device rd;
