@@ -17,8 +17,12 @@ private:
     sf::Sprite settingsBtn;
     sf::Sprite exitBtn;
     sf::Sprite shopButton;
-    sf::Text title;
-
+    sf::Sprite title;
     sf::Text bestScoreText;  // commit sauvegarde
     sf::Text totalScoreText; // commit sauvegarde
+    //Hitbox zone cliquable btn 
+    sf::FloatRect startHitbox;
+    sf::FloatRect settingsHitbox;
+    sf::FloatRect shopHitbox;
+    sf::FloatRect exitHitbox;
 };
