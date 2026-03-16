@@ -1,12 +1,13 @@
+// ==========================================
+// Game.h
+// ==========================================
 #pragma once
 #include <SFML/Graphics.hpp>
 #include <vector>
 #include <random>
 #include <optional>
 #include "RessourcesManager.h"
-// Commit Add Sound - debut
 #include "AudioManager.h"
-// Commit Add Sound - fin
 #include "Player.h"
 #include "Obstacle.h"
 #include "MainMenu.h"
@@ -14,7 +15,7 @@
 #include "OptionMenu.h"
 #include "GameOverMenu.h"
 #include "ParallaxLayer.h"
-#include "Save.h" // commit sauvegarde
+#include "Save.h" 
 
 #include "GameEvent.h"
 
@@ -34,12 +35,12 @@ private:
     void render();
     void resetGame();
 
+    void drawScore(sf::RenderWindow& window, int scoreVal, sf::Vector2f position, float scale, bool center);
+
     sf::RenderWindow window;
     RessourcesManager rm;
 
-    // Commit Add Sound - debut
     AudioManager am;
-    // Commit Add Sound - fin
 
     Player* player;
     std::vector<Obstacle> obstacles;
@@ -58,7 +59,6 @@ private:
 
     std::optional<sf::Text> menuTitle;
     std::optional<sf::Text> startButton;
-    std::optional<sf::Text> scoreText;
 
     GameState state;
     int score;
@@ -71,5 +71,5 @@ private:
     std::uniform_real_distribution<float> gapDist;
     std::uniform_real_distribution<float> chanceDist;
 
-    Save save; // commit sauvegarde
-};  
+    Save save;
+};

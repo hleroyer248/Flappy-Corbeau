@@ -1,3 +1,6 @@
+// ==========================================
+// RessourcesManager.cpp
+// ==========================================
 #include "RessourcesManager.h"
 #include <iostream>
 
@@ -23,7 +26,7 @@ bool RessourcesManager::loadAll() {
 
         topPipeImg[i] = topPipeTex[i].copyToImage();
         bottomPipeImg[i] = bottomPipeTex[i].copyToImage();
-     }
+    }
 
     if (!loadTexture(playerTex, basePath + "Player.png")) return false;
     if (!loadTexture(ghostPlayerTex, basePath + "Ghost-Player.png")) return false;
@@ -50,18 +53,66 @@ bool RessourcesManager::loadAll() {
     if (!loadTexture(titleTex, basePath + "Title.png")) return false;
     if (!loadTexture(shopBgTex, basePath + "ShopButtonBG.png")) return false;
 
+    // NOUVEAU : Chargement intelligent et Auto-Crop de la SpriteSheet
+    sf::Image numbersImg;
+    if (numbersImg.loadFromFile(basePath + "Chiffre.png") || numbersImg.loadFromFile(basePath + "Chiffre.jpg")) {
+        numbersImg.createMaskFromColor(sf::Color::Black);
+        if (!numbersTex.loadFromImage(numbersImg)) return false;
+
+        digitRects.clear();
+        int w = numbersImg.getSize().x;
+        int h = numbersImg.getSize().y;
+        bool inDigit = false;
+        int startX = 0;
+
+        // Scan des pixels pour découper parfaitement chaque chiffre
+        for (int x = 0; x < w; ++x) {
+            bool hasPixel = false;
+            for (int y = 0; y < h; ++y) {
+                if (numbersImg.getPixel({ static_cast<unsigned int>(x), static_cast<unsigned int>(y) }).a > 0) {
+                    hasPixel = true;
+                    break;
+                }
+            }
+
+            if (hasPixel && !inDigit) {
+                inDigit = true;
+                startX = x;
+            }
+            else if (!hasPixel && inDigit) {
+                inDigit = false;
+                digitRects.push_back(sf::IntRect({ startX, 0 }, { x - startX, h }));
+            }
+        }
+        if (inDigit) {
+            digitRects.push_back(sf::IntRect({ startX, 0 }, { w - startX, h }));
+        }
+
+        // Sécurité si l'auto-crop rate (image trop bizarre)
+        if (digitRects.size() < 10) {
+            digitRects.clear();
+            int defaultW = w / 10;
+            for (int i = 0; i < 10; ++i) {
+                digitRects.push_back(sf::IntRect({ i * defaultW, 0 }, { defaultW, h }));
+            }
+        }
+        std::cout << "OK : Chiffre (Auto-Crop effectue)" << std::endl;
+    }
+    else {
+        std::cerr << "ERREUR: Impossible de charger Chiffre.png\n";
+        return false;
+    }
+
     return true;
 }
 
 bool RessourcesManager::loadTexture(sf::Texture& tex, const std::string& path)
 {
-
     if (!tex.loadFromFile(path))
     {
         std::cerr << "Erreur chargement : " << path << std::endl;
         return false;
     }
-
     std::cout << "OK : " << path << std::endl;
     return true;
 }
@@ -70,12 +121,9 @@ const sf::Texture& RessourcesManager::getPlayerTexture() const { return playerTe
 const sf::Texture& RessourcesManager::getBgTexture() const { return bgTex; }
 const sf::Texture& RessourcesManager::getMidBgTexture() const { return midBgTex; }
 const sf::Texture& RessourcesManager::getFrontBgTexture() const { return frontBgTex; }
-
 const sf::Texture& RessourcesManager::getTopPipeTexture(int index) const { return topPipeTex[index]; }
 const sf::Texture& RessourcesManager::getBottomPipeTexture(int index) const { return bottomPipeTex[index]; }
-
 const sf::Font& RessourcesManager::getFont() const { return font; }
-
 const sf::Texture& RessourcesManager::getMenuBgTexture() const { return menuBgTex; }
 const sf::Texture& RessourcesManager::getStartBtnTexture() const { return startBtnTex; }
 const sf::Texture& RessourcesManager::getSettingsBtnTexture() const { return settingsBtnTex; }
@@ -92,15 +140,18 @@ const sf::Texture& RessourcesManager::getBirdBlueTexture() const { return birdBl
 const sf::Texture& RessourcesManager::getBirdGreenTexture() const { return birdGreenTex; }
 const sf::Texture& RessourcesManager::getBirdGoldTexture() const { return birdGoldTex; }
 const sf::Texture& RessourcesManager::getBirdShadowTexture() const { return birdShadowTex; }
-
-// Commit Pixel-Perfect - debut
 const sf::Image& RessourcesManager::getTopPipeImage(int index) const { return topPipeImg[index]; }
 const sf::Image& RessourcesManager::getBottomPipeImage(int index) const { return bottomPipeImg[index]; }
-// Commit Pixel-Perfect - fin
+const sf::Texture& RessourcesManager::getBgGameOverTexture() const { return bgGameOverTex; }
+const sf::Texture& RessourcesManager::getLaserTexture() const { return laserTex; }
+const sf::Texture& RessourcesManager::getTitleTexture() const { return titleTex; }
+const sf::Texture& RessourcesManager::getShopBgTexture() const { return shopBgTex; }
+const sf::Texture& RessourcesManager::getNumbersTexture() const { return numbersTex; }
 
-const sf::Texture& RessourcesManager::getBgGameOverTexture() const{ return bgGameOverTex;}
+const sf::IntRect& RessourcesManager::getDigitRect(int index) const {
+    if (index >= 0 && index < digitRects.size()) return digitRects[index];
 
-const sf::Texture& RessourcesManager::getLaserTexture() const{ return laserTex; }
-const sf::Texture& RessourcesManager::getTitleTexture() const{ return titleTex; }
-const sf::Texture& RessourcesManager::getShopBgTexture() const{ return shopBgTex; }
-
+    // CORRECTION SFML 3.0 : Un IntRect prend ({posX, posY}, {tailleX, tailleY})
+    static sf::IntRect defaultRect({ 0, 0 }, { 0, 0 });
+    return defaultRect;
+}
