@@ -25,4 +25,5 @@ private:
     sf::FloatRect settingsHitbox;
     sf::FloatRect shopHitbox;
     sf::FloatRect exitHitbox;
+    sf::Sprite shopButtonBg;
 };

@@ -8,7 +8,8 @@ MainMenu::MainMenu(const RessourcesManager& rm)
     shopButton(rm.getShopTexture()),
     title(rm.getTitleTexture()),
     bestScoreText(rm.getFont(), "", 40),
-    totalScoreText(rm.getFont(), "", 40)
+    totalScoreText(rm.getFont(), "", 40),
+    shopButtonBg(rm.getShopBgTexture())
 {
     // Etirement du background
     float scaleX = 1920.f / rm.getMenuBgTexture().getSize().x;
@@ -23,6 +24,8 @@ MainMenu::MainMenu(const RessourcesManager& rm)
     settingsBtn.setPosition({ 795.f, 580.f });
     settingsBtn.setScale({ 0.09f, 0.09f });
     shopButton.setPosition({ 800.f, 700.f });
+    shopButtonBg.setPosition({ 790.f,690.f });
+    shopButtonBg.setScale({ 0.10f,0.10f });
     shopButton.setScale({ 0.09f, 0.09f });
     exitBtn.setPosition({ 790.f, 800.f });
     exitBtn.setScale({ 0.09f, 0.09f });
@@ -31,7 +34,6 @@ MainMenu::MainMenu(const RessourcesManager& rm)
     settingsHitbox = sf::FloatRect({ 820.f, 645.f }, { 265.f, 80.f });
     shopHitbox = sf::FloatRect({ 885.f, 750.f }, { 158.f, 88.f });
     exitHitbox = sf::FloatRect({ 880.f, 850.f }, { 150.f, 90.f });
-
 
     bestScoreText.setFillColor(sf::Color::Red);
     bestScoreText.setPosition({ 1500.f, 30.f });
@@ -65,6 +67,7 @@ void MainMenu::draw(sf::RenderWindow& window) const {
     window.draw(startBtn);
     window.draw(settingsBtn);
     window.draw(exitBtn);
+    window.draw(shopButtonBg);
     window.draw(shopButton);
 
     window.draw(bestScoreText);

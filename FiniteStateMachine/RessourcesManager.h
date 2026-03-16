@@ -24,6 +24,7 @@ public:
     const sf::Texture& getSettingsBgTexture() const;
     const sf::Texture& getBgGameOverTexture() const;
     const sf::Texture& getShopTexture() const;
+    const sf::Texture& getShopBgTexture() const;
     //Button Texture 
     const sf::Texture& getStartBtnTexture() const;
     const sf::Texture& getSettingsBtnTexture() const;
@@ -47,6 +48,8 @@ public:
 
     const sf::Texture& getLaserTexture() const;
     const sf::Texture& getTitleTexture() const;
+
+
 
 private:
     sf::Texture playerTex;
@@ -79,13 +82,13 @@ private:
     sf::Texture shopTex;
     sf::Texture menuBgTex;
     sf::Texture bgGameOverTex;
+    sf::Texture shopBgTex;
     //Obstacles Texture 
     sf::Image topPipeImg[3];
     sf::Image bottomPipeImg[3];
 	
     sf::Texture laserTex;
     sf::Texture titleTex;
-
 
     bool loadTexture(sf::Texture& tex, const std::string& path);
 
