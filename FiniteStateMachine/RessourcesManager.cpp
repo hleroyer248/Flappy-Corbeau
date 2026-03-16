@@ -11,7 +11,7 @@ bool RessourcesManager::loadAll() {
         return false;
     }
 
-     for (int i = 0; i < 3; ++i) {
+    for (int i = 0; i < 3; ++i) {
         std::string topName = "Hobstacle" + std::to_string(i + 1) + ".png";
         std::string botName = "Bobstacle" + std::to_string(i + 1) + ".png";
 
@@ -25,30 +25,6 @@ bool RessourcesManager::loadAll() {
         bottomPipeImg[i] = bottomPipeTex[i].copyToImage();
     }
 
-<<<<<<< Updated upstream
-    if (!playerTex.loadFromFile(basePath + "Player.png") ||
-        !ghostPlayerTex.loadFromFile(basePath + "Ghost-Player.png") ||
-        !bgTex.loadFromFile(basePath + "Background.png") ||
-        !midBgTex.loadFromFile(basePath + "MidBackground.png") ||
-        !frontBgTex.loadFromFile(basePath + "FrontBackground.png") ||
-        !menuBgTex.loadFromFile(basePath + "MenuBackground.png") ||
-        !startBtnTex.loadFromFile(basePath + "StartButton.png") ||
-        !settingsBtnTex.loadFromFile(basePath + "SettingsButton.png") ||
-        !exitBtnTex.loadFromFile(basePath + "ExitButton.png") ||
-        !settingsBgTex.loadFromFile(basePath + "SettingsBackground.png") ||
-        !returnBtnTex.loadFromFile(basePath + "ReturnButton.png") ||
-        !shopTex.loadFromFile(basePath + "ShopButton.png") ||
-        !buyBtnTex.loadFromFile(basePath + "BuyButton.jpg") ||
-        !equipBtnTex.loadFromFile(basePath + "EquipButton.png") ||
-        !equippedBtnTex.loadFromFile(basePath + "EquippedButton.png") ||
-        !birdRedTex.loadFromFile(basePath + "BirdRed.png") ||
-        !birdBlueTex.loadFromFile(basePath + "BirdBlue.png") ||
-        !birdGreenTex.loadFromFile(basePath + "BirdGreen.png") ||
-        !birdGoldTex.loadFromFile(basePath + "BirdGold.png") ||
-        !bgGameOverTex.loadFromFile(basePath + "BgGameOver.png") ||
-        !birdShadowTex.loadFromFile(basePath + "BirdShadow.png")) {
-        std::cerr << "ERREUR: Impossible de charger un ou plusieurs assets png.\n";
-=======
     if (!loadTexture(playerTex, basePath + "Player.png")) return false;
     if (!loadTexture(ghostPlayerTex, basePath + "Ghost-Player.png")) return false;
     if (!loadTexture(bgTex, basePath + "Background.png")) return false;
@@ -82,10 +58,10 @@ bool RessourcesManager::loadTexture(sf::Texture& tex, const std::string& path)
     if (!tex.loadFromFile(path))
     {
         std::cerr << "Erreur chargement : " << path << std::endl;
->>>>>>> Stashed changes
         return false;
     }
 
+    std::cout << "OK : " << path << std::endl;
     return true;
 }
 
@@ -122,8 +98,7 @@ const sf::Image& RessourcesManager::getBottomPipeImage(int index) const { return
 // Commit Pixel-Perfect - fin
 
 const sf::Texture& RessourcesManager::getBgGameOverTexture() const{ return bgGameOverTex;}
-<<<<<<< Updated upstream
-=======
+
 const sf::Texture& RessourcesManager::getLaserTexture() const{ return laserTex; }
 const sf::Texture& RessourcesManager::getTitleTexture() const{ return titleTex; }
->>>>>>> Stashed changes
+

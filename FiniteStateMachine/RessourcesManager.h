@@ -17,7 +17,8 @@ public:
     // Nouveaux getters pour les 3 variations de tuyaux
     const sf::Texture& getTopPipeTexture(int index) const;
     const sf::Texture& getBottomPipeTexture(int index) const;
-
+    const std::string basePath = "Assets/";
+    bool loadTexture(sf::Texture& tex, const std::string& path);
     const sf::Font& getFont() const;
     //Background Texture 
     const sf::Texture& getMenuBgTexture() const;
@@ -44,13 +45,10 @@ public:
     // Obstacles Texture 
     const sf::Image& getTopPipeImage(int index) const;
     const sf::Image& getBottomPipeImage(int index) const;
-<<<<<<< Updated upstream
-=======
+	
     const sf::Texture& getLaserTexture() const;
-
     const sf::Texture& getTitleTexture() const;
 
->>>>>>> Stashed changes
 
 private:
     sf::Texture playerTex;
@@ -86,10 +84,7 @@ private:
     //Obstacles Texture 
     sf::Image topPipeImg[3];
     sf::Image bottomPipeImg[3];
-<<<<<<< Updated upstream
-=======
+	
     sf::Texture laserTex;
     sf::Texture titleTex;
-
->>>>>>> Stashed changes
 };

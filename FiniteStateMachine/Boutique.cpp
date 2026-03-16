@@ -38,14 +38,14 @@ Boutique::Boutique(RessourcesManager& rm, Save& save) :
     equippedButton.setPosition({ 1420.f, 700.f });
     itemNameText.setPosition({ 1450.f, 100.f });
     priceText.setPosition({ 1450.f, 180.f });
-    coinsText.setPosition({ 1450.f, 40.f });
+    coinsText.setPosition({ 350.f, 40.f });
 
     items.emplace_back("Bird Default", 0, rm.getPlayerTexture());
-    items.emplace_back("Bird Red", 10, rm.getBirdRedTexture());
-    items.emplace_back("Bird Blue", 250, rm.getBirdBlueTexture());
-    items.emplace_back("Bird Green", 350, rm.getBirdGreenTexture());
-    items.emplace_back("Bird Gold", 550, rm.getBirdGoldTexture());
-    items.emplace_back("Bird Shadow", 850, rm.getBirdShadowTexture());
+    items.emplace_back("Bird Red", 10, rm.getPlayerTexture());
+    items.emplace_back("Bird Blue", 250, rm.getPlayerTexture());
+    items.emplace_back("Bird Green", 350, rm.getPlayerTexture());
+    items.emplace_back("Bird Gold", 550, rm.getPlayerTexture());
+    items.emplace_back("Bird Shadow", 850, rm.getPlayerTexture());
 
     int cols = 3;
     int spacing = 40;
@@ -53,7 +53,8 @@ Boutique::Boutique(RessourcesManager& rm, Save& save) :
     for (int i = 0; i < items.size(); i++)
     {
         if (save.isSkinOwned(i)) items[i].setOwned(true);
-        if (save.getEquippedSkin() == i) items[i].setEquipped(true);
+        if (save.getEquippedSkin() == i || (save.getEquippedSkin() == -1 && i == 0))
+            items[i].setEquipped(true);
 
         int x = i % cols;
         int y = i / cols;
@@ -132,9 +133,15 @@ void Boutique::update(sf::RenderWindow& window) {
         itemNameText.setString(items[selectedItem].getName());
         priceText.setString("Price : " + std::to_string(items[selectedItem].getPrice()));
 
-        previewSprite = sf::Sprite(items[selectedItem].getSprite().getTexture());
-        previewSprite->setPosition({ 1450.f, 300.f });
-        previewSprite->setScale({ 5.f, 5.f });
+        previewSprite = items[selectedItem].getSprite();
+
+        auto bounds = previewSprite->getLocalBounds();
+
+        float targetSize = 250.f; // taille de preview dans le panel
+        float scale = targetSize / bounds.size.x;
+
+        previewSprite->setScale({ scale, scale });
+        previewSprite->setPosition({ 1600.f, 400.f });
 
         if (items[selectedItem].isOwned()) buyButton.setColor(sf::Color(150, 150, 150));
         else buyButton.setColor(sf::Color::White);
@@ -151,7 +158,7 @@ void Boutique::draw(sf::RenderWindow& window) {
 
     if (selectedItem != -1) {
         window.draw(infoPanel);
-        if (previewSprite) window.draw(*previewSprite);
+        window.draw(*previewSprite);
         window.draw(itemNameText);
         window.draw(priceText);
 

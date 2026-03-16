@@ -19,6 +19,5 @@ private:
     sf::Sprite returnBtn;
     sf::Text score;
     sf::Text bestScoreText;
-
 };
 
