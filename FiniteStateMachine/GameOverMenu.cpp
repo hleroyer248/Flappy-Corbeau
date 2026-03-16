@@ -11,8 +11,8 @@ GameOverMenu::GameOverMenu(const RessourcesManager& rm_in)
 {
     retryBtn.setPosition({ 450.f, 450.f });
     retryBtn.setScale({ 0.09f, 0.09f });
-    returnBtn.setPosition({ 550.f, 700.f });
-    returnBtn.setScale({ 0.09f, 0.09f });
+    returnBtn.setPosition({ 460.f, 600.f });
+    returnBtn.setScale({ 0.07f, 0.07f });
 
     // Emplacement d'origine du meilleur score
     bestScoreLabel.setPosition({ 1200.f, 850.f });
@@ -27,8 +27,8 @@ GameOverMenu::Action GameOverMenu::handleEvent(const sf::Event& event) {
         if (mouse->button == sf::Mouse::Button::Left) {
             sf::Vector2f mPos(static_cast<float>(mouse->position.x), static_cast<float>(mouse->position.y));
 
-            if (retryBtn.getGlobalBounds().contains(mPos)) return Action::Retry;
-            if (returnBtn.getGlobalBounds().contains(mPos)) return Action::Quit;
+            if (retryHitbox.contains(mPos)) return Action::Retry;
+            if (returnHitbox.contains(mPos)) return Action::Quit;
         }
     }
     return Action::None;
