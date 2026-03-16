@@ -65,3 +65,13 @@ bool CollisionBox::intersects(const CollisionBox& other) const {
 
     return false;
 }
+
+void CollisionBox::debugDraw(sf::RenderWindow& window) const {
+    sf::RectangleShape shape;
+    shape.setPosition(bounds.position);
+    shape.setSize(bounds.size);
+    shape.setFillColor(sf::Color::Transparent);
+    shape.setOutlineColor(sf::Color::Red);
+    shape.setOutlineThickness(2.f);
+    window.draw(shape);
+}

@@ -154,9 +154,24 @@ bool Player::canActivateGhost() const {
 // Commit Ghost - fin
 
 CollisionBox Player::getCollisionBox() const {
-    // Commit Pixel-Perfect - debut
-    return CollisionBox(sprite, *currentImage);
-    // Commit Pixel-Perfect - fin
+    sf::FloatRect bounds = sprite.getGlobalBounds();
+
+    // Ajout d'un padding pour le joueur (15% de réduction)
+    float padX = bounds.size.x * 0.15f;
+    float padY = bounds.size.y * 0.15f;
+
+    bounds.size.x -= (padX * 2.f);
+    bounds.size.y -= (padY * 2.f);
+
+    // Centrage de la hitbox sur le corps du joueur
+    bounds.position.x += padX;
+    bounds.position.y += padY;
+
+    // Création de la CollisionBox avec le rectangle réduit
+    CollisionBox cb(sprite, *currentImage);
+    cb.setRect(bounds);
+
+    return cb;
 }
 
 const sf::Sprite& Player::getSprite() const {

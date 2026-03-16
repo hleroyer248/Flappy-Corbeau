@@ -33,15 +33,14 @@ public:
     sf::RectangleShape warningRect;
     sf::Sprite laserSprite;
     bool isLaserActive() const;
-
-GameEvent(RessourcesManager& rm);
-
-
-void update(float dt, std::vector<Obstacle>& obstacles);
-void reset();
-void draw(sf::RenderWindow& window);
-
-//void update(float dt, std::vector<Obstacle>& obstacles, float playerX, int score);
+    
+    GameEvent(RessourcesManager& rm);
+    
+    void update(float dt, std::vector<Obstacle>& obstacles);
+    void reset();
+    void draw(sf::RenderWindow& window);
+    
+    //void update(float dt, std::vector<Obstacle>& obstacles, float playerX, int score);
 
 private:
 

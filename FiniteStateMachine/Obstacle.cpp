@@ -65,8 +65,40 @@ void Obstacle::shift(float distance) {
     updatePositions();
 }
 
-CollisionBox Obstacle::getTopCollisionBox() const { return CollisionBox(topSprite, *topImage); }
-CollisionBox Obstacle::getBottomCollisionBox() const { return CollisionBox(bottomSprite, *bottomImage); }
+CollisionBox Obstacle::getTopCollisionBox() const {
+    sf::FloatRect bounds = topSprite.getGlobalBounds();
+
+    // Padding : on réduit la hitbox de 15% sur les côtés et 5% sur le bord piquant
+    float paddingX = bounds.size.x * 0.35f;
+    float paddingY = bounds.size.y * 0.09f;
+
+    bounds.size.x -= (paddingX * 2.f);
+    bounds.size.y -= paddingY; // Réduit seulement le bas (le bord du gap)
+
+    bounds.position.x += paddingX - 25;
+
+    CollisionBox cb(topSprite, *topImage);
+    cb.setRect(bounds);
+    return cb;
+}
+
+CollisionBox Obstacle::getBottomCollisionBox() const {
+    sf::FloatRect bounds = bottomSprite.getGlobalBounds();
+
+    float paddingX = bounds.size.x * 0.35f;
+    float paddingY = bounds.size.y * 0.02f;
+
+    bounds.size.x -= (paddingX * 2.f);
+    bounds.size.y -= paddingY;
+
+    bounds.position.x += paddingX - 25;
+    bounds.position.y += paddingY; // Décale le début de la collision vers le bas
+
+    CollisionBox cb(bottomSprite, *bottomImage);
+    cb.setRect(bounds);
+    return cb;
+}
+
 const sf::Sprite& Obstacle::getTopSprite() const { return topSprite; }
 const sf::Sprite& Obstacle::getBottomSprite() const { return bottomSprite; }
 float Obstacle::getX() const { return x; }

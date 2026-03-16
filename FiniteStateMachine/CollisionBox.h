@@ -13,6 +13,7 @@ public:
     void setRect(const sf::FloatRect& rect);
     const sf::FloatRect& getRect() const;
     bool intersects(const CollisionBox& other) const;
+    void debugDraw(sf::RenderWindow& window) const;
 
 private:
     sf::FloatRect bounds;
