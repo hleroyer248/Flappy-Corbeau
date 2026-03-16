@@ -29,7 +29,8 @@ OptionMenu::OptionMenu(const RessourcesManager& rm)
     sliderCursor.setFillColor(sf::Color::White);
     sliderCursor.setPosition({ 960.f, 510.f });
 
-    returnBtn.setPosition({ 760.f, 800.f });
+    returnBtn.setPosition({ 700.f, 800.f });
+    returnBtn.setScale({ 0.09f, 0.09f });
 }
 
 OptionMenu::Action OptionMenu::handleEvent(const sf::Event& event) {

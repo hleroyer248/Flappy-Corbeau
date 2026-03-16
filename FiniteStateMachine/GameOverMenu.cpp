@@ -12,7 +12,7 @@ GameOverMenu::GameOverMenu(const RessourcesManager& rm)
     retryBtn.setPosition({ 450.f, 450.f });
     retryBtn.setScale({ 0.09f, 0.09f });
     returnBtn.setPosition({ 550.f, 700.f });
-    returnBtn.setScale({ 2.f, 2.f });
+    returnBtn.setScale({ 0.09f, 0.09f });
 
    
     bestScoreText.setPosition({ 1200.f, 850.f });

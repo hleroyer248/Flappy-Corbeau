@@ -21,12 +21,15 @@ MainMenu::MainMenu(const RessourcesManager& rm)
 
     startBtn.setPosition({ 760.f, 430.f });
     startBtn.setScale({ 0.11f, 0.11f });
+
     settingsBtn.setPosition({ 795.f, 580.f });
     settingsBtn.setScale({ 0.09f, 0.09f });
-    shopButton.setPosition({ 800.f, 700.f });
-    shopButtonBg.setPosition({ 790.f,690.f });
-    shopButtonBg.setScale({ 0.10f,0.10f });
-    shopButton.setScale({ 0.09f, 0.09f });
+
+    shopButtonBg.setPosition({ 790.f,680.f });
+    shopButtonBg.setScale({ 0.09f,0.09f });
+    shopButton.setPosition({ 825.f, 720.f });
+    shopButton.setScale({ 0.07f, 0.07f });
+
     exitBtn.setPosition({ 790.f, 800.f });
     exitBtn.setScale({ 0.09f, 0.09f });
 
@@ -72,5 +75,11 @@ void MainMenu::draw(sf::RenderWindow& window) const {
 
     window.draw(bestScoreText);
     window.draw(totalScoreText);
+    sf::RectangleShape debug;
+
+    debug.setPosition({ startHitbox.position.x, startHitbox.position.y });
+    debug.setSize({ startHitbox.size.x, startHitbox.size.y });
+    debug.setFillColor(sf::Color(255, 0, 0, 80));
+    window.draw(debug);
 
 }

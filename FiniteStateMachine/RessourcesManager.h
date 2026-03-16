@@ -86,7 +86,6 @@ private:
     //Obstacles Texture 
     sf::Image topPipeImg[3];
     sf::Image bottomPipeImg[3];
-	
     sf::Texture laserTex;
     sf::Texture titleTex;
 
