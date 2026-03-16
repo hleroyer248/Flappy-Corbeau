@@ -33,10 +33,6 @@ player(nullptr) {
     startButton->setPosition({ 550.f, 600.f });
     startButton->setFillColor(sf::Color::Yellow);
 
-    scoreText.emplace(rm.getFont(), "Score: 0", 40);
-    scoreText->setPosition({ 30.f, 30.f });
-    scoreText->setFillColor(sf::Color::White);
-
     std::random_device rd;
     gen = std::mt19937(rd());
 
@@ -46,41 +42,19 @@ player(nullptr) {
 
 void Game::resetGame() {
     player->reset();
-
     gameEvent->reset();
-
     obstacles.clear();
     score = 0;
-    scoreText->setString("Score: 0");
 
     int skinIndex = save.getEquippedSkin();
 
-    // Commit Player Default - debut
-   /* if (skinIndex == -1) {
-        player->setSkin(rm.getPlayerTexture());
-    }*/
+    if (skinIndex == 0) player->setSkin(rm.getPlayerTexture());
+    if (skinIndex == 1) player->setSkin(rm.getBirdRedTexture());
+    if (skinIndex == 2) player->setSkin(rm.getBirdBlueTexture());
+    if (skinIndex == 3) player->setSkin(rm.getBirdGreenTexture());
+    if (skinIndex == 4) player->setSkin(rm.getBirdGoldTexture());
+    if (skinIndex == 5) player->setSkin(rm.getBirdShadowTexture());
 
-    if (skinIndex == 0)
-        player->setSkin(rm.getPlayerTexture());
-
-    if (skinIndex == 1)
-        player->setSkin(rm.getBirdRedTexture());
-
-    if (skinIndex == 2)
-        player->setSkin(rm.getBirdBlueTexture());
-
-    if (skinIndex == 3)
-        player->setSkin(rm.getBirdGreenTexture());
-
-    if (skinIndex == 4)
-        player->setSkin(rm.getBirdGoldTexture());
-
-    if (skinIndex == 5)
-        player->setSkin(rm.getBirdShadowTexture());
-
-    obstacles.clear();
-    score = 0;
-    scoreText->setString("Score: 0");
     pipeSpawnTimer = 0.f;
     lastPipeWasMoving = false;
 }
@@ -189,8 +163,7 @@ void Game::update(float dt) {
         player->update(dt);
         player->updateGhost(dt);
 
-        gameEvent->update(dt, obstacles //, player->getPosition().x, score
-        );
+        gameEvent->update(dt, obstacles);
 
         if (gameEvent->shouldClearObstacles)
         {
@@ -201,31 +174,8 @@ void Game::update(float dt) {
         if (gameEvent->laserDodgedThisFrame)
         {
             score++;
-            scoreText->setString("Score: " + std::to_string(score));
             gameEvent->laserDodgedThisFrame = false;
         }
-
-        //pipeSpawnTimer += dt;
-        //if (pipeSpawnTimer > 1.5f) {
-        //    ObstacleType spawnType = ObstacleType::Normal;
-        //    if (!lastPipeWasMoving && chanceDist(gen) < 20.f) {
-        //        if (chanceDist(gen) < 75.f) spawnType = ObstacleType::ParMouv;
-        //        else spawnType = ObstacleType::MachMouv;
-        //    }
-        //    lastPipeWasMoving = (spawnType != ObstacleType::Normal);
-
-        //    float playerSize = 115.f;
-
-        //    // MODIFICATION ICI : On réduit l'écart entre les tuyaux (de 2.0f à 1.6f)
-        //    float gapHeight = playerSize * 1.4f;
-
-        //    std::uniform_int_distribution<> pipeDist(0, 2);
-        //    int topIdx = pipeDist(gen);
-        //    int botIdx = pipeDist(gen);
-
-        //    obstacles.emplace_back(1920.f, gapDist(gen), gapHeight, rm, spawnType, topIdx, botIdx);
-        //    pipeSpawnTimer = 0.f;
-        //}
 
         bool collision = false;
         CollisionBox pBox = player->getCollisionBox();
@@ -237,7 +187,6 @@ void Game::update(float dt) {
             }
         }
         for (auto it = obstacles.begin(); it != obstacles.end(); ) {
-            //it->update(dt);
 
             if (!player->isGhost()) {
                 if (pBox.intersects(it->getTopCollisionBox()) || pBox.intersects(it->getBottomCollisionBox())) {
@@ -248,7 +197,6 @@ void Game::update(float dt) {
             if (!it->isPassed() && it->getX() + it->getWidth() < player->getPosition().x - (pBox.getRect().size.x / 2.f)) {
                 it->setPassed(true);
                 score++;
-                scoreText->setString("Score: " + std::to_string(score));
                 gameEvent->addObstaclePassed(obstacles);
             }
 
@@ -274,6 +222,42 @@ void Game::update(float dt) {
     }
 }
 
+void Game::drawScore(sf::RenderWindow& window, int scoreVal, sf::Vector2f position, float scale, bool center) {
+    const sf::Texture& tex = rm.getNumbersTexture();
+    if (tex.getSize().x == 0) return;
+
+    std::string s = std::to_string(scoreVal);
+
+    // Espacement dynamique pour le score in-game
+    float spacing = 20.f * scale;
+    float totalWidth = 0;
+
+    for (char c : s) {
+        int d = c - '0';
+        totalWidth += rm.getDigitRect(d).size.x * scale + spacing;
+    }
+    totalWidth -= spacing;
+
+    float currentX = position.x;
+    if (center) {
+        currentX -= totalWidth / 2.f;
+    }
+
+    sf::Sprite spr(tex);
+    spr.setScale({ scale, scale });
+
+    for (char c : s) {
+        int d = c - '0';
+        sf::IntRect rect = rm.getDigitRect(d);
+
+        spr.setTextureRect(rect);
+        spr.setPosition({ currentX, position.y });
+        window.draw(spr);
+
+        currentX += rect.size.x * scale + spacing;
+    }
+}
+
 void Game::render() {
     window.clear();
 
@@ -283,17 +267,11 @@ void Game::render() {
     else if (state == GameState::OptionMenu) {
         optionMenu->draw(window);
     }
-   /* else if (state == GameState::GameOver) {
-        gameOverMenu->draw(window);
-    }*/
     else if (state == GameState::Shop) {
         shop->draw(window);
     }
-    // défini l'ordre pour dessiner les plan un à un
     else {
         for (const auto& layer : backLayers) layer.draw(window);
-
-        // 
 
         for (const auto& layer : frontLayers) {
             layer.draw(window);
@@ -310,9 +288,13 @@ void Game::render() {
         }
         if (state == GameState::Ready) {
             window.draw(*startButton);
+
+            // MODIFICATION DE L'ÉCHELLE : On passe de 1.0f à 0.35f
+            drawScore(window, score, { 30.f, 5.f }, 0.12f, false);
         }
         else if (state == GameState::Playing) {
-            window.draw(*scoreText);
+            // MODIFICATION DE L'ÉCHELLE : On passe de 1.0f à 0.35f
+            drawScore(window, score, { 30.f, 5.f }, 0.12f, false);
         }
         if (state == GameState::GameOver) {
             gameOverMenu->draw(window);

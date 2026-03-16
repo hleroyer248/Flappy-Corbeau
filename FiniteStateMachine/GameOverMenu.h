@@ -14,10 +14,15 @@ public:
     void updateBestScore(int best);
 
 private:
+    const RessourcesManager& rm; // On stocke une référence pour accéder à l'auto-crop
     sf::Sprite background;
     sf::Sprite retryBtn;
     sf::Sprite returnBtn;
-    sf::Text score;
-    sf::Text bestScoreText;
-};
 
+    sf::Text bestScoreLabel;
+
+    int finalScoreVal;
+    int bestScoreVal;
+
+    void drawNumbers(sf::RenderWindow& window, int value, sf::Vector2f position, float scale, bool center) const;
+};

@@ -62,6 +62,7 @@ OptionMenu::Action OptionMenu::handleEvent(const sf::Event& event) {
             float ratio = (mouseX - minX) / 400.f;
             volumeValue = ratio * 100.f;
 
+
             VolumeText.setString(std::to_string(static_cast<int>(volumeValue)) + "%");
         }
     }
