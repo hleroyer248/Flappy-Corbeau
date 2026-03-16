@@ -11,7 +11,7 @@ GameOverMenu::GameOverMenu(const RessourcesManager& rm_in)
 {
     retryBtn.setPosition({ 450.f, 450.f });
     retryBtn.setScale({ 0.09f, 0.09f });
-    returnBtn.setPosition({ 460.f, 600.f });
+    returnBtn.setPosition({ 500.f, 700.f });
     returnBtn.setScale({ 0.07f, 0.07f });
 
     // Emplacement d'origine du meilleur score
