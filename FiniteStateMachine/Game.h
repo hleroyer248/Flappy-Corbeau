@@ -64,6 +64,7 @@ private:
     int score;
     float pipeSpawnTimer;
     bool lastPipeWasMoving;
+    bool debugMode = false;
 
     sf::Clock clock;
     std::mt19937 gen;

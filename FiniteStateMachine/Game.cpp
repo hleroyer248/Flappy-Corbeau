@@ -1,7 +1,7 @@
 #include "Game.h"
 #include <iostream>
 
-Game::Game() : window(sf::VideoMode({ 1920, 1080 }), "Flappy Bird - SFML 3.0.2", sf::State::Fullscreen),
+Game::Game() : window(sf::VideoMode({ 1920, 1080 }), "Flappy Bird - SFML 3.0.2", sf::State::Windowed),
 state(GameState::MainMenu), score(0), pipeSpawnTimer(0.f), lastPipeWasMoving(false),
 player(nullptr) {
     window.setFramerateLimit(60);
@@ -166,6 +166,12 @@ void Game::processEvents() {
                 }
             }
         }
+
+        if (const auto* key = event.getIf<sf::Event::KeyPressed>()) {
+            if (key->code == sf::Keyboard::Key::F1) {
+                debugMode = !debugMode; // Toggle le mode debug
+            }
+        }
     }
 }
 
@@ -319,5 +325,20 @@ void Game::render() {
         }
     }
 
+    if (debugMode) {
+        // 1. Hitbox du Joueur
+        player->getCollisionBox().debugDraw(window);
+
+        // 2. Hitbox des Obstacles
+        for (const auto& obs : obstacles) {
+            obs.getTopCollisionBox().debugDraw(window);
+            obs.getBottomCollisionBox().debugDraw(window);
+        }
+
+        // 3. Hitbox du Laser
+        if (gameEvent->isLaserActive()) {
+            gameEvent->getLaserCollisionBox().debugDraw(window);
+        }
+    }
     window.display();
 }
