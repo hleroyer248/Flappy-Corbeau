@@ -22,7 +22,7 @@ public:
 
     bool shouldClearObstacles = false;
     bool laserDodgedThisFrame = false;
-
+    CollisionBox getLaserCollisionBox() const;
     int obstaclesPassed;
     int lasersDodged;
 
@@ -32,6 +32,7 @@ public:
 
     sf::RectangleShape warningRect;
     sf::Sprite laserSprite;
+    bool isLaserActive() const;
 
 GameEvent(RessourcesManager& rm);
 
@@ -56,6 +57,7 @@ private:
     std::mt19937 gen;
     std::uniform_real_distribution<float> gapDist;
     std::uniform_real_distribution<float> chanceDist;
+    std::uniform_real_distribution<float> laserYDist;
 
     void spawnObstacle(std::vector<Obstacle>& obstacles);
 };

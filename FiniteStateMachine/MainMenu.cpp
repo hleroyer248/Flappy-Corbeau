@@ -19,7 +19,8 @@ MainMenu::MainMenu(const RessourcesManager& rm)
     title.setFillColor(sf::Color::White);
 
     startBtn.setPosition({ 760.f, 400.f });
-    settingsBtn.setPosition({ 760.f, 550.f });
+    settingsBtn.setPosition({ 780.f, 500.f });
+    settingsBtn.setScale({ 0.09f, 0.09f });
     shopButton.setPosition({ 760.f, 700.f });
     exitBtn.setPosition({ 760.f, 850.f });
 

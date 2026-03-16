@@ -14,6 +14,7 @@ GameEvent::GameEvent(RessourcesManager& rm) :
 
     gapDist(100.f, 350.f),
     chanceDist(0.f, 100.f),
+    laserYDist(100.f, 980.f),
     state(EventState::Normal),
     obstaclesPassed(0),
     lasersDodged(0),
@@ -48,7 +49,7 @@ void GameEvent::reset()
     speedMultiplier = 1.f;
 
     state = EventState::Normal;
-    obstaclesPassed = 10;
+    obstaclesPassed = 0;
     lasersDodged = 0;
 
     warningTimer = 0.f;
@@ -113,6 +114,14 @@ void GameEvent::update(float dt, std::vector<Obstacle>& obstacles)
     else if (state == EventState::Warning)
     {
         warningTimer += dt;
+
+        if (warningTimer == 0.f)
+        {
+            float randomY = laserYDist(gen);
+
+            warningRect.setPosition({ 0.f, randomY });
+            laserSprite.setPosition({ 0.f, randomY });
+        }
 
         if (warningTimer >= 1.5f)
         {
@@ -226,4 +235,15 @@ void GameEvent::draw(sf::RenderWindow& window)
     {
         window.draw(laserSprite);
     }
+}
+
+CollisionBox GameEvent::getLaserCollisionBox() const
+{
+    sf::FloatRect rect = laserSprite.getGlobalBounds();
+    return CollisionBox(rect);
+}
+
+bool GameEvent::isLaserActive() const
+{
+    return state == EventState::Laser;
 }
