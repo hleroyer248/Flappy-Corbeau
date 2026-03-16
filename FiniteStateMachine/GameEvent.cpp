@@ -22,6 +22,11 @@ GameEvent::GameEvent(RessourcesManager& rm) :
     laserSprite(rm.getLaserTexture()){
 
     laserSprite.setTexture(rm.getLaserTexture(), true);
+    laserSprite.setPosition({ 0.f, 500.f });
+    float screenWidth = 1920.f;
+    float textureWidth = rm.getLaserTexture().getSize().x;
+
+    laserSprite.setScale({ screenWidth / textureWidth, 1.f });
 
     std::random_device rd;
     gen = std::mt19937(rd());
@@ -32,9 +37,7 @@ GameEvent::GameEvent(RessourcesManager& rm) :
     warningRect.setPosition({ 0.f, 500.f });
 
     // LASER SPRITE
-    laserSprite.setPosition({ 300.f, 500.f });
     laserDodgedThisFrame = false;
-    laserSprite.setScale({ 2.f, 2.f });
 }
 
 
@@ -45,7 +48,7 @@ void GameEvent::reset()
     speedMultiplier = 1.f;
 
     state = EventState::Normal;
-    obstaclesPassed = 0;
+    obstaclesPassed = 10;
     lasersDodged = 0;
 
     warningTimer = 0.f;

@@ -3,12 +3,13 @@
 
 Game::Game() : window(sf::VideoMode({ 1920, 1080 }), "Flappy Bird - SFML 3.0.2", sf::State::Fullscreen),
 state(GameState::MainMenu), score(0), pipeSpawnTimer(0.f), lastPipeWasMoving(false),
-player(nullptr), gameEvent(rm) {
+player(nullptr) {
     window.setFramerateLimit(60);
     window.setKeyRepeatEnabled(false);
 
     if (!rm.loadAll()) { std::exit(-1); }
     if (!am.loadAll()) { std::exit(-1); }
+    gameEvent.emplace(rm);
 
     player = new Player(rm);
     save.equipSkin(-1);
@@ -46,7 +47,7 @@ player(nullptr), gameEvent(rm) {
 void Game::resetGame() {
     player->reset();
 
-    gameEvent.reset();
+    gameEvent->reset();
 
     obstacles.clear();
     score = 0;
@@ -186,20 +187,20 @@ void Game::update(float dt) {
         player->update(dt);
         player->updateGhost(dt);
 
-        gameEvent.update(dt, obstacles //, player->getPosition().x, score
+        gameEvent->update(dt, obstacles //, player->getPosition().x, score
         );
 
-        if (gameEvent.shouldClearObstacles)
+        if (gameEvent->shouldClearObstacles)
         {
             obstacles.clear();
-            gameEvent.shouldClearObstacles = false;
+            gameEvent->shouldClearObstacles = false;
         }
 
-        if (gameEvent.laserDodgedThisFrame)
+        if (gameEvent->laserDodgedThisFrame)
         {
             score++;
             scoreText->setString("Score: " + std::to_string(score));
-            gameEvent.laserDodgedThisFrame = false;
+            gameEvent->laserDodgedThisFrame = false;
         }
 
         //pipeSpawnTimer += dt;
@@ -239,7 +240,7 @@ void Game::update(float dt) {
                 it->setPassed(true);
                 score++;
                 scoreText->setString("Score: " + std::to_string(score));
-                gameEvent.addObstaclePassed(obstacles);
+                gameEvent->addObstaclePassed(obstacles);
             }
 
             if (it->getX() + it->getWidth() < 0.f) it = obstacles.erase(it);
@@ -295,7 +296,7 @@ void Game::render() {
                 window.draw(obs.getBottomSprite());
             }
             window.draw(player->getSprite());
-            gameEvent.draw(window);
+            gameEvent->draw(window);
 
         }
         if (state == GameState::Ready) {

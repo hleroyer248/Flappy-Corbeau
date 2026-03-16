@@ -27,7 +27,7 @@ public:
 
 private:
 
-    GameEvent gameEvent;
+    std::optional<GameEvent> gameEvent;
 
     void processEvents();
     void update(float dt);

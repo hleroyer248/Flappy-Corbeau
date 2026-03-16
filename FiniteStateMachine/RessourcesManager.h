@@ -17,7 +17,8 @@ public:
     // Nouveaux getters pour les 3 variations de tuyaux
     const sf::Texture& getTopPipeTexture(int index) const;
     const sf::Texture& getBottomPipeTexture(int index) const;
-
+    const std::string basePath = "Assets/";
+    bool loadTexture(sf::Texture& tex, const std::string& path);
     const sf::Font& getFont() const;
 
     const sf::Texture& getMenuBgTexture() const;
@@ -41,6 +42,8 @@ public:
     // Nouveaux getters d'images Pixel-Perfect
     const sf::Image& getTopPipeImage(int index) const;
     const sf::Image& getBottomPipeImage(int index) const;
+
+
     const sf::Texture& getLaserTexture() const;
 
 private:
@@ -77,5 +80,7 @@ private:
     // Tableaux pour stocker les 3 images Pixel-Perfect
     sf::Image topPipeImg[3];
     sf::Image bottomPipeImg[3];
+
+
     sf::Texture laserTex;
 };
