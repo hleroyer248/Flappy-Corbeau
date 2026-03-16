@@ -1,29 +1,25 @@
 #include "GameOverMenu.h"
 
-GameOverMenu::GameOverMenu(const RessourcesManager& rm)
-    : background(rm.getBgGameOverTexture()),
-    retryBtn(rm.getStartBtnTexture()),
-    returnBtn(rm.getReturnBtnTexture()),
-    score(rm.getFont(), " 0", 50),
-    bestScoreText(rm.getFont(), "Best : 0", 40)
+GameOverMenu::GameOverMenu(const RessourcesManager& rm_in)
+    : rm(rm_in),
+    background(rm_in.getBgGameOverTexture()),
+    retryBtn(rm_in.getStartBtnTexture()),
+    returnBtn(rm_in.getReturnBtnTexture()),
+    bestScoreLabel(rm_in.getFont(), "Best :", 40),
+    finalScoreVal(0),
+    bestScoreVal(0)
 {
-
-    // Positions pour centrer les boutons (� ajuster selon la taille de tes images)
     retryBtn.setPosition({ 450.f, 450.f });
     retryBtn.setScale({ 0.09f, 0.09f });
     returnBtn.setPosition({ 460.f, 600.f });
     returnBtn.setScale({ 0.07f, 0.07f });
 
-   
-    bestScoreText.setPosition({ 1200.f, 850.f });
-    bestScoreText.setFillColor(sf::Color::White);
+    // Emplacement d'origine du meilleur score
+    bestScoreLabel.setPosition({ 1200.f, 850.f });
+    bestScoreLabel.setFillColor(sf::Color::White);
 
     background.setScale({ 2.0f, 2.0f });
     background.setPosition({ 100.f, 0.f });
-
-    retryHitbox = sf::FloatRect({ 470.f, 510.f }, { 270.f, 85.f });
-    returnHitbox = sf::FloatRect({ 490.f, 638.f }, { 210.f, 70.f });
-
 }
 
 GameOverMenu::Action GameOverMenu::handleEvent(const sf::Event& event) {
@@ -38,31 +34,63 @@ GameOverMenu::Action GameOverMenu::handleEvent(const sf::Event& event) {
     return Action::None;
 }
 
+void GameOverMenu::drawNumbers(sf::RenderWindow& window, int value, sf::Vector2f position, float scale, bool center) const {
+    const sf::Texture& tex = rm.getNumbersTexture();
+    if (tex.getSize().x == 0) return;
+
+    std::string s = std::to_string(value);
+
+    // Espacement dynamique légèrement augmenté pour les petites échelles
+    float spacing = 20.f * scale;
+    float totalWidth = 0;
+
+    // Calcul de la largeur totale pour pouvoir centrer
+    for (char c : s) {
+        int d = c - '0';
+        totalWidth += rm.getDigitRect(d).size.x * scale + spacing;
+    }
+    totalWidth -= spacing;
+
+    float currentX = position.x;
+    if (center) {
+        currentX -= totalWidth / 2.f;
+    }
+
+    sf::Sprite spr(tex);
+    spr.setScale({ scale, scale });
+
+    for (char c : s) {
+        int d = c - '0';
+        sf::IntRect rect = rm.getDigitRect(d);
+
+        spr.setTextureRect(rect);
+        spr.setPosition({ currentX, position.y });
+        window.draw(spr);
+
+        // On avance la position X pour le prochain chiffre
+        currentX += rect.size.x * scale + spacing;
+    }
+}
+
 void GameOverMenu::draw(sf::RenderWindow& window) const {
     window.draw(background);
-    window.draw(score);
-    window.draw(bestScoreText);
+    window.draw(bestScoreLabel);
     window.draw(retryBtn);
     window.draw(returnBtn);
-    sf::RectangleShape debug;
 
-    debug.setPosition(returnHitbox.position);
-    debug.setSize(returnHitbox.size);
-    debug.setFillColor(sf::Color(255, 0, 0, 80));
+    // MODIFICATION DE L'ÉCHELLE : On passe de 1.2f à 0.4f (Le score de la partie)
+    drawNumbers(window, finalScoreVal, { 1250.f, 500.f }, 0.15f, true);
 
-    window.draw(debug);
+    // MODIFICATION DE L'ÉCHELLE : On passe de 0.8f à 0.25f (Le meilleur score)
+    drawNumbers(window, bestScoreVal, { 1350.f, 700.f }, 0.15f, false);
 }
 
 void GameOverMenu::updateScoreText(int finalScore)
 {
-    score.setString(std::to_string(finalScore));
-
-    sf::FloatRect textRect = score.getLocalBounds();
-    score.setOrigin({ textRect.size.x / 2.f, textRect.size.y / 2.f });
-    score.setPosition({ 1250.f, 640.f });
+    finalScoreVal = finalScore;
 }
 
 void GameOverMenu::updateBestScore(int best)
 {
-    bestScoreText.setString(std::to_string(best));
+    bestScoreVal = best;
 }
