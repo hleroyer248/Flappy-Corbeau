@@ -33,10 +33,10 @@ MainMenu::MainMenu(const RessourcesManager& rm)
     exitBtn.setPosition({ 790.f, 800.f });
     exitBtn.setScale({ 0.09f, 0.09f });
 
-    startHitbox = sf::FloatRect({ 800.f, 525.f }, { 320.f, 90.f });
+    startHitbox = sf::FloatRect({ 785.f, 505.f }, { 340.f, 100.f });
     settingsHitbox = sf::FloatRect({ 820.f, 645.f }, { 265.f, 80.f });
-    shopHitbox = sf::FloatRect({ 885.f, 750.f }, { 158.f, 88.f });
-    exitHitbox = sf::FloatRect({ 880.f, 850.f }, { 150.f, 90.f });
+    shopHitbox = sf::FloatRect({ 810.f, 750.f }, { 270.f, 88.f });
+    exitHitbox = sf::FloatRect({ 810.f, 870.f }, { 270.f, 90.f });
 
     bestScoreText.setFillColor(sf::Color::Red);
     bestScoreText.setPosition({ 1500.f, 30.f });
@@ -77,8 +77,8 @@ void MainMenu::draw(sf::RenderWindow& window) const {
     window.draw(totalScoreText);
     sf::RectangleShape debug;
 
-    debug.setPosition({ startHitbox.position.x, startHitbox.position.y });
-    debug.setSize({ startHitbox.size.x, startHitbox.size.y });
+    debug.setPosition({ exitHitbox.position.x, exitHitbox.position.y });
+    debug.setSize({ exitHitbox.size.x, exitHitbox.size.y });
     debug.setFillColor(sf::Color(255, 0, 0, 80));
     window.draw(debug);
 
