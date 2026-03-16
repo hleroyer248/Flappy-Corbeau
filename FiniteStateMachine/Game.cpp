@@ -272,6 +272,17 @@ void Game::update(float dt) {
             mainMenu->updateScores(save.getBestScore(), save.getTotalScore());
         }
     }
+
+    if (state == GameState::OptionMenu) {
+
+        optionMenu->update(window);
+
+        float volume = optionMenu->getVolume();
+        am.setVolume(volume);
+
+        return;
+    }
+
 }
 
 void Game::render() {

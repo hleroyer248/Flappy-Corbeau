@@ -1,4 +1,6 @@
 #include "AudioManager.h"
+#include "OptionMenu.h"
+
 #include <iostream>
 
 AudioManager::AudioManager() {}
@@ -53,4 +55,16 @@ void AudioManager::playDeathSound() {
         std::cout << "[Audio] Bruit de mort (Dead) !" << std::endl;
         deathSound->play();
     }
+}
+
+void AudioManager::setVolume(float volume) {
+
+    bgMusic.setVolume(volume);
+
+    if (jumpSound)
+        jumpSound->setVolume(volume);
+
+    if (deathSound)
+        deathSound->setVolume(volume);
+
 }

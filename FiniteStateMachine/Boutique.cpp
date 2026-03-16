@@ -1,5 +1,6 @@
 #include "Boutique.h"
 #include <iostream>
+#include "OptionMenu.h"
 
 Boutique::Boutique(RessourcesManager& rm, Save& save) :
     save(save),
@@ -149,6 +150,7 @@ void Boutique::update(sf::RenderWindow& window) {
         else buyButton.setColor(sf::Color::White);
     }
 }
+
 
 void Boutique::draw(sf::RenderWindow& window) {
     window.draw(background);

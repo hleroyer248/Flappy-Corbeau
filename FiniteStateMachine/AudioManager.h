@@ -4,6 +4,8 @@
 #include <string>
 #include <optional> // Très important pour la SFML 3.0 !
 
+#include "OptionMenu.h"
+
 class AudioManager {
 public:
     AudioManager();
@@ -15,7 +17,10 @@ public:
     void playJumpSound();
     void playDeathSound();
 
+    void setVolume(float volume);
+
 private:
+
     sf::Music bgMusic;
 
     sf::SoundBuffer jumpBuffer;
