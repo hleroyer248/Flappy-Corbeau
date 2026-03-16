@@ -18,7 +18,6 @@ public:
     const sf::Texture& getTopPipeTexture(int index) const;
     const sf::Texture& getBottomPipeTexture(int index) const;
     const std::string basePath = "Assets/";
-    bool loadTexture(sf::Texture& tex, const std::string& path);
     const sf::Font& getFont() const;
     //Background Texture 
     const sf::Texture& getMenuBgTexture() const;
