@@ -3,12 +3,13 @@
 
 Game::Game() : window(sf::VideoMode({ 1920, 1080 }), "Flappy Bird - SFML 3.0.2", sf::State::Fullscreen),
 state(GameState::MainMenu), score(0), pipeSpawnTimer(0.f), lastPipeWasMoving(false),
-player(nullptr), gameEvent(rm) {
+player(nullptr) {
     window.setFramerateLimit(60);
     window.setKeyRepeatEnabled(false);
 
     if (!rm.loadAll()) { std::exit(-1); }
     if (!am.loadAll()) { std::exit(-1); }
+    gameEvent.emplace(rm);
 
     player = new Player(rm);
     save.equipSkin(-1);
@@ -46,7 +47,7 @@ player(nullptr), gameEvent(rm) {
 void Game::resetGame() {
     player->reset();
 
-    gameEvent.reset();
+    gameEvent->reset();
 
     obstacles.clear();
     score = 0;
@@ -55,24 +56,26 @@ void Game::resetGame() {
     int skinIndex = save.getEquippedSkin();
 
     // Commit Player Default - debut
-    if (skinIndex == -1) {
+   /* if (skinIndex == -1) {
         player->setSkin(rm.getPlayerTexture());
-    }
-    // Commit Player Default - fin
+    }*/
 
     if (skinIndex == 0)
-        player->setSkin(rm.getBirdRedTexture());  
+        player->setSkin(rm.getPlayerTexture());
 
     if (skinIndex == 1)
-        player->setSkin(rm.getBirdBlueTexture());
+        player->setSkin(rm.getBirdRedTexture());
 
     if (skinIndex == 2)
-        player->setSkin(rm.getBirdGreenTexture());
+        player->setSkin(rm.getBirdBlueTexture());
 
     if (skinIndex == 3)
-        player->setSkin(rm.getBirdGoldTexture());
+        player->setSkin(rm.getBirdGreenTexture());
 
     if (skinIndex == 4)
+        player->setSkin(rm.getBirdGoldTexture());
+
+    if (skinIndex == 5)
         player->setSkin(rm.getBirdShadowTexture());
 
     obstacles.clear();
@@ -186,8 +189,21 @@ void Game::update(float dt) {
         player->update(dt);
         player->updateGhost(dt);
 
-        gameEvent.update(dt, obstacles //, player->getPosition().x, score
+        gameEvent->update(dt, obstacles //, player->getPosition().x, score
         );
+
+        if (gameEvent->shouldClearObstacles)
+        {
+            obstacles.clear();
+            gameEvent->shouldClearObstacles = false;
+        }
+
+        if (gameEvent->laserDodgedThisFrame)
+        {
+            score++;
+            scoreText->setString("Score: " + std::to_string(score));
+            gameEvent->laserDodgedThisFrame = false;
+        }
 
         //pipeSpawnTimer += dt;
         //if (pipeSpawnTimer > 1.5f) {
@@ -213,6 +229,13 @@ void Game::update(float dt) {
 
         bool collision = false;
         CollisionBox pBox = player->getCollisionBox();
+        if (gameEvent->isLaserActive())
+        {
+            if (pBox.intersects(gameEvent->getLaserCollisionBox()))
+            {
+                collision = true;
+            }
+        }
         for (auto it = obstacles.begin(); it != obstacles.end(); ) {
             //it->update(dt);
 
@@ -226,6 +249,7 @@ void Game::update(float dt) {
                 it->setPassed(true);
                 score++;
                 scoreText->setString("Score: " + std::to_string(score));
+                gameEvent->addObstaclePassed(obstacles);
             }
 
             if (it->getX() + it->getWidth() < 0.f) it = obstacles.erase(it);
@@ -281,6 +305,7 @@ void Game::render() {
                 window.draw(obs.getBottomSprite());
             }
             window.draw(player->getSprite());
+            gameEvent->draw(window);
 
         }
         if (state == GameState::Ready) {

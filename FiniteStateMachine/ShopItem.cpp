@@ -10,9 +10,19 @@ ShopItem::ShopItem(const std::string& name, int price, const sf::Texture& textur
     owned = false;
     equipped = false;
 
-    sprite.setTexture(texture);
-    sprite.setScale({ 0.08f, 0.08f });
+    auto texSize = texture.getSize();
 
+    // calcul automatique d'une frame
+    int frameWidth = texSize.x / 3;
+    int frameHeight = texSize.y / 3;
+
+    sprite.setTextureRect(sf::IntRect({ 0,0 }, { frameWidth,frameHeight }));
+
+    // adapter le scale pour rentrer dans la box
+    float targetSize = 120.f;
+    float scale = targetSize / frameWidth;
+
+    sprite.setScale({ scale, scale });
     box.setSize({ 200.f, 200.f });
     box.setFillColor(sf::Color(70, 70, 70));
 
@@ -21,8 +31,17 @@ ShopItem::ShopItem(const std::string& name, int price, const sf::Texture& textur
 void ShopItem::setPosition(float x, float y)
 {
 
-    box.setPosition({ x, y });
-    sprite.setPosition({ x + 35.f, y + 35.f });
+    box.setPosition({ x,y });
+
+    sprite.setOrigin({
+        sprite.getLocalBounds().size.x / 2.f,
+        sprite.getLocalBounds().size.y / 2.f
+        });
+
+    sprite.setPosition({
+        x + box.getSize().x / 2.f,
+        y + box.getSize().y / 2.f
+        });
 
 }
 

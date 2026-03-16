@@ -11,7 +11,7 @@ bool RessourcesManager::loadAll() {
         return false;
     }
 
-     for (int i = 0; i < 3; ++i) {
+    for (int i = 0; i < 3; ++i) {
         std::string topName = "Hobstacle" + std::to_string(i + 1) + ".png";
         std::string botName = "Bobstacle" + std::to_string(i + 1) + ".png";
 
@@ -25,31 +25,42 @@ bool RessourcesManager::loadAll() {
         bottomPipeImg[i] = bottomPipeTex[i].copyToImage();
     }
 
-    if (!playerTex.loadFromFile(basePath + "Player.png") ||
-        !ghostPlayerTex.loadFromFile(basePath + "Ghost-Player.png") ||
-        !bgTex.loadFromFile(basePath + "Background.png") ||
-        !midBgTex.loadFromFile(basePath + "MidBackground.png") ||
-        !frontBgTex.loadFromFile(basePath + "FrontBackground.png") ||
-        !menuBgTex.loadFromFile(basePath + "MenuBackground.png") ||
-        !startBtnTex.loadFromFile(basePath + "StartButton.png") ||
-        !settingsBtnTex.loadFromFile(basePath + "SettingsButton.png") ||
-        !exitBtnTex.loadFromFile(basePath + "ExitButton.png") ||
-        !settingsBgTex.loadFromFile(basePath + "SettingsBackground.png") ||
-        !returnBtnTex.loadFromFile(basePath + "ReturnButton.png") ||
-        !shopTex.loadFromFile(basePath + "ShopButton.png") ||
-        !buyBtnTex.loadFromFile(basePath + "BuyButton.jpg") ||
-        !equipBtnTex.loadFromFile(basePath + "EquipButton.png") ||
-        !equippedBtnTex.loadFromFile(basePath + "EquippedButton.png") ||
-        !birdRedTex.loadFromFile(basePath + "BirdRed.png") ||
-        !birdBlueTex.loadFromFile(basePath + "BirdBlue.png") ||
-        !birdGreenTex.loadFromFile(basePath + "BirdGreen.png") ||
-        !birdGoldTex.loadFromFile(basePath + "BirdGold.png") ||
-        !bgGameOverTex.loadFromFile(basePath + "BgGameOver.png") ||
-        !birdShadowTex.loadFromFile(basePath + "BirdShadow.png")) {
-        std::cerr << "ERREUR: Impossible de charger un ou plusieurs assets png.\n";
+    if (!loadTexture(playerTex, basePath + "Player.png")) return false;
+    if (!loadTexture(ghostPlayerTex, basePath + "Ghost-Player.png")) return false;
+    if (!loadTexture(bgTex, basePath + "Background.png")) return false;
+    if (!loadTexture(midBgTex, basePath + "MidBackground.png")) return false;
+    if (!loadTexture(frontBgTex, basePath + "FrontBackground.png")) return false;
+    if (!loadTexture(menuBgTex, basePath + "MenuBackground.png")) return false;
+    if (!loadTexture(startBtnTex, basePath + "StartButton.png")) return false;
+    if (!loadTexture(settingsBtnTex, basePath + "SettingsButton.png")) return false;
+    if (!loadTexture(exitBtnTex, basePath + "ExitButton.png")) return false;
+    if (!loadTexture(settingsBgTex, basePath + "SettingsBackground.png")) return false;
+    if (!loadTexture(returnBtnTex, basePath + "ReturnButton.png")) return false;
+    if (!loadTexture(shopTex, basePath + "ShopButton.png")) return false;
+    if (!loadTexture(buyBtnTex, basePath + "BuyButton.jpg")) return false;
+    if (!loadTexture(equipBtnTex, basePath + "EquipButton.png")) return false;
+    if (!loadTexture(equippedBtnTex, basePath + "EquippedButton.png")) return false;
+    if (!loadTexture(birdRedTex, basePath + "BirdRed.png")) return false;
+    if (!loadTexture(birdBlueTex, basePath + "BirdBlue.png")) return false;
+    if (!loadTexture(birdGreenTex, basePath + "BirdGreen.png")) return false;
+    if (!loadTexture(birdGoldTex, basePath + "BirdGold.png")) return false;
+    if (!loadTexture(bgGameOverTex, basePath + "BgGameOver.png")) return false;
+    if (!loadTexture(laserTex, basePath + "Laser.png")) return false;
+    if (!loadTexture(birdShadowTex, basePath + "BirdShadow.png")) return false;
+
+    return true;
+}
+
+bool RessourcesManager::loadTexture(sf::Texture& tex, const std::string& path)
+{
+
+    if (!tex.loadFromFile(path))
+    {
+        std::cerr << "Erreur chargement : " << path << std::endl;
         return false;
     }
 
+    std::cout << "OK : " << path << std::endl;
     return true;
 }
 
@@ -86,3 +97,4 @@ const sf::Image& RessourcesManager::getBottomPipeImage(int index) const { return
 // Commit Pixel-Perfect - fin
 
 const sf::Texture& RessourcesManager::getBgGameOverTexture() const{ return bgGameOverTex;}
+const sf::Texture& RessourcesManager::getLaserTexture() const{ return laserTex; }

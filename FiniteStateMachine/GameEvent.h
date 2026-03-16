@@ -16,11 +16,30 @@ class GameEvent {
 
 public:
 
+    enum class EventState{Normal,Warning,Laser };
+
+    EventState state;
+
+    bool shouldClearObstacles = false;
+    bool laserDodgedThisFrame = false;
+    CollisionBox getLaserCollisionBox() const;
+    int obstaclesPassed;
+    int lasersDodged;
+
+    float warningTimer;
+    float laserTimer;
+    void addObstaclePassed(std::vector<Obstacle>& obstacles);
+
+    sf::RectangleShape warningRect;
+    sf::Sprite laserSprite;
+    bool isLaserActive() const;
+
 GameEvent(RessourcesManager& rm);
 
 
 void update(float dt, std::vector<Obstacle>& obstacles);
 void reset();
+void draw(sf::RenderWindow& window);
 
 //void update(float dt, std::vector<Obstacle>& obstacles, float playerX, int score);
 
@@ -38,6 +57,7 @@ private:
     std::mt19937 gen;
     std::uniform_real_distribution<float> gapDist;
     std::uniform_real_distribution<float> chanceDist;
+    std::uniform_real_distribution<float> laserYDist;
 
     void spawnObstacle(std::vector<Obstacle>& obstacles);
 };
