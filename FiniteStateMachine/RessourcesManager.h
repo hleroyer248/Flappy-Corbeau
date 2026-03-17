@@ -50,6 +50,8 @@ public:
     // NOUVEAU : Récupère la hitbox parfaite d'un chiffre
     const sf::IntRect& getDigitRect(int index) const;
 
+    const sf::Texture& getCapaTexture() const;
+
 private:
     sf::Texture playerTex;
     sf::Texture bgTex;
@@ -88,6 +90,8 @@ private:
 
     sf::Texture numbersTex;
     std::vector<sf::IntRect> digitRects; // Stocke la découpe parfaite des 10 chiffres
+
+    sf::Texture capaTex;
 
     bool loadTexture(sf::Texture& tex, const std::string& path);
 };

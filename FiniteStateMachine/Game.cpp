@@ -3,7 +3,8 @@
 
 Game::Game() : window(sf::VideoMode({ 1920, 1080 }), "Flappy Bird - SFML 3.0.2", sf::State::Windowed),
 state(GameState::MainMenu), score(0), pipeSpawnTimer(0.f), lastPipeWasMoving(false),
-player(nullptr) {
+player(nullptr), capaIcon(rm.getCapaTexture())
+{
     window.setFramerateLimit(60);
     window.setKeyRepeatEnabled(false);
 
@@ -36,6 +37,19 @@ player(nullptr) {
 
     gapDist = std::uniform_real_distribution<float>(200.f, 650.f);
     chanceDist = std::uniform_real_distribution<float>(0.f, 100.f);
+
+    capaIcon.setTexture(rm.getCapaTexture());
+
+    // 🔥 TESTS
+    capaIcon.setTextureRect(sf::IntRect({ 0,0 }, {
+        (int)rm.getCapaTexture().getSize().x,
+        (int)rm.getCapaTexture().getSize().y
+        }));
+
+    capaIcon.setScale({ 0.05f, 0.05f });
+    capaIcon.setPosition({ 100.f, 800.f });
+
+    cooldownArc = sf::VertexArray(sf::PrimitiveType::TriangleFan);
 }
 
 void Game::resetGame() {
@@ -166,6 +180,27 @@ void Game::update(float dt) {
     if (state == GameState::Playing) {
         player->update(dt);
         player->updateGhost(dt);
+        float ratio = player->getCooldownRatio();
+        float angleMax = 360.f * ratio;
+
+        cooldownArc.clear();
+        sf::FloatRect bounds = capaIcon.getGlobalBounds();
+
+        sf::Vector2f center(
+            bounds.position.x + bounds.size.x / 2.f,
+            bounds.position.y + bounds.size.y / 2.f
+        );
+        center.x += 5.f;
+        cooldownArc.append(sf::Vertex(center, sf::Color(100, 100, 100, 150)));
+
+        for (int i = 0; i <= 100; i++) {
+            float angle = (-90.f + (angleMax * i / 100.f)) * 3.14159f / 180.f;
+
+            float x = center.x + cos(angle) * 48.f;
+            float y = center.y + sin(angle) * 48.f;
+
+            cooldownArc.append(sf::Vertex({ x, y }, sf::Color(100, 100, 100, 150)));
+        }
 
         gameEvent->update(dt, obstacles);
 
@@ -298,6 +333,12 @@ void Game::render() {
         else if (state == GameState::Playing) {
             // MODIFICATION DE L'ÉCHELLE : On passe de 1.0f à 0.35f
             drawScore(window, score, { 30.f, 5.f }, 0.12f, false);
+            window.draw(capaIcon);
+
+            if (!player->canActivateGhost()) {
+                window.draw(cooldownArc);
+            }
+
         }
         if (state == GameState::GameOver) {
             gameOverMenu->draw(window);

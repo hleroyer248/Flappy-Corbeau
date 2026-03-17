@@ -52,6 +52,7 @@ bool RessourcesManager::loadAll() {
     if (!loadTexture(birdShadowTex, basePath + "BirdShadow.png")) return false;
     if (!loadTexture(titleTex, basePath + "Title.png")) return false;
     if (!loadTexture(shopBgTex, basePath + "ShopButtonBG.png")) return false;
+    if (!loadTexture(capaTex, basePath + "Capa.png")) return false;
 
     // NOUVEAU : Chargement intelligent et Auto-Crop de la SpriteSheet
     sf::Image numbersImg;
@@ -147,6 +148,7 @@ const sf::Texture& RessourcesManager::getLaserTexture() const { return laserTex;
 const sf::Texture& RessourcesManager::getTitleTexture() const { return titleTex; }
 const sf::Texture& RessourcesManager::getShopBgTexture() const { return shopBgTex; }
 const sf::Texture& RessourcesManager::getNumbersTexture() const { return numbersTex; }
+const sf::Texture& RessourcesManager::getCapaTexture() const { return capaTex; }
 
 const sf::IntRect& RessourcesManager::getDigitRect(int index) const {
     if (index >= 0 && index < digitRects.size()) return digitRects[index];

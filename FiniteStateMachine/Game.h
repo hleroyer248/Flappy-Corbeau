@@ -70,6 +70,9 @@ private:
     std::mt19937 gen;
     std::uniform_real_distribution<float> gapDist;
     std::uniform_real_distribution<float> chanceDist;
+    //Sprite de la capacite 
+    sf::Sprite capaIcon;
+    sf::VertexArray cooldownArc;
 
     Save save;
 };

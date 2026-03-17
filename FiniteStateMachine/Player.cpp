@@ -199,3 +199,9 @@ void Player::setSkin(const sf::Texture& texture)
     }
     // Commit Crow - fin
 }
+
+
+float Player::getCooldownRatio() const {
+    if (ghostCooldownTimer <= 0.f) return 0.f;
+    return ghostCooldownTimer / GHOST_COOLDOWN_MAX;
+}
