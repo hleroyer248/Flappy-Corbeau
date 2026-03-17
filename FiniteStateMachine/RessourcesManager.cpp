@@ -49,7 +49,6 @@ bool RessourcesManager::loadAll() {
     if (!loadTexture(titleTex, basePath + "Title.png")) return false;
     if (!loadTexture(shopBgTex, basePath + "ShopButtonBG.png")) return false;
 
-    // AUTO-CROP CHIFFRES
     sf::Image numbersImg;
     if (numbersImg.loadFromFile(basePath + "Chiffre.png") || numbersImg.loadFromFile(basePath + "Chiffre.jpg")) {
         numbersImg.createMaskFromColor(sf::Color::Black);
@@ -78,7 +77,6 @@ bool RessourcesManager::loadAll() {
         }
     }
 
-    // NOUVEAU : AUTO-CROP 2D LASER
     sf::Image laserImg;
     if (laserImg.loadFromFile(basePath + "Laser.png") || laserImg.loadFromFile(basePath + "Laser.jpg")) {
         laserImg.createMaskFromColor(sf::Color::Black);
@@ -87,47 +85,96 @@ bool RessourcesManager::loadAll() {
             int w = laserImg.getSize().x;
             int h = laserImg.getSize().y;
 
-            bool inRow = false;
-            int startY = 0;
-            // Scan horizontal pour trouver les lignes
-            for (int y = 0; y < h; ++y) {
-                bool rowHasPixel = false;
-                for (int x = 0; x < w; ++x) {
-                    if (laserImg.getPixel({ static_cast<unsigned int>(x), static_cast<unsigned int>(y) }).a > 0) {
-                        rowHasPixel = true; break;
+            auto isVisible = [&](int px_x, int px_y) {
+                sf::Color c = laserImg.getPixel({ static_cast<unsigned int>(px_x), static_cast<unsigned int>(px_y) });
+                return (c.a > 20 && (c.r > 20 || c.g > 20 || c.b > 20));
+                };
+
+            int numCols = 2;
+            int colWidth = w / numCols;
+
+            for (int c = 0; c < numCols; ++c) {
+                int startColX = c * colWidth;
+                int endColX = startColX + colWidth;
+
+                bool inLaser = false;
+                int startY = 0;
+
+                for (int y = 0; y < h; ++y) {
+                    bool rowHasPixel = false;
+
+                    for (int x = startColX; x < endColX; ++x) {
+                        if (isVisible(x, y)) {
+                            rowHasPixel = true;
+                            break;
+                        }
                     }
-                }
-                if (rowHasPixel && !inRow) {
-                    inRow = true; startY = y;
-                }
-                else if (!rowHasPixel && inRow) {
-                    inRow = false;
-                    // Scan vertical au sein de cette ligne pour trouver les colonnes
-                    bool inCol = false;
-                    int startX = 0;
-                    for (int x = 0; x < w; ++x) {
-                        bool colHasPixel = false;
-                        for (int ry = startY; ry < y; ++ry) {
-                            if (laserImg.getPixel({ static_cast<unsigned int>(x), static_cast<unsigned int>(ry) }).a > 0) {
-                                colHasPixel = true; break;
+
+                    if (rowHasPixel && !inLaser) {
+                        inLaser = true;
+                        startY = y;
+                    }
+                    else if (!rowHasPixel && inLaser) {
+                        inLaser = false;
+                        int endY = y;
+
+                        int trueMinX = endColX;
+                        int trueMaxX = startColX;
+
+                        for (int ry = startY; ry < endY; ++ry) {
+                            for (int rx = startColX; rx < endColX; ++rx) {
+                                if (isVisible(rx, ry)) {
+                                    if (rx < trueMinX) trueMinX = rx;
+                                    if (rx > trueMaxX) trueMaxX = rx;
+                                }
                             }
                         }
-                        if (colHasPixel && !inCol) {
-                            inCol = true; startX = x;
-                        }
-                        else if (!colHasPixel && inCol) {
-                            inCol = false;
-                            laserRects.push_back(sf::IntRect({ startX, startY }, { x - startX, y - startY }));
+
+                        int fW = trueMaxX - trueMinX + 1;
+                        int fH = endY - startY;
+
+                        if (fW > 50 && fH > 5) {
+                            int fX = std::max(startColX, trueMinX - 2);
+                            int fY = std::max(0, startY - 2);
+                            fW = std::min(endColX - fX, fW + 4);
+                            fH = std::min(h - fY, fH + 4);
+
+                            laserRects.push_back(sf::IntRect({ fX, fY }, { fW, fH }));
                         }
                     }
-                    if (inCol) laserRects.push_back(sf::IntRect({ startX, startY }, { w - startX, y - startY }));
+                }
+
+                if (inLaser) {
+                    int endY = h;
+                    int trueMinX = endColX;
+                    int trueMaxX = startColX;
+                    for (int ry = startY; ry < endY; ++ry) {
+                        for (int rx = startColX; rx < endColX; ++rx) {
+                            if (isVisible(rx, ry)) {
+                                if (rx < trueMinX) trueMinX = rx;
+                                if (rx > trueMaxX) trueMaxX = rx;
+                            }
+                        }
+                    }
+
+                    int fW = trueMaxX - trueMinX + 1;
+                    int fH = endY - startY;
+
+                    if (fW > 50 && fH > 5) {
+                        int fX = std::max(startColX, trueMinX - 2);
+                        int fY = std::max(0, startY - 2);
+                        fW = std::min(endColX - fX, fW + 4);
+                        fH = std::min(h - fY, fH + 4);
+
+                        laserRects.push_back(sf::IntRect({ fX, fY }, { fW, fH }));
+                    }
                 }
             }
-            // Sécurité si un seul laser a été trouvé
+
             if (laserRects.empty()) {
                 laserRects.push_back(sf::IntRect({ 0, 0 }, { w, h }));
             }
-            std::cout << "OK : Laser (Auto-Crop 2D effectue, " << laserRects.size() << " frames trouvees)" << std::endl;
+            std::cout << "OK : Laser (Decoupe Dynamique Parfaite, " << laserRects.size() << " frames trouvees)" << std::endl;
         }
     }
     else {
@@ -186,7 +233,6 @@ const sf::IntRect& RessourcesManager::getDigitRect(int index) const {
     return defaultRect;
 }
 
-// METHODES LASER
 const sf::IntRect& RessourcesManager::getLaserRect(int index) const {
     if (index >= 0 && index < laserRects.size()) return laserRects[index];
     static sf::IntRect defaultRect({ 0, 0 }, { 0, 0 });
