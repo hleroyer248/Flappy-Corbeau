@@ -25,6 +25,8 @@ public:
 
     void setSkin(const sf::Texture& texture);
 
+    float getCooldownRatio() const;
+
 private:
     sf::Sprite sprite;
     sf::Vector2f velocity;
@@ -37,7 +39,7 @@ private:
     float ghostTimer;
     float ghostCooldownTimer;
     const float GHOST_DURATION = 5.0f;
-    const float GHOST_COOLDOWN_MAX = 1.0f;
+    const float GHOST_COOLDOWN_MAX = 6.0f;
     // Commit Ghost - fin
 
     // Commit Crow - debut
