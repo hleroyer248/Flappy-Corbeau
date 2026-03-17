@@ -47,8 +47,11 @@ public:
     const sf::Texture& getTitleTexture() const;
 
     const sf::Texture& getNumbersTexture() const;
-    // NOUVEAU : Récupère la hitbox parfaite d'un chiffre
     const sf::IntRect& getDigitRect(int index) const;
+
+    // NOUVEAU : Auto-Crop du Laser
+    const sf::IntRect& getLaserRect(int index) const;
+    int getLaserFrameCount() const;
 
 private:
     sf::Texture playerTex;
@@ -87,7 +90,10 @@ private:
     sf::Texture titleTex;
 
     sf::Texture numbersTex;
-    std::vector<sf::IntRect> digitRects; // Stocke la découpe parfaite des 10 chiffres
+    std::vector<sf::IntRect> digitRects;
+
+    // NOUVEAU
+    std::vector<sf::IntRect> laserRects;
 
     bool loadTexture(sf::Texture& tex, const std::string& path);
 };

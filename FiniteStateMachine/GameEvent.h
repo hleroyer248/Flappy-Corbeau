@@ -3,6 +3,7 @@
 #include <vector>
 #include <random>
 #include <optional>
+#include <array>
 
 #include "RessourcesManager.h"
 #include "AudioManager.h"
@@ -16,31 +17,39 @@ class GameEvent {
 
 public:
 
-    enum class EventState{Normal,Warning,Laser };
+    enum class EventState { Normal, Warning, Laser };
 
     EventState state;
 
     bool shouldClearObstacles = false;
     bool laserDodgedThisFrame = false;
-    CollisionBox getLaserCollisionBox() const;
+
+    // Gère désormais 2 boîtes de collision
+    std::vector<CollisionBox> getLaserCollisionBoxes() const;
+
     int obstaclesPassed;
     int lasersDodged;
 
     float warningTimer;
     float laserTimer;
+
+    // NOUVEAU : Timer d'animation
+    float laserAnimTimer;
+    int currentLaserFrame;
+
     void addObstaclePassed(std::vector<Obstacle>& obstacles);
 
-    sf::RectangleShape warningRect;
-    sf::Sprite laserSprite;
+    // Gère 2 Lasers
+    std::array<sf::RectangleShape, 2> warningRects;
+    std::array<sf::Sprite, 2> laserSprites;
+
     bool isLaserActive() const;
-    
+
     GameEvent(RessourcesManager& rm);
-    
+
     void update(float dt, std::vector<Obstacle>& obstacles);
     void reset();
     void draw(sf::RenderWindow& window);
-    
-    //void update(float dt, std::vector<Obstacle>& obstacles, float playerX, int score);
 
 private:
 

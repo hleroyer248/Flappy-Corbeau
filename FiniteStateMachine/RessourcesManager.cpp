@@ -1,6 +1,3 @@
-// ==========================================
-// RessourcesManager.cpp
-// ==========================================
 #include "RessourcesManager.h"
 #include <iostream>
 
@@ -48,68 +45,101 @@ bool RessourcesManager::loadAll() {
     if (!loadTexture(birdGreenTex, basePath + "BirdGreen.png")) return false;
     if (!loadTexture(birdGoldTex, basePath + "BirdGold.png")) return false;
     if (!loadTexture(bgGameOverTex, basePath + "BgGameOver.png")) return false;
-    if (!loadTexture(laserTex, basePath + "Laser.png")) return false;
     if (!loadTexture(birdShadowTex, basePath + "BirdShadow.png")) return false;
     if (!loadTexture(titleTex, basePath + "Title.png")) return false;
     if (!loadTexture(shopBgTex, basePath + "ShopButtonBG.png")) return false;
 
-    // NOUVEAU : Chargement intelligent et Auto-Crop de la SpriteSheet
+    // AUTO-CROP CHIFFRES
     sf::Image numbersImg;
     if (numbersImg.loadFromFile(basePath + "Chiffre.png") || numbersImg.loadFromFile(basePath + "Chiffre.jpg")) {
         numbersImg.createMaskFromColor(sf::Color::Black);
-        if (!numbersTex.loadFromImage(numbersImg)) return false;
+        if (numbersTex.loadFromImage(numbersImg)) {
+            digitRects.clear();
+            int w = numbersImg.getSize().x;
+            int h = numbersImg.getSize().y;
+            bool inDigit = false;
+            int startX = 0;
 
-        digitRects.clear();
-        int w = numbersImg.getSize().x;
-        int h = numbersImg.getSize().y;
-        bool inDigit = false;
-        int startX = 0;
-
-        // Scan des pixels pour découper parfaitement chaque chiffre
-        for (int x = 0; x < w; ++x) {
-            bool hasPixel = false;
-            for (int y = 0; y < h; ++y) {
-                if (numbersImg.getPixel({ static_cast<unsigned int>(x), static_cast<unsigned int>(y) }).a > 0) {
-                    hasPixel = true;
-                    break;
+            for (int x = 0; x < w; ++x) {
+                bool hasPixel = false;
+                for (int y = 0; y < h; ++y) {
+                    if (numbersImg.getPixel({ static_cast<unsigned int>(x), static_cast<unsigned int>(y) }).a > 0) {
+                        hasPixel = true; break;
+                    }
+                }
+                if (hasPixel && !inDigit) { inDigit = true; startX = x; }
+                else if (!hasPixel && inDigit) {
+                    inDigit = false;
+                    digitRects.push_back(sf::IntRect({ startX, 0 }, { x - startX, h }));
                 }
             }
+            if (inDigit) digitRects.push_back(sf::IntRect({ startX, 0 }, { w - startX, h }));
+            std::cout << "OK : Chiffre (Auto-Crop effectue)" << std::endl;
+        }
+    }
 
-            if (hasPixel && !inDigit) {
-                inDigit = true;
-                startX = x;
-            }
-            else if (!hasPixel && inDigit) {
-                inDigit = false;
-                digitRects.push_back(sf::IntRect({ startX, 0 }, { x - startX, h }));
-            }
-        }
-        if (inDigit) {
-            digitRects.push_back(sf::IntRect({ startX, 0 }, { w - startX, h }));
-        }
+    // NOUVEAU : AUTO-CROP 2D LASER
+    sf::Image laserImg;
+    if (laserImg.loadFromFile(basePath + "Laser.png") || laserImg.loadFromFile(basePath + "Laser.jpg")) {
+        laserImg.createMaskFromColor(sf::Color::Black);
+        if (laserTex.loadFromImage(laserImg)) {
+            laserRects.clear();
+            int w = laserImg.getSize().x;
+            int h = laserImg.getSize().y;
 
-        // Sécurité si l'auto-crop rate (image trop bizarre)
-        if (digitRects.size() < 10) {
-            digitRects.clear();
-            int defaultW = w / 10;
-            for (int i = 0; i < 10; ++i) {
-                digitRects.push_back(sf::IntRect({ i * defaultW, 0 }, { defaultW, h }));
+            bool inRow = false;
+            int startY = 0;
+            // Scan horizontal pour trouver les lignes
+            for (int y = 0; y < h; ++y) {
+                bool rowHasPixel = false;
+                for (int x = 0; x < w; ++x) {
+                    if (laserImg.getPixel({ static_cast<unsigned int>(x), static_cast<unsigned int>(y) }).a > 0) {
+                        rowHasPixel = true; break;
+                    }
+                }
+                if (rowHasPixel && !inRow) {
+                    inRow = true; startY = y;
+                }
+                else if (!rowHasPixel && inRow) {
+                    inRow = false;
+                    // Scan vertical au sein de cette ligne pour trouver les colonnes
+                    bool inCol = false;
+                    int startX = 0;
+                    for (int x = 0; x < w; ++x) {
+                        bool colHasPixel = false;
+                        for (int ry = startY; ry < y; ++ry) {
+                            if (laserImg.getPixel({ static_cast<unsigned int>(x), static_cast<unsigned int>(ry) }).a > 0) {
+                                colHasPixel = true; break;
+                            }
+                        }
+                        if (colHasPixel && !inCol) {
+                            inCol = true; startX = x;
+                        }
+                        else if (!colHasPixel && inCol) {
+                            inCol = false;
+                            laserRects.push_back(sf::IntRect({ startX, startY }, { x - startX, y - startY }));
+                        }
+                    }
+                    if (inCol) laserRects.push_back(sf::IntRect({ startX, startY }, { w - startX, y - startY }));
+                }
             }
+            // Sécurité si un seul laser a été trouvé
+            if (laserRects.empty()) {
+                laserRects.push_back(sf::IntRect({ 0, 0 }, { w, h }));
+            }
+            std::cout << "OK : Laser (Auto-Crop 2D effectue, " << laserRects.size() << " frames trouvees)" << std::endl;
         }
-        std::cout << "OK : Chiffre (Auto-Crop effectue)" << std::endl;
     }
     else {
-        std::cerr << "ERREUR: Impossible de charger Chiffre.png\n";
+        std::cerr << "ERREUR: Impossible de charger Laser.png\n";
         return false;
     }
 
     return true;
 }
 
-bool RessourcesManager::loadTexture(sf::Texture& tex, const std::string& path)
-{
-    if (!tex.loadFromFile(path))
-    {
+bool RessourcesManager::loadTexture(sf::Texture& tex, const std::string& path) {
+    if (!tex.loadFromFile(path)) {
         std::cerr << "Erreur chargement : " << path << std::endl;
         return false;
     }
@@ -140,18 +170,29 @@ const sf::Texture& RessourcesManager::getBirdBlueTexture() const { return birdBl
 const sf::Texture& RessourcesManager::getBirdGreenTexture() const { return birdGreenTex; }
 const sf::Texture& RessourcesManager::getBirdGoldTexture() const { return birdGoldTex; }
 const sf::Texture& RessourcesManager::getBirdShadowTexture() const { return birdShadowTex; }
+
 const sf::Image& RessourcesManager::getTopPipeImage(int index) const { return topPipeImg[index]; }
 const sf::Image& RessourcesManager::getBottomPipeImage(int index) const { return bottomPipeImg[index]; }
+
 const sf::Texture& RessourcesManager::getBgGameOverTexture() const { return bgGameOverTex; }
 const sf::Texture& RessourcesManager::getLaserTexture() const { return laserTex; }
 const sf::Texture& RessourcesManager::getTitleTexture() const { return titleTex; }
 const sf::Texture& RessourcesManager::getShopBgTexture() const { return shopBgTex; }
-const sf::Texture& RessourcesManager::getNumbersTexture() const { return numbersTex; }
 
+const sf::Texture& RessourcesManager::getNumbersTexture() const { return numbersTex; }
 const sf::IntRect& RessourcesManager::getDigitRect(int index) const {
     if (index >= 0 && index < digitRects.size()) return digitRects[index];
-
-    // CORRECTION SFML 3.0 : Un IntRect prend ({posX, posY}, {tailleX, tailleY})
     static sf::IntRect defaultRect({ 0, 0 }, { 0, 0 });
     return defaultRect;
+}
+
+// METHODES LASER
+const sf::IntRect& RessourcesManager::getLaserRect(int index) const {
+    if (index >= 0 && index < laserRects.size()) return laserRects[index];
+    static sf::IntRect defaultRect({ 0, 0 }, { 0, 0 });
+    return defaultRect;
+}
+
+int RessourcesManager::getLaserFrameCount() const {
+    return static_cast<int>(laserRects.size());
 }

@@ -141,7 +141,7 @@ void Game::processEvents() {
 
         if (const auto* key = event.getIf<sf::Event::KeyPressed>()) {
             if (key->code == sf::Keyboard::Key::F1) {
-                debugMode = !debugMode; // Toggle le mode debug
+                debugMode = !debugMode;
             }
         }
     }
@@ -184,9 +184,13 @@ void Game::update(float dt) {
         bool collision = false;
         CollisionBox pBox = player->getCollisionBox();
 
+        // On vérifie la collision avec tous les lasers
         if (gameEvent->isLaserActive() && !player->isGhost()) {
-            if (pBox.intersects(gameEvent->getLaserCollisionBox())) {
-                collision = true;
+            for (const auto& box : gameEvent->getLaserCollisionBoxes()) {
+                if (pBox.intersects(box)) {
+                    collision = true;
+                    break; // On arrête dès qu'on touche un laser
+                }
             }
         }
 
@@ -231,7 +235,6 @@ void Game::drawScore(sf::RenderWindow& window, int scoreVal, sf::Vector2f positi
 
     std::string s = std::to_string(scoreVal);
 
-    // Espacement dynamique pour le score in-game
     float spacing = 20.f * scale;
     float totalWidth = 0;
 
@@ -291,12 +294,9 @@ void Game::render() {
         }
         if (state == GameState::Ready) {
             window.draw(*startButton);
-
-            // MODIFICATION DE L'ÉCHELLE : On passe de 1.0f à 0.35f
             drawScore(window, score, { 30.f, 5.f }, 0.12f, false);
         }
         else if (state == GameState::Playing) {
-            // MODIFICATION DE L'ÉCHELLE : On passe de 1.0f à 0.35f
             drawScore(window, score, { 30.f, 5.f }, 0.12f, false);
         }
         if (state == GameState::GameOver) {
@@ -305,18 +305,15 @@ void Game::render() {
     }
 
     if (debugMode) {
-        // 1. Hitbox du Joueur
         player->getCollisionBox().debugDraw(window);
-
-        // 2. Hitbox des Obstacles
         for (const auto& obs : obstacles) {
             obs.getTopCollisionBox().debugDraw(window);
             obs.getBottomCollisionBox().debugDraw(window);
         }
-
-        // 3. Hitbox du Laser
         if (gameEvent->isLaserActive()) {
-            gameEvent->getLaserCollisionBox().debugDraw(window);
+            for (const auto& box : gameEvent->getLaserCollisionBoxes()) {
+                box.debugDraw(window);
+            }
         }
     }
     window.display();
