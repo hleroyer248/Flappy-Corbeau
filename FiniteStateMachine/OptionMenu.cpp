@@ -6,7 +6,7 @@ OptionMenu::OptionMenu(const RessourcesManager& rm)
     : background(rm.getSettingsBgTexture()),
     returnBtn(rm.getReturnBtnTexture()),
     infoText(rm.getFont(), "OPTIONS", 80),
-    VolumeText(rm.getFont(), "100%", 40), VFXVolumeText(rm.getFont(), "100%", 40) { // Initialisé à 100% par défaut
+    VolumeText(rm.getFont(), "100% (Music)", 40), VFXVolumeText(rm.getFont(), "100% (VFX)", 40) { // Initialisé à 100% par défaut
 
     // 1. Étirement du background pour une fenêtre 1920x1080 (comme dans ton code)
     float scaleX = 1920.f / rm.getSettingsBgTexture().getSize().x;
@@ -107,7 +107,7 @@ OptionMenu::Action OptionMenu::handleEvent(const sf::Event& event) {
  
 
              // Mise à jour du texte
-            VolumeText.setString(std::to_string(static_cast<int>(volumeValue)) + "%");
+            VolumeText.setString(std::to_string(static_cast<int>(volumeValue)) + "% Music");
 
         }
 
@@ -120,7 +120,7 @@ OptionMenu::Action OptionMenu::handleEvent(const sf::Event& event) {
             float ratio = (mouseX - minX) / 400.f;
             vfxVolumeValue = ratio * 100.f;
 
-            VFXVolumeText.setString(std::to_string(static_cast<int>(vfxVolumeValue)) + "%");
+            VFXVolumeText.setString(std::to_string(static_cast<int>(vfxVolumeValue)) + "% (VFX)");
                /*extern AudioManager* globalAM; // ou passe le via OptionMenu
             if (globalAM) globalAM->setVFXVolume(vfxVolumeValue)*/;
 
