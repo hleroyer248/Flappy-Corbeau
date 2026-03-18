@@ -1,6 +1,3 @@
-// ==========================================
-// Obstacle.cpp
-// ==========================================
 #include "Obstacle.h"
 #include <cmath>
 #include <random> // Nécessaire pour std::random_device et std::mt19937
