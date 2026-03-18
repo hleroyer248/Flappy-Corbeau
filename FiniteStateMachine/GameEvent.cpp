@@ -19,8 +19,9 @@ GameEvent::GameEvent(RessourcesManager& rm) :
     currentWaveDuration(0.f),
     screenShakeIntensity(0.f),
     laserAnimTimer(0.f),
-    currentLaserFrame(0) {
-
+    currentLaserFrame(0),
+    laserProbability(20.f) // NOUVEAU : Initialisation à 20%
+{
     std::random_device rd;
     gen = std::mt19937(rd());
 
@@ -38,6 +39,7 @@ void GameEvent::reset() {
     screenShakeIntensity = 0.f;
     activeLasers.clear();
     shouldClearObstacles = false;
+    laserProbability = 20.f; // NOUVEAU : On réinitialise la chance à 20% au Game Over
 }
 
 void GameEvent::update(float dt, std::vector<Obstacle>& obstacles) {
@@ -183,13 +185,27 @@ void GameEvent::setupWave(int waveIndex) {
     state = EventState::Warning;
 }
 
+// NOUVELLE LOGIQUE PSEUDO-ALÉATOIRE
 void GameEvent::addObstaclePassed(std::vector<Obstacle>& obstacles) {
     obstaclesPassed++;
 
-    if (obstaclesPassed >= 10 && state == EventState::Normal) {
-        obstaclesPassed = 0;
-        shouldClearObstacles = true;
-        setupWave(0);
+    if (obstaclesPassed >= 7 && state == EventState::Normal) {
+        obstaclesPassed = 0; 
+
+        std::uniform_real_distribution<float> probDist(0.f, 100.f);
+        float roll = probDist(gen);
+
+        if (roll <= laserProbability) {
+            shouldClearObstacles = true;
+            setupWave(0);
+
+            laserProbability = 25.f;
+        }
+        else {
+            laserProbability += 5.f;
+
+            if (laserProbability > 100.f) laserProbability = 100.f;
+        }
     }
 }
 
