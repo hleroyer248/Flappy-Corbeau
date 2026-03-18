@@ -1,6 +1,3 @@
-// ==========================================
-// Game.h
-// ==========================================
 #pragma once
 #include <SFML/Graphics.hpp>
 #include <vector>
@@ -16,7 +13,6 @@
 #include "GameOverMenu.h"
 #include "ParallaxLayer.h"
 #include "Save.h" 
-
 #include "GameEvent.h"
 
 enum class GameState { MainMenu, OptionMenu, Shop, Ready, Playing, GameOver };
@@ -70,7 +66,7 @@ private:
     std::mt19937 gen;
     std::uniform_real_distribution<float> gapDist;
     std::uniform_real_distribution<float> chanceDist;
-    //Sprite de la capacite 
+
     sf::Sprite capaIcon;
     sf::VertexArray cooldownArc;
 
