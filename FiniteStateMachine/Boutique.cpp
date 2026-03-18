@@ -38,6 +38,19 @@ Boutique::Boutique(RessourcesManager& rm, Save& save) :
     buyButton.setPosition({ 1420.f, 700.f });
     equipButton.setPosition({ 1420.f, 700.f });
     equippedButton.setPosition({ 1420.f, 700.f });
+
+    auto forceButtonWidth = [](sf::Sprite& sprite, float targetWidth) {
+        float originalWidth = sprite.getLocalBounds().size.x;
+        if (originalWidth > 0.f) {
+            float scale = targetWidth / originalWidth;
+            sprite.setScale({ scale, scale });
+        }
+        };
+
+    forceButtonWidth(buyButton, 400.f);
+    forceButtonWidth(equipButton, 400.f);
+    forceButtonWidth(equippedButton, 400.f);
+
     itemNameText.setPosition({ 1450.f, 100.f });
     priceText.setPosition({ 1450.f, 180.f });
     coinsText.setPosition({ 350.f, 40.f });
@@ -48,6 +61,14 @@ Boutique::Boutique(RessourcesManager& rm, Save& save) :
     items.emplace_back("Bird Green", 350, rm.getPlayerTexture());
     items.emplace_back("Bird Gold", 550, rm.getPlayerTexture());
     items.emplace_back("Bird Shadow", 850, rm.getPlayerTexture());
+
+    items[0].setColor(sf::Color::White);
+    items[1].setColor(sf::Color::Red);
+    items[2].setColor(sf::Color::Blue);
+    items[3].setColor(sf::Color::Green);
+    items[4].setColor(sf::Color(255, 215, 0)); // gold
+    items[5].setColor(sf::Color(100, 100, 100)); // shadow
+
 
     int cols = 3;
     int spacing = 40;

@@ -67,6 +67,7 @@ void Player::applyCurrentTexture(const sf::Texture* tex) {
     float visualSize = 115.f;
     sprite.setScale({ visualSize / frameWidth, visualSize / frameHeight });
     // Commit Visual Size - fin
+    sprite.setColor(skinColor);
 }
 
 void Player::reset() {
@@ -77,7 +78,7 @@ void Player::reset() {
     ghostActive = false;
     ghostTimer = 0.f;
     ghostCooldownTimer = 0.f;
-    sprite.setColor(sf::Color(255, 255, 255, 255));
+    sprite.setColor(skinColor);
     // Commit Ghost - fin
 
     // Commit Crow - debut
@@ -128,14 +129,14 @@ void Player::updateGhost(float dt) {
             ghostActive = false;
             ghostCooldownTimer = GHOST_COOLDOWN_MAX;
             applyCurrentTexture(normalTexture);
-            sprite.setColor(sf::Color(255, 255, 255, 255));
+            sprite.setColor(skinColor);
         }
         else if (ghostTimer <= 2.0f) {
             if (static_cast<int>(ghostTimer * 10) % 2 == 0) {
-                sprite.setColor(sf::Color(255, 255, 255, 128));
+                sprite.setColor(sf::Color(skinColor.r, skinColor.g, skinColor.b, 128));
             }
             else {
-                sprite.setColor(sf::Color(255, 255, 255, 255));
+                sprite.setColor(skinColor);
             }
         }
     }
@@ -196,6 +197,7 @@ void Player::setSkin(const sf::Texture& texture)
     // Commit Crow - debut
     if (!ghostActive) {
         applyCurrentTexture(normalTexture);
+        sprite.setColor(skinColor);
     }
     // Commit Crow - fin
 }
@@ -204,4 +206,10 @@ void Player::setSkin(const sf::Texture& texture)
 float Player::getCooldownRatio() const {
     if (ghostCooldownTimer <= 0.f) return 0.f;
     return ghostCooldownTimer / GHOST_COOLDOWN_MAX;
+}
+
+void Player::setSkinColor(const sf::Color& color)
+{
+    skinColor = color;
+    sprite.setColor(skinColor);
 }

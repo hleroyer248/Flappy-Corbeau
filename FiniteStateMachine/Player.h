@@ -27,6 +27,8 @@ public:
 
     float getCooldownRatio() const;
 
+    void setSkinColor(const sf::Color& color);
+
 private:
     sf::Sprite sprite;
     sf::Vector2f velocity;
@@ -60,4 +62,6 @@ private:
     sf::Image ghostImage;
     const sf::Image* currentImage;
     // Commit Pixel-Perfect - fin
+    sf::Color skinColor = sf::Color::White;
+
 };
