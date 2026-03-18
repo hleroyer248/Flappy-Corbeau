@@ -61,10 +61,19 @@ void AudioManager::setVolume(float volume) {
 
     bgMusic.setVolume(volume);
 
-    if (jumpSound)
+    /*if (jumpSound)
         jumpSound->setVolume(volume);
 
     if (deathSound)
-        deathSound->setVolume(volume);
+        deathSound->setVolume(volume);*/
 
+}
+
+void AudioManager::setVFXVolume(float volume){
+
+   vfxVolume = volume;
+
+    if (jumpSound) jumpSound->setVolume(vfxVolume);
+    if (deathSound) deathSound->setVolume(vfxVolume);
+   
 }
