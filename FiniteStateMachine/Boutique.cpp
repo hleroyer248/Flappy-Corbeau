@@ -38,6 +38,19 @@ Boutique::Boutique(RessourcesManager& rm, Save& save) :
     buyButton.setPosition({ 1420.f, 700.f });
     equipButton.setPosition({ 1420.f, 700.f });
     equippedButton.setPosition({ 1420.f, 700.f });
+
+    auto forceButtonWidth = [](sf::Sprite& sprite, float targetWidth) {
+        float originalWidth = sprite.getLocalBounds().size.x;
+        if (originalWidth > 0.f) {
+            float scale = targetWidth / originalWidth;
+            sprite.setScale({ scale, scale });
+        }
+        };
+
+    forceButtonWidth(buyButton, 400.f);
+    forceButtonWidth(equipButton, 400.f);
+    forceButtonWidth(equippedButton, 400.f);
+
     itemNameText.setPosition({ 1450.f, 100.f });
     priceText.setPosition({ 1450.f, 180.f });
     coinsText.setPosition({ 350.f, 40.f });
