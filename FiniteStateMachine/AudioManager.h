@@ -21,6 +21,10 @@ public:
     void playRandomMusic();
     void updateMusic(); 
     void updateCrow(float dt);
+    void playLaserSound();
+    void stopLaserSmooth();
+    void updateLaser(float dt);
+
 
 
 private:
@@ -42,5 +46,13 @@ private:
     std::uniform_real_distribution<float> chanceDist;
     float crowTimer = 0.f;
     std::uniform_real_distribution<float> timeDist;
+
+    sf::SoundBuffer laserBuffer;
+    std::optional<sf::Sound> laserSound;
+
+    float laserVolume = 40.f;
+    bool isFadingOut = false;
+    float fadeSpeed = 40.f; // vitesse du fondu
+
 };
 // Commit BugFix SFML 3 - fin

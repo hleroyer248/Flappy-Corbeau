@@ -40,6 +40,13 @@ bool AudioManager::loadAll() {
     deathSound.emplace(deathBuffer);
     deathSound->setVolume(0.f);
 
+    if (!laserBuffer.loadFromFile(basePath + "Laser.mp3")) {
+        std::cerr << "ERREUR: Impossible de charger Laser.wav.\n";
+        return false;
+    }
+    laserSound.emplace(laserBuffer);
+    laserSound->setVolume(40.f);
+
 
     if (!ghostBuffer.loadFromFile(basePath + "Ghost.wav")) {
         std::cerr << "ERREUR: Impossible de charger Ghost.mp3.\n";
@@ -124,5 +131,41 @@ void AudioManager::updateCrow(float dt) {
         jumpSound->play();
 
         crowTimer = timeDist(gen); // 🔁 nouveau temps random
+    }
+}
+
+void AudioManager::playLaserSound() {
+    if (!laserSound) return;
+
+    laserSound->stop();
+
+    laserSound->setPlayingOffset(sf::seconds(1.2f));
+    laserSound->setLooping(true);
+
+    laserVolume = 40.f;
+    laserSound->setVolume(laserVolume);
+
+    isFadingOut = false;
+
+    laserSound->play();
+}
+
+void AudioManager::stopLaserSmooth() {
+    isFadingOut = true;
+}
+
+void AudioManager::updateLaser(float dt) {
+    if (!laserSound) return;
+
+    if (isFadingOut) {
+        laserVolume -= fadeSpeed * dt;
+
+        if (laserVolume <= 0.f) {
+            laserVolume = 0.f;
+            laserSound->stop();
+            isFadingOut = false;
+        }
+
+        laserSound->setVolume(laserVolume);
     }
 }

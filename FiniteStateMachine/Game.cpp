@@ -176,6 +176,7 @@ void Game::processEvents() {
 void Game::update(float dt) {
     am.updateMusic();
     am.updateCrow(dt);
+    am.updateLaser(dt);
     if (state == GameState::MainMenu || state == GameState::OptionMenu) {
         return;
     }
@@ -217,6 +218,16 @@ void Game::update(float dt) {
         }
 
         gameEvent->update(dt, obstacles);
+        bool laserNow = gameEvent->isLaserActive();
+
+        if (laserNow && !laserWasActive) {
+            am.playLaserSound();
+        }
+
+        laserWasActive = laserNow;
+        if (!laserNow && laserWasActive) {
+            am.stopLaserSmooth();
+        }
 
         if (gameEvent->shouldClearObstacles)
         {
