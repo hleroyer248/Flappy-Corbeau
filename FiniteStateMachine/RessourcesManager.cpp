@@ -1,7 +1,4 @@
-﻿// ==========================================
-// RessourcesManager.cpp
-// ==========================================
-#include "RessourcesManager.h"
+﻿#include "RessourcesManager.h"
 #include <iostream>
 
 RessourcesManager::RessourcesManager() {}

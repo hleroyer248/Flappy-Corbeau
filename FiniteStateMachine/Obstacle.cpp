@@ -157,12 +157,11 @@ void Obstacle::shift(float distance) {
 CollisionBox Obstacle::getTopCollisionBox() const {
     sf::FloatRect bounds = topSprite.getGlobalBounds();
 
-    // Padding : on réduit la hitbox de 15% sur les côtés et 5% sur le bord piquant
     float paddingX = bounds.size.x * 0.35f;
     float paddingY = bounds.size.y * 0.09f;
 
     bounds.size.x -= (paddingX * 2.f);
-    bounds.size.y -= paddingY; // Réduit seulement le bas (le bord du gap)
+    bounds.size.y -= paddingY;
 
     bounds.position.x += paddingX - 25;
 
@@ -176,14 +175,14 @@ CollisionBox Obstacle::getBottomCollisionBox() const {
 
     bounds.size.y = 1080.f - bounds.position.y;
 
-    float paddingX = bounds.size.x * 0.35f;
+    float paddingX = bounds.size.x * 0.001f;
     float paddingY = bounds.size.y * 0.02f;
 
     bounds.size.x -= (paddingX * 2.f);
     bounds.size.y -= paddingY;
 
-    bounds.position.x += paddingX - 25;
-    bounds.position.y += paddingY; // Décale le début de la collision vers le bas
+    bounds.position.x += paddingX;
+    bounds.position.y += paddingY;
 
     CollisionBox cb(bounds);
     return cb;
