@@ -29,4 +29,3 @@ private:
     sf::SoundBuffer deathBuffer;
     std::optional<sf::Sound> deathSound; // Doit absolument être un std::optional
 };
-// Commit BugFix SFML 3 - fin
