@@ -49,9 +49,9 @@ bool RessourcesManager::loadAll() {
 
     if (!loadTexture(playerTex, basePath + "Player.png")) return false;
     if (!loadTexture(ghostPlayerTex, basePath + "Ghost-Player.png")) return false;
-    if (!loadTexture(bgTex, basePath + "Background.png")) return false;
-    if (!loadTexture(midBgTex, basePath + "MidBackground.png")) return false;
-    if (!loadTexture(frontBgTex, basePath + "FrontBackground.png")) return false;
+    if (!loadTexture(backBgTex, basePath + "background_indoor.png")) return false;
+    if (!loadTexture(midBgTex, basePath + "2nd_layer_B.png")) return false;
+    if (!loadTexture(groundBgTex, basePath + "ground_layer.png")) return false;
     if (!loadTexture(menuBgTex, basePath + "MenuBackground.png")) return false;
     if (!loadTexture(startBtnTex, basePath + "StartButton.png")) return false;
     if (!loadTexture(settingsBtnTex, basePath + "SettingsButton.png")) return false;
@@ -231,9 +231,9 @@ bool RessourcesManager::loadTexture(sf::Texture& tex, const std::string& path) {
 }
 
 const sf::Texture& RessourcesManager::getPlayerTexture() const { return playerTex; }
-const sf::Texture& RessourcesManager::getBgTexture() const { return bgTex; }
+const sf::Texture& RessourcesManager::getBackBgTexture() const { return backBgTex; }
 const sf::Texture& RessourcesManager::getMidBgTexture() const { return midBgTex; }
-const sf::Texture& RessourcesManager::getFrontBgTexture() const { return frontBgTex; }
+const sf::Texture& RessourcesManager::getGroundBgTexture() const { return groundBgTex; }
 const sf::Texture& RessourcesManager::getTopPipeTexture(int index) const { return topPipeTex[index]; }
 const sf::Texture& RessourcesManager::getBottomPipeTexture(int index) const { return bottomPipeTex[index]; }
 const sf::Font& RessourcesManager::getFont() const { return font; }
