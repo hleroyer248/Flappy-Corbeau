@@ -376,12 +376,19 @@ void Game::render() {
         }
     }
 
-    if (debugMode) {
+    if (debugMode && (state == GameState::Playing || state == GameState::Ready)) {
         player->getCollisionBox().debugDraw(window);
         for (const auto& obs : obstacles) {
             obs.getTopCollisionBox().debugDraw(window);
             obs.getBottomCollisionBox().debugDraw(window);
         }
     }
+
+    if (gameEvent->isLaserActive()) {
+        for (const auto& box : gameEvent->getLaserCollisionBoxes()) {
+            box.debugDraw(window);
+        }
+    }
+
     window.display();
 }

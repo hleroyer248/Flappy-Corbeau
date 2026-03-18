@@ -149,7 +149,7 @@ void GameEvent::update(float dt, std::vector<Obstacle>& obstacles) {
 void GameEvent::addObstaclePassed(std::vector<Obstacle>& obstacles) {
     obstaclesPassed++;
 
-    if (obstaclesPassed >= 10 && state == EventState::Normal) {
+    if (obstaclesPassed >= 1 && state == EventState::Normal) {
         state = EventState::Warning;
         warningTimer = 0.f;
         obstaclesPassed = 0;
