@@ -37,7 +37,7 @@ void Player::applyCurrentTexture(const sf::Texture* tex) {
     else currentImage = &normalImage;
     // Commit Pixel-Perfect - fin
 
-    if (tex == defaultPlayerTexture) {
+    if (tex == defaultPlayerTexture || tex == ghostTexture) {
         isAnimated = true;
         totalFrames = 7;
 
