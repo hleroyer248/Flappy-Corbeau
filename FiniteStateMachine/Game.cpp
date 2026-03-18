@@ -20,9 +20,9 @@ player(nullptr), capaIcon(rm.getCapaTexture())
     gameOverMenu.emplace(rm);
     shop.emplace(rm, save);
 
-    backLayers.emplace_back(rm.getBgTexture(), 0.3f);
+    backLayers.clear();
+    backLayers.emplace_back(rm.getBackBgTexture(), 0.3f);
     backLayers.emplace_back(rm.getMidBgTexture(), 0.6f);
-    frontLayers.emplace_back(rm.getFrontBgTexture(), 1.5f);
 
     menuTitle.emplace(rm.getFont(), "FLAPPY BIRD", 90);
     menuTitle->setPosition({ 700.f, 250.f });
@@ -233,12 +233,11 @@ void Game::update(float dt) {
         bool collision = false;
         CollisionBox pBox = player->getCollisionBox();
 
-        // On vérifie la collision avec tous les lasers
         if (gameEvent->isLaserActive() && !player->isGhost()) {
             for (const auto& box : gameEvent->getLaserCollisionBoxes()) {
                 if (pBox.intersects(box)) {
                     collision = true;
-                    break; // On arrête dès qu'on touche un laser
+                    break;
                 }
             }
         }
@@ -328,49 +327,40 @@ void Game::render() {
     else {
         for (const auto& layer : backLayers) layer.draw(window);
 
-        for (const auto& layer : frontLayers) {
-            layer.draw(window);
-        }
-
         if (state == GameState::Playing || state == GameState::Ready || state == GameState::GameOver) {
             for (const auto& obs : obstacles) {
                 window.draw(obs.getTopSprite());
-                //bottom obstacles en boucle 
-                const sf::Sprite& body = obs.getBottomBody();
 
+                const sf::Sprite& body = obs.getBottomBody();
                 float y = body.getPosition().y;
                 float height = body.getGlobalBounds().size.y - 12.f;
-
                 bool first = true;
 
                 while (y < 1100.f) {
                     sf::Sprite part = body;
-
                     if (!first) {
                         sf::IntRect rect = part.getTextureRect();
-
                         int cut = 149;
-
                         rect.position.y += cut;
                         rect.size.y -= cut;
-
                         part.setTextureRect(rect);
                     }
-
                     part.setPosition({ body.getPosition().x, y });
-
                     window.draw(part);
-
                     y += height;
                     first = false;
                 }
-
                 window.draw(obs.getBottomHead());
             }
+
             window.draw(player->getSprite());
             gameEvent->draw(window);
-
         }
+
+        for (const auto& layer : frontLayers) {
+            layer.draw(window);
+        }
+
         if (state == GameState::Ready) {
             window.draw(*startButton);
             drawScore(window, score, { 30.f, 5.f }, 0.12f, false);
@@ -378,28 +368,29 @@ void Game::render() {
         else if (state == GameState::Playing) {
             drawScore(window, score, { 30.f, 5.f }, 0.12f, false);
             window.draw(capaIcon);
-
             if (!player->canActivateGhost()) {
                 window.draw(cooldownArc);
             }
-
         }
+
         if (state == GameState::GameOver) {
             gameOverMenu->draw(window);
         }
     }
 
-    if (debugMode) {
+    if (debugMode && (state == GameState::Playing || state == GameState::Ready)) {
         player->getCollisionBox().debugDraw(window);
         for (const auto& obs : obstacles) {
             obs.getTopCollisionBox().debugDraw(window);
             obs.getBottomCollisionBox().debugDraw(window);
         }
-        if (gameEvent->isLaserActive()) {
-            for (const auto& box : gameEvent->getLaserCollisionBoxes()) {
-                box.debugDraw(window);
-            }
+    }
+
+    if (gameEvent->isLaserActive()) {
+        for (const auto& box : gameEvent->getLaserCollisionBoxes()) {
+            box.debugDraw(window);
         }
     }
+
     window.display();
 }
