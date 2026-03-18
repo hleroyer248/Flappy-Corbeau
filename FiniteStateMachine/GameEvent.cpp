@@ -9,7 +9,7 @@ GameEvent::GameEvent(RessourcesManager& rm) :
     baseSpeed(100.f),
     speedMultiplier(1.f),
     maxSpeedMultiplier(4.0),
-    gapDist(250.f, 700.f),
+    gapDist(150.f, 550.f),
     chanceDist(0.f, 100.f),
     laserYDist(100.f, 800.f),
     state(EventState::Normal),
@@ -201,5 +201,5 @@ void GameEvent::spawnObstacle(std::vector<Obstacle>& obstacles) {
     }
 
     std::uniform_int_distribution<int> pipeDist(0, 2);
-    obstacles.emplace_back(1950.f, gapDist(gen), 150.f, rm, type, pipeDist(gen), pipeDist(gen));
+    obstacles.emplace_back(1950.f, gapDist(gen), 210.f, rm, type, pipeDist(gen), pipeDist(gen));
 }
