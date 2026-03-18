@@ -1,6 +1,3 @@
-// ==========================================
-// GameOverMenu.cpp
-// ==========================================
 #include "GameOverMenu.h"
 
 GameOverMenu::GameOverMenu(const RessourcesManager& rm_in)
