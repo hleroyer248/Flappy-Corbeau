@@ -12,7 +12,7 @@ Son architecture repose sur un système de...... (laser, menus...).  <br/>
 # **_PLONGEZ DANS DANS LE MONDE QUE VOUS OFFRE SPACE UNIVERSE !_** 🛰️💫   <br/>
 
 
-<img width="1919" height="1079" alt="image" src="https://github.com/user-attachments/assets/2429d253-ce3c-44f7-9f7b-ad4b545cb353" />
+img
 
 <br/>
 <br/>
