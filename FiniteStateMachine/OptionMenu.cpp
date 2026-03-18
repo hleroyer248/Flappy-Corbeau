@@ -72,7 +72,7 @@ OptionMenu::Action OptionMenu::handleEvent(const sf::Event& event) {
             sf::Vector2f mPos(static_cast<float>(mousePress->position.x), static_cast<float>(mousePress->position.y));
 
             // On vérifie si on attrape le curseur
-            if (sliderCursor.getGlobalBounds().contains(mPos)) { 
+            if (sliderCursor.getGlobalBounds().contains(mPos)) {
                 isDraggingVolume = true;
             }
 
@@ -84,36 +84,52 @@ OptionMenu::Action OptionMenu::handleEvent(const sf::Event& event) {
 
     // --- MOUVEMENT SOURIS ---
     if (const auto* mouseMove = event.getIf<sf::Event::MouseMoved>()) {
-        if (isDraggingVolume) {
-            float mouseX = static_cast<float>(mouseMove->position.x);
-            float minX = 760.f;
-            float maxX = 1160.f; // 
+        // if (isDraggingVolume) {
+        float mouseX = static_cast<float>(mouseMove->position.x);
+        float minX = 760.f;
+        float maxX = 1160.f;
 
+        if (isDraggingVolume) {
             // Contrainte du curseur sur la barre
             if (mouseX < minX) mouseX = minX;
             if (mouseX > maxX) mouseX = maxX;
 
             sliderCursor.setPosition({ mouseX, 510.f });
-            vfxSliderCursor.setPosition({ mouseX, 610.f });
+            //vfxSliderCursor.setPosition({ mouseX, 610.f });
 
             // Calcul du volume (0 à 100)
             float ratio = (mouseX - minX) / 400.f;
             volumeValue = ratio * 100.f;
-            vfxVolumeValue = ratio * 100.f;
+           
 
             // APPLICATION RÉELLE DU VOLUME
             sf::Listener::setGlobalVolume(volumeValue);
-            sf::Listener::setGlobalVolume(vfxVolumeValue);
+ 
 
-            // Mise à jour du texte
+             // Mise à jour du texte
             VolumeText.setString(std::to_string(static_cast<int>(volumeValue)) + "%");
-            VFXVolumeText.setString(std::to_string(static_cast<int>(volumeValue)) + "%");
-        
-            /*extern AudioManager* globalAM; // ou passe le via OptionMenu
-            if (globalAM) globalAM->setVFXVolume(vfxVolumeValue)*/;
 
         }
+
+        if (isDraggingVFX) {
+            if (mouseX < minX) mouseX = minX;
+            if (mouseX > maxX) mouseX = maxX;
+
+            vfxSliderCursor.setPosition({ mouseX, 610.f });
+
+            float ratio = (mouseX - minX) / 400.f;
+            vfxVolumeValue = ratio * 100.f;
+
+            VFXVolumeText.setString(std::to_string(static_cast<int>(vfxVolumeValue)) + "%");
+               /*extern AudioManager* globalAM; // ou passe le via OptionMenu
+            if (globalAM) globalAM->setVFXVolume(vfxVolumeValue)*/;
+
+            // Ici, applique le volume à ton manager de sons s'il existe
+            /* if (globalAM) globalAM->setVFXVolume(vfxVolumeValue); */
+        }
     }
+
+
 
     // --- CLIC RELÂCHÉ ---
     if (const auto* mouseRelease = event.getIf<sf::Event::MouseButtonReleased>()) {
