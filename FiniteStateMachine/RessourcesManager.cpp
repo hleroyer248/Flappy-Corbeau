@@ -1,3 +1,6 @@
+// ==========================================
+// RessourcesManager.cpp
+// ==========================================
 #include "RessourcesManager.h"
 #include <iostream>
 
@@ -69,6 +72,7 @@ bool RessourcesManager::loadAll() {
     if (!loadTexture(shopBgTex, basePath + "ShopButtonBG.png")) return false;
     if (!loadTexture(capaTex, basePath + "Capa.png")) return false;
 
+    // AUTO-CROP CHIFFRES
     sf::Image numbersImg;
     if (numbersImg.loadFromFile(basePath + "Chiffre.png") || numbersImg.loadFromFile(basePath + "Chiffre.jpg")) {
         numbersImg.createMaskFromColor(sf::Color::Black);
@@ -93,10 +97,21 @@ bool RessourcesManager::loadAll() {
                 }
             }
             if (inDigit) digitRects.push_back(sf::IntRect({ startX, 0 }, { w - startX, h }));
+
+            // CORRECTION DU MERGE : La sécurité d'auto-crop des chiffres est de retour à sa bonne place !
+            if (digitRects.size() < 10) {
+                digitRects.clear();
+                int defaultW = w / 10;
+                for (int i = 0; i < 10; ++i) {
+                    digitRects.push_back(sf::IntRect({ i * defaultW, 0 }, { defaultW, h }));
+                }
+            }
+
             std::cout << "OK : Chiffre (Auto-Crop effectue)" << std::endl;
         }
     }
 
+    // AUTO-CROP HYBRIDE LASER
     sf::Image laserImg;
     if (laserImg.loadFromFile(basePath + "Laser.png") || laserImg.loadFromFile(basePath + "Laser.jpg")) {
         laserImg.createMaskFromColor(sf::Color::Black);
@@ -191,14 +206,9 @@ bool RessourcesManager::loadAll() {
                 }
             }
 
+            // CORRECTION DU MERGE : On referme correctement le if et on retire le bloc des chiffres qui était coincé ici
             if (laserRects.empty()) {
                 laserRects.push_back(sf::IntRect({ 0, 0 }, { w, h }));
-        // Sécurité si l'auto-crop rate (image trop bizarre)
-        if (digitRects.size() < 10) {
-            digitRects.clear();
-            int defaultW = w / 10;
-            for (int i = 0; i < 10; ++i) {
-                digitRects.push_back(sf::IntRect({ i * defaultW, 0 }, { defaultW, h }));
             }
             std::cout << "OK : Laser (Decoupe Dynamique Parfaite, " << laserRects.size() << " frames trouvees)" << std::endl;
         }
@@ -251,7 +261,6 @@ const sf::Texture& RessourcesManager::getBgGameOverTexture() const { return bgGa
 const sf::Texture& RessourcesManager::getLaserTexture() const { return laserTex; }
 const sf::Texture& RessourcesManager::getTitleTexture() const { return titleTex; }
 const sf::Texture& RessourcesManager::getShopBgTexture() const { return shopBgTex; }
-const sf::Texture& RessourcesManager::getNumbersTexture() const { return numbersTex; }
 const sf::Texture& RessourcesManager::getCapaTexture() const { return capaTex; }
 
 const sf::Texture& RessourcesManager::getTopHeadTexture(int index) const { return topHeadTex[index]; }
