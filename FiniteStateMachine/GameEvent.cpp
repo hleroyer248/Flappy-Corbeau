@@ -22,10 +22,10 @@ GameEvent::GameEvent(RessourcesManager& rm) :
     laserSprites{ sf::Sprite(rm.getLaserTexture()), sf::Sprite(rm.getLaserTexture()) } {
 
     for (int i = 0; i < 2; ++i) {
-        warningRects[i].setSize({ 1920.f, 100.f });
+        // CORRECTION ICI : Le rectangle fait exactement 60 pixels (la taille du laser) au lieu de 100
+        warningRects[i].setSize({ 1920.f, 60.f });
         warningRects[i].setFillColor(sf::Color(255, 0, 0, 150));
 
-        // CORRECTION : On découpe le sprite dès sa création pour éviter le flash
         sf::IntRect firstRect = rm.getLaserRect(0);
         if (firstRect.size.x > 0) {
             float scaleX = 1920.f / static_cast<float>(firstRect.size.x);
@@ -77,8 +77,6 @@ void GameEvent::update(float dt, std::vector<Obstacle>& obstacles) {
             currentLaserFrame = 0;
             laserAnimTimer = 0.f;
 
-            // CORRECTION DU GLITCH : On applique visuellement la position et la découpe 
-            // sur la frame exacte du changement d'état (plus de frame de retard)
             sf::IntRect currentRect = rm.getLaserRect(0);
             if (currentRect.size.x > 0) {
                 float desiredThickness = 60.f;
@@ -88,8 +86,9 @@ void GameEvent::update(float dt, std::vector<Obstacle>& obstacles) {
                 for (int i = 0; i < 2; ++i) {
                     laserSprites[i].setTextureRect(currentRect);
                     laserSprites[i].setScale({ scaleX, scaleY });
-                    float yOffset = (100.f - desiredThickness) / 2.f;
-                    laserSprites[i].setPosition({ 0.f, warningRects[i].getPosition().y + yOffset });
+
+                    // CORRECTION ICI : Plus de yOffset, on place le laser exactement à la même hauteur que le rectangle rouge
+                    laserSprites[i].setPosition({ 0.f, warningRects[i].getPosition().y });
                 }
             }
         }
@@ -98,7 +97,6 @@ void GameEvent::update(float dt, std::vector<Obstacle>& obstacles) {
         // --- ANIMATION ET SCALING ---
         laserAnimTimer += dt;
 
-        // Vitesse de l'animation ajustée pour être fluide (environ 8 images/seconde)
         float frameDuration = 0.12f;
 
         if (laserAnimTimer >= frameDuration) {
@@ -116,8 +114,8 @@ void GameEvent::update(float dt, std::vector<Obstacle>& obstacles) {
                 laserSprites[i].setTextureRect(currentRect);
                 laserSprites[i].setScale({ scaleX, scaleY });
 
-                float yOffset = (100.f - desiredThickness) / 2.f;
-                laserSprites[i].setPosition({ 0.f, warningRects[i].getPosition().y + yOffset });
+                // CORRECTION ICI AUSSI : On place le laser à la position exacte du Warning
+                laserSprites[i].setPosition({ 0.f, warningRects[i].getPosition().y });
             }
         }
 
