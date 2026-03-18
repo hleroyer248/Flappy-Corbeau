@@ -2,13 +2,12 @@
 #include <SFML/Graphics.hpp>
 
 OptionMenu::OptionMenu(const RessourcesManager& rm)
-    : background(rm.getSettingsBgTexture()),
+    : background(rm.getMenuBgTexture()),
     returnBtn(rm.getReturnBtnTexture()),
     infoText(rm.getFont(), "OPTIONS", 80), VolumeText(rm.getFont(), "50%", 40) {
 
-    // Etirement du background
-    float scaleX = 1920.f / rm.getSettingsBgTexture().getSize().x;
-    float scaleY = 1080.f / rm.getSettingsBgTexture().getSize().y;
+    float scaleX = 1920.f / rm.getMenuBgTexture().getSize().x;
+    float scaleY = 1080.f / rm.getMenuBgTexture().getSize().y;
     background.setScale({ scaleX, scaleY });
 
     infoText.setFillColor(sf::Color::White);
