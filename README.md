@@ -25,7 +25,7 @@ Dans un monde où la Mort a perdu son influence , les âmes des morts sont empri
 Autrefois, la Faucheuse guidait tout le monde vers le repos éternel. Mais depuis la chute du Royaume d’Astryx, une cité devenue un dédale chaotique. 
 La Faucheuse ne peut plus agir directement. Alors elle a créé un messager : un corbeau pas comme les autres.
 
-On l’appelle **Raven **.
+On l’appelle **Raven**.
 
 Ce corbeau est un fragment de son pouvoir. Doté de capacité fantomatique. Il ères dans les rues comme un dernier écho vie.
 
