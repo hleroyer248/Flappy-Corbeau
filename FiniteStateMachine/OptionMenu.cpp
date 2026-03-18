@@ -3,7 +3,7 @@
 #include <SFML/Audio.hpp> // Nécessaire pour sf::Listener
 
 OptionMenu::OptionMenu(const RessourcesManager& rm)
-    : background(rm.getSettingsBgTexture()),
+    : background(rm.getMenuBgTexture()),
     returnBtn(rm.getReturnBtnTexture()),
     infoText(rm.getFont(), "OPTIONS", 80),
     VolumeText(rm.getFont(), "100% (Music)", 40), VFXVolumeText(rm.getFont(), "100% (VFX)", 40) { // Initialisé à 100% par défaut
