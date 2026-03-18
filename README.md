@@ -1,4 +1,4 @@
-# RAVEN SOUL 🐦‍⬛💀— Mini Lore
+# RAVEN SOUL 🐦‍⬛💀
 > Type de jeux : Flappy Bird
 <br/>
 
