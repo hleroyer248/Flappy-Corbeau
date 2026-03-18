@@ -13,6 +13,26 @@
 #include "Boutique.h"
 #include "OptionMenu.h"
 
+struct LaserEntity {
+    sf::RectangleShape warningRect;
+    sf::Sprite sprite;
+
+    bool isDiagonal = false;
+
+    float warningDuration = 1.0f;
+    float activeDuration = 2.5f;
+    float startWarningAt = 0.f;
+    float sweepSpeed = 0.f;
+
+    float sweepMinY = 100.f;
+    float sweepMaxY = 800.f;
+
+    bool isWarning = false;
+    bool isFiring = false;
+
+    LaserEntity(const sf::Texture& tex) : sprite(tex) {}
+};
+
 class GameEvent {
 
 public:
@@ -24,24 +44,21 @@ public:
     bool shouldClearObstacles = false;
     bool laserDodgedThisFrame = false;
 
-    // Gère désormais 2 boîtes de collision
     std::vector<CollisionBox> getLaserCollisionBoxes() const;
 
     int obstaclesPassed;
     int lasersDodged;
 
-    float warningTimer;
-    float laserTimer;
+    float waveTimer;
+    float currentWaveDuration;
+    float screenShakeIntensity;
 
-    // NOUVEAU : Timer d'animation
     float laserAnimTimer;
     int currentLaserFrame;
 
     void addObstaclePassed(std::vector<Obstacle>& obstacles);
 
-    // Gère 2 Lasers
-    std::array<sf::RectangleShape, 2> warningRects;
-    std::array<sf::Sprite, 2> laserSprites;
+    std::vector<LaserEntity> activeLasers;
 
     bool isLaserActive() const;
 
@@ -68,4 +85,10 @@ private:
     std::uniform_real_distribution<float> laserYDist;
 
     void spawnObstacle(std::vector<Obstacle>& obstacles);
+
+    void setupWave(int waveIndex);
+
+    void addHorizontalLaser(float warnDur, float actDur, float startWarn, float sweepSpd = 0.f, float sweepMin = 100.f, float sweepMax = 800.f);
+    void addDiagonalLaser(float warnDur, float actDur, float startWarn, float startX);
+    void ensureSpacing(float minDist, float targetStartTime);
 };
