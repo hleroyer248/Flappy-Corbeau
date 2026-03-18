@@ -15,25 +15,11 @@ GameEvent::GameEvent(RessourcesManager& rm) :
     state(EventState::Normal),
     obstaclesPassed(0),
     lasersDodged(0),
-    warningTimer(0.f),
-    laserTimer(0.f),
+    waveTimer(0.f),
+    currentWaveDuration(0.f),
+    screenShakeIntensity(0.f),
     laserAnimTimer(0.f),
-    currentLaserFrame(0),
-    laserSprites{ sf::Sprite(rm.getLaserTexture()), sf::Sprite(rm.getLaserTexture()) } {
-
-    for (int i = 0; i < 2; ++i) {
-        // CORRECTION ICI : Le rectangle fait exactement 60 pixels (la taille du laser) au lieu de 100
-        warningRects[i].setSize({ 1920.f, 60.f });
-        warningRects[i].setFillColor(sf::Color(255, 0, 0, 150));
-
-        sf::IntRect firstRect = rm.getLaserRect(0);
-        if (firstRect.size.x > 0) {
-            float scaleX = 1920.f / static_cast<float>(firstRect.size.x);
-            float scaleY = 60.f / static_cast<float>(firstRect.size.y);
-            laserSprites[i].setTextureRect(firstRect);
-            laserSprites[i].setScale({ scaleX, scaleY });
-        }
-    }
+    currentLaserFrame(0) {
 
     std::random_device rd;
     gen = std::mt19937(rd());
@@ -48,8 +34,9 @@ void GameEvent::reset() {
     state = EventState::Normal;
     obstaclesPassed = 0;
     lasersDodged = 0;
-    warningTimer = 0.f;
-    laserTimer = 0.f;
+    waveTimer = 0.f;
+    screenShakeIntensity = 0.f;
+    activeLasers.clear();
     shouldClearObstacles = false;
 }
 
@@ -69,118 +56,184 @@ void GameEvent::update(float dt, std::vector<Obstacle>& obstacles) {
             obs.update(dt * speedMultiplier);
         }
     }
-    else if (state == EventState::Warning) {
-        warningTimer += dt;
-        if (warningTimer >= 1.5f) {
-            state = EventState::Laser;
-            laserTimer = 0.f;
-            currentLaserFrame = 0;
-            laserAnimTimer = 0.f;
+    else {
+        waveTimer += dt;
 
-            sf::IntRect currentRect = rm.getLaserRect(0);
-            if (currentRect.size.x > 0) {
-                float desiredThickness = 60.f;
-                float scaleX = 1920.f / static_cast<float>(currentRect.size.x);
-                float scaleY = desiredThickness / static_cast<float>(currentRect.size.y);
-
-                for (int i = 0; i < 2; ++i) {
-                    laserSprites[i].setTextureRect(currentRect);
-                    laserSprites[i].setScale({ scaleX, scaleY });
-
-                    // CORRECTION ICI : Plus de yOffset, on place le laser exactement à la même hauteur que le rectangle rouge
-                    laserSprites[i].setPosition({ 0.f, warningRects[i].getPosition().y });
-                }
-            }
-        }
-    }
-    else if (state == EventState::Laser) {
-        // --- ANIMATION ET SCALING ---
         laserAnimTimer += dt;
-
         float frameDuration = 0.12f;
-
         if (laserAnimTimer >= frameDuration) {
             laserAnimTimer -= frameDuration;
             currentLaserFrame = (currentLaserFrame + 1) % rm.getLaserFrameCount();
         }
 
         sf::IntRect currentRect = rm.getLaserRect(currentLaserFrame);
-        if (currentRect.size.x > 0) {
-            float desiredThickness = 60.f;
-            float scaleX = 1920.f / static_cast<float>(currentRect.size.x);
-            float scaleY = desiredThickness / static_cast<float>(currentRect.size.y);
+        bool anyFiring = false;
+        bool anyWarning = false;
 
-            for (int i = 0; i < 2; ++i) {
-                laserSprites[i].setTextureRect(currentRect);
-                laserSprites[i].setScale({ scaleX, scaleY });
+        for (auto& l : activeLasers) {
+            if (waveTimer >= l.startWarningAt && waveTimer < l.startWarningAt + l.warningDuration) {
+                l.isWarning = true;
+                l.isFiring = false;
+                anyWarning = true;
+            }
+            else if (waveTimer >= l.startWarningAt + l.warningDuration && waveTimer < l.startWarningAt + l.warningDuration + l.activeDuration) {
+                l.isWarning = false;
+                l.isFiring = true;
+                anyFiring = true;
+            }
+            else {
+                l.isWarning = false;
+                l.isFiring = false;
+            }
 
-                // CORRECTION ICI AUSSI : On place le laser à la position exacte du Warning
-                laserSprites[i].setPosition({ 0.f, warningRects[i].getPosition().y });
+            if (l.sweepSpeed != 0.f && l.isFiring) {
+                float newY = l.sprite.getPosition().y + l.sweepSpeed * dt;
+
+                if (newY < l.sweepMinY) { newY = l.sweepMinY; l.sweepSpeed *= -1.f; }
+                if (newY > l.sweepMaxY) { newY = l.sweepMaxY; l.sweepSpeed *= -1.f; }
+
+                l.sprite.setPosition({ l.sprite.getPosition().x, newY });
+            }
+
+            if (currentRect.size.x > 0) {
+                float desiredThickness = 60.f;
+                float scaleY = desiredThickness / static_cast<float>(currentRect.size.y);
+                float scaleX = (l.isDiagonal ? 2203.f : 1920.f) / static_cast<float>(currentRect.size.x);
+                l.sprite.setTextureRect(currentRect);
+                l.sprite.setScale({ scaleX, scaleY });
             }
         }
 
-        // --- GESTION DU TEMPS ---
-        laserTimer += dt;
-        if (laserTimer >= 2.5f) {
+        screenShakeIntensity = 0.f;
+        if (lasersDodged == 4 && waveTimer >= 3.5f && waveTimer < 5.0f) {
+            screenShakeIntensity = 15.f;
+        }
+
+        if (anyFiring) state = EventState::Laser;
+        else state = EventState::Warning;
+
+        if (waveTimer >= currentWaveDuration) {
             lasersDodged++;
             laserDodgedThisFrame = true;
 
             if (lasersDodged >= 5) {
                 lasersDodged = 0;
                 state = EventState::Normal;
+                activeLasers.clear();
             }
             else {
-                float newY1, newY2;
-                do {
-                    newY1 = laserYDist(gen);
-                    newY2 = laserYDist(gen);
-                } while (std::abs(newY1 - newY2) < 300.f);
-
-                warningRects[0].setPosition({ 0.f, newY1 });
-                warningRects[1].setPosition({ 0.f, newY2 });
-
-                state = EventState::Warning;
-                warningTimer = 0.f;
+                setupWave(lasersDodged);
             }
         }
     }
 }
 
+void GameEvent::setupWave(int waveIndex) {
+    activeLasers.clear();
+    waveTimer = 0.f;
+    screenShakeIntensity = 0.f;
+
+    if (waveIndex == 0) {
+        currentWaveDuration = 3.5f;
+        addHorizontalLaser(1.0f, 2.5f, 0.f);
+        addHorizontalLaser(1.0f, 2.5f, 0.f);
+        ensureSpacing(250.f, 0.f);
+    }
+    else if (waveIndex == 1) {
+        currentWaveDuration = 3.5f;
+        addHorizontalLaser(1.0f, 2.5f, 0.f);
+        addHorizontalLaser(1.0f, 2.5f, 0.f);
+        addHorizontalLaser(1.0f, 2.5f, 0.f);
+        ensureSpacing(200.f, 0.f);
+    }
+    else if (waveIndex == 2) {
+        currentWaveDuration = 4.5f;
+        addHorizontalLaser(1.0f, 3.5f, 0.f, 200.f, 100.f, 750.f);
+    }
+    else if (waveIndex == 3) {
+        currentWaveDuration = 7.5f;
+
+        addHorizontalLaser(1.0f, 2.0f, 0.f);
+        addHorizontalLaser(1.0f, 2.0f, 0.f);
+        ensureSpacing(250.f, 0.f);
+
+        addHorizontalLaser(1.0f, 2.0f, 2.0f);
+        addHorizontalLaser(1.0f, 2.0f, 2.0f);
+        ensureSpacing(250.f, 2.0f);
+
+        addHorizontalLaser(1.0f, 2.0f, 4.0f);
+        addHorizontalLaser(1.0f, 2.0f, 4.0f);
+        ensureSpacing(250.f, 4.0f);
+    }
+    else if (waveIndex == 4) {
+        currentWaveDuration = 5.5f;
+
+        addHorizontalLaser(1.0f, 2.0f, 0.f, 150.f, 100.f, 400.f);
+        addHorizontalLaser(1.0f, 2.0f, 0.f, -150.f, 600.f, 900.f);
+
+        addHorizontalLaser(0.5f, 1.5f, 3.0f);
+        addHorizontalLaser(0.5f, 1.5f, 3.0f);
+        addHorizontalLaser(0.5f, 1.5f, 3.0f);
+        ensureSpacing(200.f, 3.0f);
+
+        addDiagonalLaser(0.5f, 1.5f, 3.0f, 1440.f);
+        addDiagonalLaser(0.5f, 1.5f, 3.0f, 400.f);
+    }
+
+    state = EventState::Warning;
+}
+
 void GameEvent::addObstaclePassed(std::vector<Obstacle>& obstacles) {
     obstaclesPassed++;
 
-    if (obstaclesPassed >= 1 && state == EventState::Normal) {
-        state = EventState::Warning;
-        warningTimer = 0.f;
+    if (obstaclesPassed >= 10 && state == EventState::Normal) {
         obstaclesPassed = 0;
         shouldClearObstacles = true;
-
-        float newY1, newY2;
-        do {
-            newY1 = laserYDist(gen);
-            newY2 = laserYDist(gen);
-        } while (std::abs(newY1 - newY2) < 300.f);
-
-        warningRects[0].setPosition({ 0.f, newY1 });
-        warningRects[1].setPosition({ 0.f, newY2 });
+        setupWave(0);
     }
 }
 
 void GameEvent::draw(sf::RenderWindow& window) {
-    if (state == EventState::Warning) {
-        window.draw(warningRects[0]);
-        window.draw(warningRects[1]);
+    sf::View originalView = window.getView();
+
+    if (screenShakeIntensity > 0.f) {
+        sf::View shakeView = originalView;
+        std::uniform_real_distribution<float> shakeDist(-screenShakeIntensity, screenShakeIntensity);
+        shakeView.move({ shakeDist(gen), shakeDist(gen) });
+        window.setView(shakeView);
     }
-    if (state == EventState::Laser) {
-        window.draw(laserSprites[0]);
-        window.draw(laserSprites[1]);
+
+    for (const auto& l : activeLasers) {
+        if (l.isWarning) window.draw(l.warningRect);
+        if (l.isFiring) window.draw(l.sprite);
     }
+
+    window.setView(originalView);
 }
 
 std::vector<CollisionBox> GameEvent::getLaserCollisionBoxes() const {
     std::vector<CollisionBox> boxes;
-    boxes.push_back(CollisionBox(laserSprites[0].getGlobalBounds()));
-    boxes.push_back(CollisionBox(laserSprites[1].getGlobalBounds()));
+
+    for (const auto& l : activeLasers) {
+        if (l.isFiring) {
+            if (!l.isDiagonal) {
+                boxes.push_back(CollisionBox(l.sprite.getGlobalBounds()));
+            }
+            else {
+                int numBoxes = 50;
+                float dx = -1920.f / numBoxes;
+                float dy = 1080.f / numBoxes;
+
+                float startX = l.sprite.getPosition().x;
+
+                for (int i = 0; i <= numBoxes; ++i) {
+                    float cx = startX + dx * i;
+                    float cy = 0.f + dy * i;
+                    boxes.push_back(CollisionBox(sf::FloatRect({ cx - 22.5f, cy - 22.5f }, { 45.f, 45.f })));
+                }
+            }
+        }
+    }
     return boxes;
 }
 
@@ -200,4 +253,89 @@ void GameEvent::spawnObstacle(std::vector<Obstacle>& obstacles) {
 
     std::uniform_int_distribution<int> pipeDist(0, 2);
     obstacles.emplace_back(1950.f, gapDist(gen), 210.f, rm, type, pipeDist(gen), pipeDist(gen));
+}
+
+void GameEvent::addHorizontalLaser(float warnDur, float actDur, float startWarn, float sweepSpd, float sweepMin, float sweepMax) {
+    LaserEntity l(rm.getLaserTexture());
+    l.isDiagonal = false;
+    l.warningDuration = warnDur;
+    l.activeDuration = actDur;
+    l.startWarningAt = startWarn;
+    l.sweepSpeed = sweepSpd;
+    l.sweepMinY = sweepMin;
+    l.sweepMaxY = sweepMax;
+
+    l.warningRect.setSize({ 1920.f, 60.f });
+    l.warningRect.setFillColor(sf::Color(255, 0, 0, 150));
+    l.warningRect.setOrigin({ 0.f, 0.f });
+
+    sf::IntRect firstRect = rm.getLaserRect(0);
+    if (firstRect.size.x > 0) {
+        float scaleX = 1920.f / static_cast<float>(firstRect.size.x);
+        float scaleY = 60.f / static_cast<float>(firstRect.size.y);
+        l.sprite.setOrigin({ 0.f, 0.f });
+        l.sprite.setTextureRect(firstRect);
+        l.sprite.setScale({ scaleX, scaleY });
+    }
+
+    float startY = laserYDist(gen);
+
+    if (sweepSpd != 0.f) {
+        startY = std::max(sweepMin, std::min(startY, sweepMax));
+    }
+
+    l.sprite.setPosition({ 0.f, startY });
+    l.warningRect.setPosition({ 0.f, startY });
+
+    activeLasers.push_back(l);
+}
+
+void GameEvent::addDiagonalLaser(float warnDur, float actDur, float startWarn, float startX) {
+    LaserEntity l(rm.getLaserTexture());
+    l.isDiagonal = true;
+    l.warningDuration = warnDur;
+    l.activeDuration = actDur;
+    l.startWarningAt = startWarn;
+
+    l.warningRect.setSize({ 2203.f, 60.f });
+    l.warningRect.setFillColor(sf::Color(255, 0, 0, 150));
+    l.warningRect.setOrigin({ 0.f, 30.f });
+    l.warningRect.setPosition({ startX, 0.f });
+    l.warningRect.setRotation(sf::degrees(150.64f));
+
+    sf::IntRect firstRect = rm.getLaserRect(0);
+    if (firstRect.size.x > 0) {
+        float scaleX = 2203.f / static_cast<float>(firstRect.size.x);
+        float scaleY = 60.f / static_cast<float>(firstRect.size.y);
+        l.sprite.setOrigin({ 0.f, static_cast<float>(firstRect.size.y) / 2.f });
+        l.sprite.setPosition({ startX, 0.f });
+        l.sprite.setRotation(sf::degrees(150.64f));
+        l.sprite.setTextureRect(firstRect);
+        l.sprite.setScale({ scaleX, scaleY });
+    }
+
+    activeLasers.push_back(l);
+}
+
+void GameEvent::ensureSpacing(float minDist, float targetStartTime) {
+    bool ok = false;
+    int attempts = 0;
+    while (!ok && attempts < 100) {
+        ok = true;
+        for (size_t i = 0; i < activeLasers.size(); ++i) {
+            if (activeLasers[i].startWarningAt != targetStartTime || activeLasers[i].isDiagonal) continue;
+
+            for (size_t j = i + 1; j < activeLasers.size(); ++j) {
+                if (activeLasers[j].startWarningAt != targetStartTime || activeLasers[j].isDiagonal) continue;
+
+                if (std::abs(activeLasers[i].sprite.getPosition().y - activeLasers[j].sprite.getPosition().y) < minDist) {
+                    ok = false;
+                    float newY = laserYDist(gen);
+                    activeLasers[j].sprite.setPosition({ 0.f, newY });
+                    activeLasers[j].warningRect.setPosition({ 0.f, newY });
+                }
+            }
+        }
+        attempts++;
+    }
 }
