@@ -155,12 +155,12 @@ void Game::processEvents() {
                 }
                 if ((key->code == sf::Keyboard::Key::LShift || key->code == sf::Keyboard::Key::RShift) && player->canActivateGhost()) {
                     player->activateGhost();
+                    am.playGhostSound();
                 }
             }
             if (const auto* mouse = event.getIf<sf::Event::MouseButtonReleased>()) {
                 if (mouse->button == sf::Mouse::Button::Left) {
                     player->flap();
-                    am.playJumpSound();
                 }
             }
         }
@@ -174,6 +174,8 @@ void Game::processEvents() {
 }
 
 void Game::update(float dt) {
+    am.updateMusic();
+    am.updateCrow(dt);
     if (state == GameState::MainMenu || state == GameState::OptionMenu) {
         return;
     }
