@@ -8,7 +8,7 @@ GameOverMenu::GameOverMenu(const RessourcesManager& rm_in)
     background(rm_in.getBgGameOverTexture()),
     retryBtn(rm_in.getStartBtnTexture()),
     returnBtn(rm_in.getReturnBtnTexture()),
-    bestScoreLabel(rm_in.getFont(), "Best :", 40),
+    bestScoreLabel(rm_in.getFont(), "", 40),
     finalScoreVal(0),
     bestScoreVal(0)
 {
@@ -86,7 +86,7 @@ void GameOverMenu::draw(sf::RenderWindow& window) const {
     drawNumbers(window, finalScoreVal, { 1250.f, 500.f }, 0.15f, true);
 
     // MODIFICATION DE L'ÉCHELLE : On passe de 0.8f à 0.25f (Le meilleur score)
-    drawNumbers(window, bestScoreVal, { 1350.f, 700.f }, 0.15f, false);
+    drawNumbers(window, bestScoreVal, { 1250.f, 700.f }, 0.15f, false);
 }
 
 void GameOverMenu::updateScoreText(int finalScore)
