@@ -49,6 +49,14 @@ Boutique::Boutique(RessourcesManager& rm, Save& save) :
     items.emplace_back("Bird Gold", 550, rm.getPlayerTexture());
     items.emplace_back("Bird Shadow", 850, rm.getPlayerTexture());
 
+    items[0].setColor(sf::Color::White);
+    items[1].setColor(sf::Color::Red);
+    items[2].setColor(sf::Color::Blue);
+    items[3].setColor(sf::Color::Green);
+    items[4].setColor(sf::Color(255, 215, 0)); // gold
+    items[5].setColor(sf::Color(100, 100, 100)); // shadow
+
+
     int cols = 3;
     int spacing = 40;
 

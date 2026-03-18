@@ -67,6 +67,7 @@ void Player::applyCurrentTexture(const sf::Texture* tex) {
     float visualSize = 115.f;
     sprite.setScale({ visualSize / frameWidth, visualSize / frameHeight });
     // Commit Visual Size - fin
+    sprite.setColor(skinColor);
 }
 
 void Player::reset() {
@@ -204,4 +205,10 @@ void Player::setSkin(const sf::Texture& texture)
 float Player::getCooldownRatio() const {
     if (ghostCooldownTimer <= 0.f) return 0.f;
     return ghostCooldownTimer / GHOST_COOLDOWN_MAX;
+}
+
+void Player::setSkinColor(const sf::Color& color)
+{
+    skinColor = color;
+    sprite.setColor(skinColor);
 }
