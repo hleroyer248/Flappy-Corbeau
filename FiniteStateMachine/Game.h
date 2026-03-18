@@ -1,6 +1,3 @@
-// ==========================================
-// Game.h
-// ==========================================
 #pragma once
 #include <SFML/Graphics.hpp>
 #include <vector>
@@ -52,10 +49,6 @@ private:
     std::optional<OptionMenu> optionMenu;
     std::optional<GameOverMenu>gameOverMenu;
     std::optional<Boutique> shop;
-
-    std::optional<sf::Sprite> bg1;
-    std::optional<sf::Sprite> bg2;
-    float bgWidth;
 
     std::optional<sf::Text> menuTitle;
     std::optional<sf::Text> startButton;
