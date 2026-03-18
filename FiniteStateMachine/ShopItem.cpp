@@ -133,3 +133,14 @@ const sf::Texture& ShopItem::getTexture() const
 {
     return sprite.getTexture();
 }
+
+void ShopItem::setColor(const sf::Color& c)
+{
+    color = c;
+    sprite.setColor(color);
+}
+
+sf::Color ShopItem::getColor() const
+{
+    return color;
+}

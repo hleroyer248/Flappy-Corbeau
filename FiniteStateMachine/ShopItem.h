@@ -17,6 +17,9 @@ private:
 
     sf::Sprite sprite;
     sf::RectangleShape box;
+    sf::Color color = sf::Color::White;
+    sf::Color getColor() const;
+
 
 public:
 
@@ -41,5 +44,7 @@ public:
 
     void setEquipped(bool value);
     bool isEquipped() const;
+    void setColor(const sf::Color& c);
+
 
 };

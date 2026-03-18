@@ -60,12 +60,24 @@ void Game::resetGame() {
 
     int skinIndex = save.getEquippedSkin();
 
-    if (skinIndex == 0) player->setSkin(rm.getPlayerTexture());
-    if (skinIndex == 1) player->setSkin(rm.getBirdRedTexture());
-    if (skinIndex == 2) player->setSkin(rm.getBirdBlueTexture());
-    if (skinIndex == 3) player->setSkin(rm.getBirdGreenTexture());
-    if (skinIndex == 4) player->setSkin(rm.getBirdGoldTexture());
-    if (skinIndex == 5) player->setSkin(rm.getBirdShadowTexture());
+    //  UNE seule texture
+    player->setSkin(rm.getPlayerTexture());
+
+    //  couleur selon skin
+    sf::Color skinColor;
+
+    switch (skinIndex)
+    {
+    case 0: skinColor = sf::Color::White; break;
+    case 1: skinColor = sf::Color::Red; break;
+    case 2: skinColor = sf::Color::Blue; break;
+    case 3: skinColor = sf::Color::Green; break;
+    case 4: skinColor = sf::Color(255, 215, 0); break; // gold
+    case 5: skinColor = sf::Color(100, 100, 100); break; // shadow
+    default: skinColor = sf::Color::White; break;
+    }
+
+    player->setSkinColor(skinColor);
 
     pipeSpawnTimer = 0.f;
     lastPipeWasMoving = false;
