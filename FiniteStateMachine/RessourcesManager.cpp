@@ -12,17 +12,36 @@ bool RessourcesManager::loadAll() {
     }
 
     for (int i = 0; i < 3; ++i) {
-        std::string topName = "Hobstacle" + std::to_string(i + 1) + ".png";
-        std::string botName = "Bobstacle" + std::to_string(i + 1) + ".png";
 
-        if (!topPipeTex[i].loadFromFile(basePath + topName) ||
-            !bottomPipeTex[i].loadFromFile(basePath + botName)) {
-            std::cerr << "ERREUR: Impossible de charger " << topName << " ou " << botName << "\n";
+        // 🔵 TOP (ON NE TOUCHE PAS)
+        std::string topName = "Hobstacle" + std::to_string(i + 1) + ".png";
+
+        if (!topPipeTex[i].loadFromFile(basePath + topName)) {
+            std::cerr << "ERREUR: Impossible de charger " << topName << "\n";
             return false;
         }
 
         topPipeImg[i] = topPipeTex[i].copyToImage();
-        bottomPipeImg[i] = bottomPipeTex[i].copyToImage();
+
+        // 🔴 BOTTOM HEAD (statue)
+        std::string botHead = "Bobstacle" + std::to_string(i + 1) + ".png";
+
+        if (!bottomHeadTex[i].loadFromFile(basePath + botHead)) {
+            std::cerr << "ERREUR: Impossible de charger " << botHead << "\n";
+            return false;
+        }
+
+        bottomHeadImg[i] = bottomHeadTex[i].copyToImage();
+
+        // 🟡 BOTTOM BODY (partie étirable)
+        std::string botBody = "SuitePylone" + std::to_string(i + 1) + ".png";
+
+        if (!bottomBodyTex[i].loadFromFile(basePath + botBody)) {
+            std::cerr << "ERREUR: Impossible de charger " << botBody << "\n";
+            return false;
+        }
+
+        bottomBodyImg[i] = bottomBodyTex[i].copyToImage();
     }
 
     if (!loadTexture(playerTex, basePath + "Player.png")) return false;
@@ -48,6 +67,7 @@ bool RessourcesManager::loadAll() {
     if (!loadTexture(birdShadowTex, basePath + "BirdShadow.png")) return false;
     if (!loadTexture(titleTex, basePath + "Title.png")) return false;
     if (!loadTexture(shopBgTex, basePath + "ShopButtonBG.png")) return false;
+    if (!loadTexture(capaTex, basePath + "Capa.png")) return false;
 
     sf::Image numbersImg;
     if (numbersImg.loadFromFile(basePath + "Chiffre.png") || numbersImg.loadFromFile(basePath + "Chiffre.jpg")) {
@@ -173,6 +193,12 @@ bool RessourcesManager::loadAll() {
 
             if (laserRects.empty()) {
                 laserRects.push_back(sf::IntRect({ 0, 0 }, { w, h }));
+        // Sécurité si l'auto-crop rate (image trop bizarre)
+        if (digitRects.size() < 10) {
+            digitRects.clear();
+            int defaultW = w / 10;
+            for (int i = 0; i < 10; ++i) {
+                digitRects.push_back(sf::IntRect({ i * defaultW, 0 }, { defaultW, h }));
             }
             std::cout << "OK : Laser (Decoupe Dynamique Parfaite, " << laserRects.size() << " frames trouvees)" << std::endl;
         }
@@ -225,6 +251,13 @@ const sf::Texture& RessourcesManager::getBgGameOverTexture() const { return bgGa
 const sf::Texture& RessourcesManager::getLaserTexture() const { return laserTex; }
 const sf::Texture& RessourcesManager::getTitleTexture() const { return titleTex; }
 const sf::Texture& RessourcesManager::getShopBgTexture() const { return shopBgTex; }
+const sf::Texture& RessourcesManager::getNumbersTexture() const { return numbersTex; }
+const sf::Texture& RessourcesManager::getCapaTexture() const { return capaTex; }
+
+const sf::Texture& RessourcesManager::getTopHeadTexture(int index) const { return topHeadTex[index]; }
+const sf::Texture& RessourcesManager::getTopBodyTexture(int index) const { return topBodyTex[index]; }
+const sf::Texture& RessourcesManager::getBottomHeadTexture(int index) const { return bottomHeadTex[index]; }
+const sf::Texture& RessourcesManager::getBottomBodyTexture(int index) const { return bottomBodyTex[index]; }
 
 const sf::Texture& RessourcesManager::getNumbersTexture() const { return numbersTex; }
 const sf::IntRect& RessourcesManager::getDigitRect(int index) const {
