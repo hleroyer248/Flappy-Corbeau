@@ -46,6 +46,11 @@ public:
     const sf::Texture& getLaserTexture() const;
     const sf::Texture& getTitleTexture() const;
 
+    const sf::Texture& getTopHeadTexture(int index) const;
+    const sf::Texture& getTopBodyTexture(int index) const;
+    const sf::Texture& getBottomHeadTexture(int index) const;
+    const sf::Texture& getBottomBodyTexture(int index) const;
+
     const sf::Texture& getNumbersTexture() const;
     // NOUVEAU : Récupère la hitbox parfaite d'un chiffre
     const sf::IntRect& getDigitRect(int index) const;
@@ -87,6 +92,13 @@ private:
     sf::Image bottomPipeImg[3];
     sf::Texture laserTex;
     sf::Texture titleTex;
+
+    sf::Texture topHeadTex[3];
+    sf::Texture topBodyTex[3];
+    sf::Texture bottomHeadTex[3];
+    sf::Texture bottomBodyTex[3];
+    sf::Image bottomHeadImg[3];
+    sf::Image bottomBodyImg[3];
 
     sf::Texture numbersTex;
     std::vector<sf::IntRect> digitRects; // Stocke la découpe parfaite des 10 chiffres

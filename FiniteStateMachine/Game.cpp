@@ -318,7 +318,37 @@ void Game::render() {
         if (state == GameState::Playing || state == GameState::Ready || state == GameState::GameOver) {
             for (const auto& obs : obstacles) {
                 window.draw(obs.getTopSprite());
-                window.draw(obs.getBottomSprite());
+                //bottom obstacles en boucle 
+                const sf::Sprite& body = obs.getBottomBody();
+
+                float y = body.getPosition().y;
+                float height = body.getGlobalBounds().size.y - 12.f;
+
+                bool first = true;
+
+                while (y < 1100.f) {
+                    sf::Sprite part = body;
+
+                    if (!first) {
+                        sf::IntRect rect = part.getTextureRect();
+
+                        int cut = 149;
+
+                        rect.position.y += cut;
+                        rect.size.y -= cut;
+
+                        part.setTextureRect(rect);
+                    }
+
+                    part.setPosition({ body.getPosition().x, y });
+
+                    window.draw(part);
+
+                    y += height;
+                    first = false;
+                }
+
+                window.draw(obs.getBottomHead());
             }
             window.draw(player->getSprite());
             gameEvent->draw(window);
