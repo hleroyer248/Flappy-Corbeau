@@ -20,6 +20,8 @@ public:
     CollisionBox getBottomCollisionBox() const;
     const sf::Sprite& getTopSprite() const;
     const sf::Sprite& getBottomSprite() const;
+    const sf::Sprite& getBottomHead() const;
+    const sf::Sprite& getBottomBody() const;
     float getX() const;
     float getWidth() const;
     bool isPassed() const;
@@ -28,6 +30,14 @@ public:
 private:
     sf::Sprite topSprite;
     sf::Sprite bottomSprite;
+
+    sf::Sprite topHead;
+    sf::Sprite topBody;
+
+    sf::Sprite bottomHead;
+    sf::Sprite bottomBody;
+
+
     float x;
     bool passed;
     float width;
@@ -36,6 +46,10 @@ private:
     float gapHeight;
     float time;
     float topTexHeight;
+
+    float offsetX;
+    float offsetY;
+    float headAdjust;
 
     const sf::Image* topImage;
     const sf::Image* bottomImage;
