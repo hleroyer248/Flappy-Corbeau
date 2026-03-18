@@ -45,21 +45,32 @@ Le voyage ne fait que commencer.
 
 <br/>
 
-*Nous avons mobilisé toute notre puissance technologique pour vous envoyer en mission.*    <br/>
-*À bord de votre Arwing, le vaisseau d’élite de la Super Terre, vous combattrez sans relâche et répandrez notre résistance à travers la galaxie.* 
 
-**_EXTERMINEZ_** *ces envahisseurs et* **_SAUVER NOTRE MONDE !_**
 
-<br/>
 
-**_Vous êtes notre dernier espoir...    <br/>
-Tout repose sur vos épaules...     <br/>
-On compte sur vous !_**      <br/>
 
- <br/>
+Dans un monde où la Mort a perdu son influence , les âmes des morts sont emprisonné dans cet univers en déperdition .  Prisonnières des ruines
 
-**_Devenez un HÉROS !_** ✨ <br/>
-**_Devenez une LÉGENDE !_**  ✨
+Autrefois, la Faucheuse guidait tout le monde vers le repos éternel. Mais depuis la chute du Royaume d’Astryx, une cité devenue un dédale chaotique. 
+La Faucheuse ne peut plus agir directement. Alors elle a créé un messager : un corbeau pas comme les autres.
+
+On l’appelle **Raven **.
+
+Ce corbeau est un fragment de son pouvoir. Doté de capacité fantomatique. Il ères dans les rues comme un dernier écho vie.
+
+Sa mission est claire :
+
+Traverser les villes mortes et le château en ruines.  
+Éviter les débris instables, les reliques maudites et les anomalies qui hantent les lieux.  
+Trouver les âmes perdues, oubliées, abandonnées.
+
+Et les libérer pour qu’elles trouvent enfin la paix.
+
+Chaque âme sauvée s’élève en une douce lueur violette dans le ciel sombre.
+
+Mais plus Raven avance, plus les ruines semblent s’animer… comme si une force inconnue ne voulait pas laisser partir les âmes.
+
+Le voyage ne fait que commencer.
 
 
 <br/>
@@ -78,13 +89,7 @@ On compte sur vous !_**      <br/>
 
 # 2. Structuration du projet 🛠️ :
 
-apprentissage<br/>
-├─ apprentissage.sln<br/>
-├─ apprentissage/<br/>
-│ ├─ .cpp / .h (Code source : Game, Entity, Enemy, Levels, etc.)<br/>
-│ ├─ arial.ttf  (police de texte) <br/>
-│ ├─ x64/<br/>
-│ │ ├─ Debug/Release  (Binaires et DLL SFML)<br/>
+
 │ └─ .vs/  (Fichiers Visual Studio) <br/>
 <br/>
 <br/>
@@ -138,61 +143,3 @@ Les bibliothèques SFML suivantes sont utilisées :
 >  **_Les "DLL" sont fournies avec le projet pour simplifier l’exécution._**
 <br/>
 <br/>
-
-> *Merci d'avoir lu ! En guise de récompense entrez les codes suivant pour une meilleure expérience de jeux !( Code :* **_BOSS_** ; **_GodMode_**) 🥳🎉
-
-<br/>
-
-> [!TIP]
-> Pour <ins>insérer un code :</ins>
-> - Aller dans **Settings**
-> - Selectionner la catégorie "**_Code_**"
-> - Inserez les code donner précédemment.
-> - Appuyer <ins>Entrer</ins> ou <ins>cliquer.</ins>
-
-<br/>
-
-- 😊 [Je suis satisfait](../../issues/new?labels=feedback&title=Avis+positif)   <br/>
-- 😕 [Je ne suis pas satisfait](../../issues/new?labels=feedback&title=Avis+négatif)   <br/>
-
-> Veuillez laisser une réponse en cliquant sur le lien bleuté. Cela nous aidera pour les prochaine conception, MERCI ✅.
-
-<br/>
-<br/>
-
-> [!IMPORTANT]
-> C'est un <ins>projet à but pédagogique</ins> : le code privilégie la **clarté** et **l’expérimentation.**     <br/>
-> Les dossiers "<ins>.vs</ins>" et "<ins>binaires</ins>" sont présents pour un <ins>démarrage rapide</ins>.
-
-<br/>
-<br/>
-
-
-> # FAIT PART : **_H.S_** **(HUGO LEROYER et SWAN PACTOLE--OTHILY)**
-
-
-
-
-
-Dans un monde où la Mort a perdu son influence , les âmes des morts sont emprisonné dans cet univers en déperdition .  Prisonnières des ruines
-
-Autrefois, la Faucheuse guidait tout le monde vers le repos éternel. Mais depuis la chute du Royaume d’Astryx, une cité devenue un dédale chaotique. 
-La Faucheuse ne peut plus agir directement. Alors elle a créé un messager : un corbeau pas comme les autres.
-
-On l’appelle **Raven **.
-
-Ce corbeau est un fragment de son pouvoir. Doté de capacité fantomatique. Il ères dans les rues comme un dernier écho vie.
-
-Sa mission est claire :
-
-Traverser les villes mortes et le château en ruines.  
-Éviter les débris instables, les reliques maudites et les anomalies qui hantent les lieux.  
-Trouver les âmes perdues, oubliées, abandonnées.
-
-Et les libérer pour qu’elles trouvent enfin la paix.
-
-Chaque âme sauvée s’élève en une douce lueur violette dans le ciel sombre.
-
-Mais plus Raven avance, plus les ruines semblent s’animer… comme si une force inconnue ne voulait pas laisser partir les âmes.
-
-Le voyage ne fait que commencer.
