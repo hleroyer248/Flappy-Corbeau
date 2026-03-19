@@ -107,7 +107,7 @@ OptionMenu::Action OptionMenu::handleEvent(const sf::Event& event) {
  
 
              // Mise à jour du texte
-            VolumeText.setString(std::to_string(static_cast<int>(volumeValue)) + "% Music");
+            VolumeText.setString(std::to_string(static_cast<int>(volumeValue)) + "% (Music)");
 
         }
 
