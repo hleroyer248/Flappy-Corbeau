@@ -2,7 +2,7 @@
 #include <iostream>
 
 Game::Game() : window(sf::VideoMode({ 1920, 1080 }), "RavenSoul", sf::State::Windowed),
-state(GameState::MainMenu), score(0), pipeSpawnTimer(0.f), lastPipeWasMoving(false),
+state(GameState::MainMenu), score(0), pipeSpawnTimer(0.f), lastPipeWasMoving(false), bgWidth(0.f),
 player(nullptr), capaIcon(rm.getCapaTexture())
 {
     window.setFramerateLimit(60);
@@ -14,17 +14,11 @@ player(nullptr), capaIcon(rm.getCapaTexture())
 
     frontLayers.clear();
 
-    // 🔥 layer (sol)
-    //frontLayers.emplace_back(rm.getFrontBottomTexture(), 1.2f);
-
-    // 🔥 layer (plafond)
-    //frontLayers.emplace_back(rm.getFrontTopTexture(), 1.2f);
-
     player = new Player(rm);
     save.equipSkin(-1);
 
     mainMenu.emplace(rm);
-    optionMenu.emplace(rm);
+    optionMenu.emplace(rm, am);
     gameOverMenu.emplace(rm);
     shop.emplace(rm, save);
 
@@ -48,7 +42,6 @@ player(nullptr), capaIcon(rm.getCapaTexture())
 
     capaIcon.setTexture(rm.getCapaTexture());
 
-    // 🔥 TESTS
     capaIcon.setTextureRect(sf::IntRect({ 0,0 }, {
         (int)rm.getCapaTexture().getSize().x,
         (int)rm.getCapaTexture().getSize().y
@@ -67,21 +60,17 @@ void Game::resetGame() {
     score = 0;
 
     int skinIndex = save.getEquippedSkin();
-
-    //  UNE seule texture
     player->setSkin(rm.getPlayerTexture());
 
-    //  couleur selon skin
     sf::Color skinColor;
-
     switch (skinIndex)
     {
     case 0: skinColor = sf::Color::White; break;
     case 1: skinColor = sf::Color::Red; break;
     case 2: skinColor = sf::Color::Blue; break;
     case 3: skinColor = sf::Color::Green; break;
-    case 4: skinColor = sf::Color(255, 215, 0); break; // gold
-    case 5: skinColor = sf::Color(100, 100, 100); break; // shadow
+    case 4: skinColor = sf::Color(255, 215, 0); break;
+    case 5: skinColor = sf::Color(100, 100, 100); break;
     default: skinColor = sf::Color::White; break;
     }
 
