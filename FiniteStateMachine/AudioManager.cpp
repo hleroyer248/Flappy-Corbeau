@@ -1,4 +1,4 @@
-﻿#include "AudioManager.h"
+#include "AudioManager.h"
 #include <iostream>
 
 AudioManager::AudioManager() {
@@ -162,12 +162,20 @@ void AudioManager::updateSoundVolumes() {
     if (jumpSound) jumpSound->setVolume(30.f * mult);
     if (deathSound) deathSound->setVolume(100.f * mult);
     if (ghostSound) ghostSound->setVolume(150.f * mult);
+
+    for (auto& sound : laserShots) {
+        sound.setVolume(50.f * mult);
+    }
+} 
+
 void AudioManager::playLaserSound() {
-    laserShots.emplace_back(laserBuffer); // ✅ direct dans le vector
+    laserShots.emplace_back(laserBuffer);
 
     sf::Sound& sound = laserShots.back();
 
-    sound.setVolume(50.f);
+    float mult = isSoundMuted ? 0.f : (masterSoundVolume / 100.f);
+    sound.setVolume(50.f * mult);
+
     sound.setPitch(0.95f + (chanceDist(gen) / 100.f) * 0.1f);
     sound.setPlayingOffset(sf::seconds(1.2f));
 
