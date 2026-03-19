@@ -3,7 +3,7 @@
 ParallaxLayer::ParallaxLayer(const sf::Texture& tex, float speedFactor)
     : factor(speedFactor), s1(tex), s2(tex)
 {
-    float scaleY = 1080.f * 0.928 / static_cast<float>(tex.getSize().y);
+    float scaleY = 1080.f * 0.928f / static_cast<float>(tex.getSize().y);
 
     // On applique le même scale sur X pour garder les proportions de l'image
     float scaleX = scaleY;

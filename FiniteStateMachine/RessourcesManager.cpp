@@ -71,6 +71,8 @@ bool RessourcesManager::loadAll() {
     if (!loadTexture(titleTex, basePath + "Title.png")) return false;
     if (!loadTexture(shopBgTex, basePath + "ShopButtonBG.png")) return false;
     if (!loadTexture(capaTex, basePath + "Capa.png")) return false;
+    if (!loadTexture(frontBottomTex, basePath + "FrontBottom.png")) return false;
+    if (!loadTexture(frontTopTex, basePath + "FrontTop.png")) return false;
 
     // AUTO-CROP CHIFFRES
     sf::Image numbersImg;
@@ -284,3 +286,6 @@ const sf::IntRect& RessourcesManager::getLaserRect(int index) const {
 int RessourcesManager::getLaserFrameCount() const {
     return static_cast<int>(laserRects.size());
 }
+
+const sf::Texture& RessourcesManager::getFrontTopTexture() const { return frontTopTex; }
+const sf::Texture& RessourcesManager::getFrontBottomTexture() const { return frontBottomTex; }

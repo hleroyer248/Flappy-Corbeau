@@ -60,6 +60,8 @@ public:
     float laserAnimTimer;
     int currentLaserFrame;
 
+    float laserProbability;
+
     void addObstaclePassed(std::vector<Obstacle>& obstacles);
 
     std::vector<LaserEntity> activeLasers;
