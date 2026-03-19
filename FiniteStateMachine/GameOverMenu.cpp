@@ -14,7 +14,6 @@ GameOverMenu::GameOverMenu(const RessourcesManager& rm_in)
     returnBtn.setPosition({ 460.f, 800.f });
     returnBtn.setScale({ 0.07f, 0.07f });
 
-    // Emplacement d'origine du meilleur score
     bestScoreLabel.setPosition({ 1200.f, 850.f });
     bestScoreLabel.setFillColor(sf::Color::White);
 
@@ -27,7 +26,6 @@ GameOverMenu::Action GameOverMenu::handleEvent(const sf::Event& event) {
         if (mouse->button == sf::Mouse::Button::Left) {
             sf::Vector2f mPos(static_cast<float>(mouse->position.x), static_cast<float>(mouse->position.y));
 
-            // CORRECTION ICI : On utilise la hitbox automatique des sprites
             if (retryBtn.getGlobalBounds().contains(mPos)) return Action::Retry;
             if (returnBtn.getGlobalBounds().contains(mPos)) return Action::Quit;
         }
@@ -41,11 +39,9 @@ void GameOverMenu::drawNumbers(sf::RenderWindow& window, int value, sf::Vector2f
 
     std::string s = std::to_string(value);
 
-    // Espacement dynamique légèrement augmenté pour les petites échelles
     float spacing = 20.f * scale;
     float totalWidth = 0;
 
-    // Calcul de la largeur totale pour pouvoir centrer
     for (char c : s) {
         int d = c - '0';
         totalWidth += rm.getDigitRect(d).size.x * scale + spacing;
@@ -68,7 +64,6 @@ void GameOverMenu::drawNumbers(sf::RenderWindow& window, int value, sf::Vector2f
         spr.setPosition({ currentX, position.y });
         window.draw(spr);
 
-        // On avance la position X pour le prochain chiffre
         currentX += rect.size.x * scale + spacing;
     }
 }
@@ -79,10 +74,7 @@ void GameOverMenu::draw(sf::RenderWindow& window) const {
     window.draw(retryBtn);
     window.draw(returnBtn);
 
-    // MODIFICATION DE L'ÉCHELLE : On passe de 1.2f à 0.4f (Le score de la partie)
     drawNumbers(window, finalScoreVal, { 1250.f, 500.f }, 0.15f, true);
-
-    // MODIFICATION DE L'ÉCHELLE : On passe de 0.8f à 0.25f (Le meilleur score)
     drawNumbers(window, bestScoreVal, { 1250.f, 700.f }, 0.15f, false);
 }
 
