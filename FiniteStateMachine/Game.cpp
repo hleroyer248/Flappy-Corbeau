@@ -357,6 +357,9 @@ void Game::render() {
                 window.draw(obs.getBottomHead());
             }
 
+            for (const auto& t : player->getTrail()) {
+                window.draw(t.sprite);
+            }
             window.draw(player->getSprite());
             gameEvent->draw(window);
         }

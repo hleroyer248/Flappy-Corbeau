@@ -4,6 +4,15 @@
 #include "CollisionBox.h"
 
 class Player {
+    struct TrailPoint {
+        sf::Sprite sprite;
+        float lifetime;
+
+        TrailPoint(const sf::Sprite& s, float life)
+            : sprite(s), lifetime(life) {
+        }
+    };
+
 public:
     Player(const RessourcesManager& rm);
     void reset();
@@ -25,6 +34,7 @@ public:
     float getCooldownRatio() const;
 
     void setSkinColor(const sf::Color& color);
+    const std::vector<TrailPoint>& getTrail() const;
 
 private:
     sf::Sprite sprite;
@@ -54,5 +64,8 @@ private:
     sf::Image ghostImage;
     const sf::Image* currentImage;
     sf::Color skinColor = sf::Color::White;
+    float trailTimer = 0.f;
+    std::vector<TrailPoint> trail;
+    bool rainbowActive = false;
 
 };

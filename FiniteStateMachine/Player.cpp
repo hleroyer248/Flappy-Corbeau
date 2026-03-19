@@ -91,6 +91,32 @@ void Player::update(float dt) {
             sprite.setTextureRect(sf::IntRect({ col * frameWidth, row * frameHeight }, { frameWidth, frameHeight }));
         }
     }
+    if (rainbowActive) { // ou mieux: flag rainbow
+        trailTimer += dt;
+
+        if (trailTimer >= 0.05f) {
+            trailTimer = 0.f;
+
+            trail.emplace_back(sprite, 0.5f);
+        }
+    }
+    for (auto& t : trail) {
+        t.lifetime -= dt;
+
+        float alpha = (t.lifetime / 0.5f) * 255.f;
+        sf::Color c = t.sprite.getColor();
+        c.a = static_cast<uint8_t>(alpha);
+        t.sprite.setColor(c);
+    }
+
+    // suppression
+    trail.erase(
+        std::remove_if(trail.begin(), trail.end(),
+            [](const TrailPoint& t) {
+                return t.lifetime <= 0.f;
+            }),
+        trail.end()
+    );
 }
 
 void Player::activateGhost() {
@@ -179,4 +205,8 @@ void Player::setSkinColor(const sf::Color& color)
 {
     skinColor = color;
     sprite.setColor(skinColor);
+}
+
+const std::vector<Player::TrailPoint>& Player::getTrail() const {
+    return trail;
 }
