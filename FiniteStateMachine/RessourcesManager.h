@@ -56,7 +56,6 @@ public:
     const sf::Texture& getNumbersTexture() const;
     const sf::IntRect& getDigitRect(int index) const;
 
-    // NOUVEAU : Auto-Crop du Laser
     const sf::IntRect& getLaserRect(int index) const;
     int getLaserFrameCount() const;
     const sf::Texture& getCapaTexture() const;
@@ -109,7 +108,6 @@ private:
     sf::Texture numbersTex;
     std::vector<sf::IntRect> digitRects;
 
-    // NOUVEAU
     std::vector<sf::IntRect> laserRects;
 
     sf::Texture capaTex;
