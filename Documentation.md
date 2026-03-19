@@ -60,18 +60,18 @@ Le projet a été développé avec une volonté de **clarté** et d'**expérimen
 
 Le projet **Raven Soul** est le fruit d'une collaboration interdisciplinaire répartie en trois pôles de compétences :
 
-### 💻 Groupe Technique (G. Tech)
+### 💻 Groupe Technique (G. TECH)
 * **LEROYER Hugo**
 * **PACTOLE--OTHILY Swan**
 * **UWINEZA Job**
 * **BOUYAT Léo**
 
-### 🎨 Groupe Artistique (G. Art)
+### 🎨 Groupe Artistique (G. ART)
 * **Natchimie Enzo**
 * **Marie Wendy**
 * **Mith Odryan**
 * **Robert Arnaud**
 
-### 📈 Groupe Business & Communication (G. Business)
+### 📈 Groupe Business & Communication (G. BS)
 * **FERRO Marco**
 * **SAELEN Doryan**
