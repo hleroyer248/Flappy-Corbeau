@@ -250,28 +250,35 @@ void Game::update(float dt) {
             }
         }
 
-        for (auto it = obstacles.begin(); it != obstacles.end(); ) {
-
-            if (!player->isGhost()) {
+        if (!player->isGhost()) {
+            for (auto it = obstacles.begin(); it != obstacles.end(); ) {
                 if (pBox.intersects(it->getTopCollisionBox()) || pBox.intersects(it->getBottomCollisionBox())) {
                     collision = true;
                 }
-            }
 
-            if (!it->isPassed() && it->getX() + it->getWidth() < player->getPosition().x - (pBox.getRect().size.x / 2.f)) {
-                it->setPassed(true);
-                score++;
-                gameEvent->addObstaclePassed(obstacles);
-            }
+                if (!it->isPassed() && it->getX() + it->getWidth() < player->getPosition().x - (pBox.getRect().size.x / 2.f)) {
+                    it->setPassed(true);
+                    score++;
+                    gameEvent->addObstaclePassed(obstacles);
+                }
 
-            if (it->getX() + it->getWidth() < 0.f) it = obstacles.erase(it);
-            else ++it;
+                if (it->getX() + it->getWidth() < 0.f) it = obstacles.erase(it);
+                else ++it;
+            }
         }
 
-        if (!player->isGhost()) {
-            if (pBox.getRect().position.y < 0.f || pBox.getRect().position.y + pBox.getRect().size.y > 1080.f) {
-                collision = true;
+        else {
+            for (auto& obs : obstacles) {
+                if (!obs.isPassed() && obs.getX() + obs.getWidth() < player->getPosition().x - (pBox.getRect().size.x / 2.f)) {
+                    obs.setPassed(true);
+                    score++;
+                    gameEvent->addObstaclePassed(obstacles);
+                }
             }
+        }
+
+        if (pBox.getRect().position.y < 0.f || pBox.getRect().position.y + pBox.getRect().size.y > 1080.f) {
+            collision = true;
         }
 
         if (collision) {
