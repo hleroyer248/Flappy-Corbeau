@@ -11,7 +11,6 @@ MainMenu::MainMenu(const RessourcesManager& rm)
     totalScoreText(rm.getFont(), "", 40),
     shopButtonBg(rm.getShopBgTexture())
 {
-    // Etirement du background
     float scaleX = 1920.f / rm.getMenuBgTexture().getSize().x;
     float scaleY = 1080.f / rm.getMenuBgTexture().getSize().y;
     background.setScale({ scaleX, scaleY });
@@ -70,12 +69,4 @@ void MainMenu::draw(sf::RenderWindow& window) const {
 
     window.draw(bestScoreText);
     window.draw(totalScoreText);
-
-
-    //sf::RectangleShape debug;
-
-    //debug.setPosition({ exitHitbox.position.x, exitHitbox.position.y });
-    //debug.setSize({ exitHitbox.size.x, exitHitbox.size.y });
-    //debug.setFillColor(sf::Color(255, 0, 0, 80));
-    //window.draw(debug);
 }
