@@ -1,6 +1,6 @@
 #include "Obstacle.h"
 #include <cmath>
-#include <random> // Nécessaire pour std::random_device et std::mt19937
+#include <random> 
 
 Obstacle::Obstacle(float startX, float gapY, float gapH, const RessourcesManager& rm, ObstacleType t, int topIdx, int botIdx)
     : topSprite(rm.getTopPipeTexture(topIdx)),
@@ -21,29 +21,23 @@ Obstacle::Obstacle(float startX, float gapY, float gapH, const RessourcesManager
     headAdjust = headScaleAdjust[botIdx];
     offsetX = offsetXAdjust[botIdx];
     offsetY = offsetYAdjust[botIdx];
-
-    // Ne pas toucher : Scale global des obstacle bas 
+ 
     float globalScale = 0.20f;
 
     float originalTopTexHeight = static_cast<float>(topSprite.getTexture().getSize().y);
     float originalTopTexWidth = static_cast<float>(topSprite.getTexture().getSize().x);
 
-    float desiredWidth = 650.f;  // Base de calcul
+    float desiredWidth = 650.f;  
     float desiredHeight = 1200.f;
 
-    // --- CORRECTION DU HAUT ---
-    // On calcule la largeur réelle du pilier du bas pour s'y aligner parfaitement (650 * 0.20 = 130)
     float actualWidth = desiredWidth * globalScale;
 
-    // On applique cette largeur réelle au sprite du haut, pour qu'ils fassent la même taille
     float scaleXTop = actualWidth / originalTopTexWidth;
     float scaleYTop = desiredHeight / originalTopTexHeight;
 
     topSprite.setScale({ scaleXTop, scaleYTop });
     topTexHeight = desiredHeight;
-    // --- FIN CORRECTION HAUT ---
 
-    // HEAD (ON NE TOUCHE PAS)
     float headWidth = static_cast<float>(bottomHead.getTexture().getSize().x);
     float bodyWidth = static_cast<float>(bottomBody.getTexture().getSize().x);
 
@@ -57,7 +51,6 @@ Obstacle::Obstacle(float startX, float gapY, float gapH, const RessourcesManager
     scaleXHead * headAdjust
         });
 
-    // BODY (étiré seulement en Y) (ON NE TOUCHE PAS)
     float bodyHeight = static_cast<float>(bottomBody.getTexture().getSize().y);
 
     bottomBody.setScale({
@@ -65,7 +58,6 @@ Obstacle::Obstacle(float startX, float gapY, float gapH, const RessourcesManager
       scaleXBody
         });
 
-    // CORRECTION : La largeur globale de l'obstacle prend la vraie taille pour que le score se valide pile au bon moment
     width = actualWidth;
 
     updatePositions();
@@ -78,16 +70,13 @@ void Obstacle::updatePositions() {
         topSprite.setPosition({ x, topY });
         float bottomY = currentGapY + gapHeight;
 
-        // HEAD
         bottomHead.setPosition({ x + offsetX, bottomY + offsetY });
 
-        // BODY
         float headHeight = bottomHead.getGlobalBounds().size.y;
         float fixOffset = -12.f;
 
         bottomBody.setPosition({ x, bottomY + headHeight + fixOffset });
 
-        // scale dynamique
         float screenBottom = 1080.f;
         float bodyHeight = screenBottom - (bottomY + headHeight);
         float originalBodyHeight = static_cast<float>(bottomBody.getTexture().getSize().y);
@@ -116,16 +105,13 @@ void Obstacle::updatePositions() {
 
         float bottomY = baseGapY + gapHeight;
 
-        // HEAD
         bottomHead.setPosition({ x + offsetX, bottomY + offsetY });
 
-        // BODY (sous la tête)
         float headHeight = bottomHead.getTexture().getSize().y * bottomHead.getScale().y;
-        float fixOffset = -12.f; // ajuste à la main
+        float fixOffset = -12.f; 
 
         bottomBody.setPosition({ x, bottomY + headHeight + fixOffset });
 
-        // Calcul de la hauteur du body
         float screenBottom = 1080.f;
         float bodyHeight = screenBottom - (bottomY + headHeight);
         float originalBodyHeight = static_cast<float>(bottomBody.getTexture().getSize().y);
@@ -154,8 +140,6 @@ CollisionBox Obstacle::getTopCollisionBox() const {
     bounds.size.x -= (paddingX * 2.f);
     bounds.size.y -= paddingY;
 
-    // CORRECTION : On retire le hack "- 25" qui était là pour l'ancien obstacle géant. 
-    // La hitbox s'alignera parfaitement sur le visuel.
     bounds.position.x += paddingX;
 
     CollisionBox cb(topSprite, *topImage);
