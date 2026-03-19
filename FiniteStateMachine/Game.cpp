@@ -10,7 +10,7 @@ player(nullptr), capaIcon(rm.getCapaTexture())
 
     if (!rm.loadAll()) { std::exit(-1); }
     if (!am.loadAll()) { std::exit(-1); }
-    gameEvent.emplace(rm);
+    gameEvent.emplace(rm, am);
 
     frontLayers.clear();
 
@@ -184,6 +184,7 @@ void Game::processEvents() {
 void Game::update(float dt) {
     am.updateMusic();
     am.updateCrow(dt);
+    //am.updateLaser(dt);
     if (state == GameState::MainMenu || state == GameState::OptionMenu) {
         return;
     }
