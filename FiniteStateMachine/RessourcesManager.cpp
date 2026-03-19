@@ -1,6 +1,3 @@
-// ==========================================
-// RessourcesManager.cpp
-// ==========================================
 #include "RessourcesManager.h"
 #include <iostream>
 
@@ -16,7 +13,6 @@ bool RessourcesManager::loadAll() {
 
     for (int i = 0; i < 3; ++i) {
 
-        // 🔵 TOP (ON NE TOUCHE PAS)
         std::string topName = "Hobstacle" + std::to_string(i + 1) + ".png";
 
         if (!topPipeTex[i].loadFromFile(basePath + topName)) {
@@ -26,7 +22,6 @@ bool RessourcesManager::loadAll() {
 
         topPipeImg[i] = topPipeTex[i].copyToImage();
 
-        // 🔴 BOTTOM HEAD (statue)
         std::string botHead = "Bobstacle" + std::to_string(i + 1) + ".png";
 
         if (!bottomHeadTex[i].loadFromFile(basePath + botHead)) {
@@ -36,7 +31,6 @@ bool RessourcesManager::loadAll() {
 
         bottomHeadImg[i] = bottomHeadTex[i].copyToImage();
 
-        // 🟡 BOTTOM BODY (partie étirable)
         std::string botBody = "SuitePylone" + std::to_string(i + 1) + ".png";
 
         if (!bottomBodyTex[i].loadFromFile(basePath + botBody)) {
@@ -74,7 +68,6 @@ bool RessourcesManager::loadAll() {
     if (!loadTexture(frontBottomTex, basePath + "FrontBottom.png")) return false;
     if (!loadTexture(frontTopTex, basePath + "FrontTop.png")) return false;
 
-    // AUTO-CROP CHIFFRES
     sf::Image numbersImg;
     if (numbersImg.loadFromFile(basePath + "Chiffre.png") || numbersImg.loadFromFile(basePath + "Chiffre.jpg")) {
         numbersImg.createMaskFromColor(sf::Color::Black);
@@ -100,7 +93,6 @@ bool RessourcesManager::loadAll() {
             }
             if (inDigit) digitRects.push_back(sf::IntRect({ startX, 0 }, { w - startX, h }));
 
-            // CORRECTION DU MERGE : La sécurité d'auto-crop des chiffres est de retour à sa bonne place !
             if (digitRects.size() < 10) {
                 digitRects.clear();
                 int defaultW = w / 10;
@@ -113,7 +105,6 @@ bool RessourcesManager::loadAll() {
         }
     }
 
-    // AUTO-CROP HYBRIDE LASER
     sf::Image laserImg;
     if (laserImg.loadFromFile(basePath + "Laser.png") || laserImg.loadFromFile(basePath + "Laser.jpg")) {
         laserImg.createMaskFromColor(sf::Color::Black);
@@ -208,7 +199,6 @@ bool RessourcesManager::loadAll() {
                 }
             }
 
-            // CORRECTION DU MERGE : On referme correctement le if et on retire le bloc des chiffres qui était coincé ici
             if (laserRects.empty()) {
                 laserRects.push_back(sf::IntRect({ 0, 0 }, { w, h }));
             }
