@@ -14,7 +14,6 @@ public:
     void stopMusic();
 
     void playJumpSound();
-    void playDeathSound();
     void playGhostSound();
 
     void playRandomMusic();
@@ -41,9 +40,6 @@ private:
     std::optional<sf::Sound> jumpSound;
     std::optional<sf::Sound> ghostSound;
     sf::SoundBuffer ghostBuffer;
-
-    sf::SoundBuffer deathBuffer;
-    std::optional<sf::Sound> deathSound;
 
     std::vector<std::string> musicPaths;
 
