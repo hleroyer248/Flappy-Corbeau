@@ -48,7 +48,7 @@ player(nullptr), capaIcon(rm.getCapaTexture())
         }));
 
     capaIcon.setScale({ 0.05f, 0.05f });
-    capaIcon.setPosition({ 100.f, 800.f });
+    capaIcon.setPosition({ 00.f, 950.f });
 
     cooldownArc = sf::VertexArray(sf::PrimitiveType::TriangleFan);
 }
@@ -63,7 +63,7 @@ void Game::resetGame() {
 
     player->setSkin(rm.getPlayerTexture());
 
-    sf::Color skinColor = sf::Color::White; 
+    sf::Color skinColor;
 
     switch (skinIndex)
     {
@@ -73,13 +73,10 @@ void Game::resetGame() {
     case 3: skinColor = sf::Color::Green; break;
     case 4: skinColor = sf::Color(255, 215, 0); break;
     case 5: skinColor = sf::Color(100, 100, 100); break;
-    case 6:
-        break;
+    default: skinColor = sf::Color::White; break;
     }
 
-    if (skinIndex != 6) {
-        player->setSkinColor(skinColor);
-    }
+    player->setSkinColor(skinColor);
 
     pipeSpawnTimer = 0.f;
     lastPipeWasMoving = false;
@@ -196,11 +193,6 @@ void Game::update(float dt) {
     if (state == GameState::Playing) {
         player->update(dt);
         player->updateGhost(dt);
-
-        if (save.getEquippedSkin() == 6) {
-            float time = rainbowClock.getElapsedTime().asSeconds();
-            player->setSkinColor(getRainbowColor(time));
-        }
         float ratio = player->getCooldownRatio();
         float angleMax = 360.f * ratio;
 
@@ -249,28 +241,34 @@ void Game::update(float dt) {
             }
         }
 
-        for (auto it = obstacles.begin(); it != obstacles.end(); ) {
-
-            if (!player->isGhost()) {
+        if (!player->isGhost()) {
+            for (auto it = obstacles.begin(); it != obstacles.end(); ) {
                 if (pBox.intersects(it->getTopCollisionBox()) || pBox.intersects(it->getBottomCollisionBox())) {
                     collision = true;
                 }
-            }
 
-            if (!it->isPassed() && it->getX() + it->getWidth() < player->getPosition().x - (pBox.getRect().size.x / 2.f)) {
-                it->setPassed(true);
-                score++;
-                gameEvent->addObstaclePassed(obstacles);
-            }
+                if (!it->isPassed() && it->getX() + it->getWidth() < player->getPosition().x - (pBox.getRect().size.x / 2.f)) {
+                    it->setPassed(true);
+                    score++;
+                    gameEvent->addObstaclePassed(obstacles);
+                }
 
-            if (it->getX() + it->getWidth() < 0.f) it = obstacles.erase(it);
-            else ++it;
+                if (it->getX() + it->getWidth() < 0.f) it = obstacles.erase(it);
+                else ++it;
+            }
+        }
+        else {
+            for (auto& obs : obstacles) {
+                if (!obs.isPassed() && obs.getX() + obs.getWidth() < player->getPosition().x - (pBox.getRect().size.x / 2.f)) {
+                    obs.setPassed(true);
+                    score++;
+                    gameEvent->addObstaclePassed(obstacles);
+                }
+            }
         }
 
-        if (!player->isGhost()) {
-            if (pBox.getRect().position.y < 0.f || pBox.getRect().position.y + pBox.getRect().size.y > 1080.f) {
-                collision = true;
-            }
+        if (pBox.getRect().position.y < 0.f || pBox.getRect().position.y + pBox.getRect().size.y > 1080.f) {
+            collision = true;
         }
 
         if (collision) {
@@ -383,20 +381,6 @@ void Game::render() {
             gameOverMenu->draw(window);
         }
     }
-
-    /*if (debugMode && (state == GameState::Playing || state == GameState::Ready)) {
-        player->getCollisionBox().debugDraw(window);
-        for (const auto& obs : obstacles) {
-            obs.getTopCollisionBox().debugDraw(window);
-            obs.getBottomCollisionBox().debugDraw(window);
-        }
-    }
-
-    if (gameEvent->isLaserActive()) {
-        for (const auto& box : gameEvent->getLaserCollisionBoxes()) {
-            box.debugDraw(window);
-        }
-    }*/
 
     window.display();
 }
