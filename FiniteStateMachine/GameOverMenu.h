@@ -14,7 +14,7 @@ public:
     void updateBestScore(int best);
 
 private:
-    const RessourcesManager& rm; // On stocke une r�f�rence pour acc�der � l'auto-crop
+    const RessourcesManager& rm; 
     sf::Sprite background;
     sf::Sprite retryBtn;
     sf::Sprite returnBtn;
