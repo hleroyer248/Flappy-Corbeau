@@ -10,7 +10,7 @@ player(nullptr), capaIcon(rm.getCapaTexture())
 
     if (!rm.loadAll()) { std::exit(-1); }
     if (!am.loadAll()) { std::exit(-1); }
-    gameEvent.emplace(rm);
+    gameEvent.emplace(rm, am);
 
     player = new Player(rm);
     save.equipSkin(-1);
@@ -218,16 +218,6 @@ void Game::update(float dt) {
         }
 
         gameEvent->update(dt, obstacles);
-        bool laserNow = gameEvent->isLaserActive();
-
-        if (laserNow && !laserWasActive) {
-            am.playLaserSound();
-        }
-
-        laserWasActive = laserNow;
-        if (!laserNow && laserWasActive) {
-            am.stopLaserSmooth();
-        }
 
         if (gameEvent->shouldClearObstacles)
         {

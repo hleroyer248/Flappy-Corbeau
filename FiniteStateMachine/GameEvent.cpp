@@ -1,8 +1,9 @@
-#include "GameEvent.h"
+﻿#include "GameEvent.h"
 #include <iostream>
 
-GameEvent::GameEvent(RessourcesManager& rm) :
+GameEvent::GameEvent(RessourcesManager& rm, AudioManager& am) :
     rm(rm),
+    am(am),
     spawnTimer(0.f),
     spawnInterval(1.5f),
     elapsedTime(0.f),
@@ -41,6 +42,9 @@ void GameEvent::reset() {
 }
 
 void GameEvent::update(float dt, std::vector<Obstacle>& obstacles) {
+    if (activeLasers.empty()) {
+        setupWave(0);
+    }
     elapsedTime += dt;
 
     speedMultiplier = std::min(1.f + elapsedTime / 300.f, maxSpeedMultiplier);
@@ -69,8 +73,14 @@ void GameEvent::update(float dt, std::vector<Obstacle>& obstacles) {
         sf::IntRect currentRect = rm.getLaserRect(currentLaserFrame);
         bool anyFiring = false;
         bool anyWarning = false;
-
         for (auto& l : activeLasers) {
+            float warningStart = l.startWarningAt;
+
+            // 🔥 Joue le son EXACTEMENT quand CE laser commence
+            if (!l.soundPlayed && waveTimer >= warningStart) {
+                am.playLaserSound();
+                l.soundPlayed = true;
+            }
             if (waveTimer >= l.startWarningAt && waveTimer < l.startWarningAt + l.warningDuration) {
                 l.isWarning = true;
                 l.isFiring = false;

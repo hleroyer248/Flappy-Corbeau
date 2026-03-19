@@ -22,7 +22,6 @@ public:
     void updateMusic(); 
     void updateCrow(float dt);
     void playLaserSound();
-    void stopLaserSmooth();
     void updateLaser(float dt);
 
 
@@ -48,11 +47,8 @@ private:
     std::uniform_real_distribution<float> timeDist;
 
     sf::SoundBuffer laserBuffer;
-    std::optional<sf::Sound> laserSound;
 
-    float laserVolume = 40.f;
-    bool isFadingOut = false;
-    float fadeSpeed = 40.f; // vitesse du fondu
+    std::vector<sf::Sound> laserShots;
 
 };
 // Commit BugFix SFML 3 - fin
