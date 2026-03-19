@@ -1,7 +1,7 @@
 #include "Game.h"
 #include <iostream>
 
-Game::Game() : window(sf::VideoMode({ 1920, 1080 }), "RavenSoul", sf::State::Windowed),
+Game::Game() : window(sf::VideoMode({ 1920, 1080 }), "RavenSoul", sf::State::Fullscreen),
 state(GameState::MainMenu), score(0), pipeSpawnTimer(0.f), lastPipeWasMoving(false),
 player(nullptr), capaIcon(rm.getCapaTexture())
 {
@@ -13,12 +13,6 @@ player(nullptr), capaIcon(rm.getCapaTexture())
     gameEvent.emplace(rm, am);
 
     frontLayers.clear();
-
-    // layer (sol)
-    frontLayers.emplace_back(rm.getFrontBottomTexture(), 1.2f);
-
-    // layer (plafond)
-    frontLayers.emplace_back(rm.getFrontTopTexture(), 1.2f);
 
     player = new Player(rm);
     save.equipSkin(-1);
@@ -255,40 +249,32 @@ void Game::update(float dt) {
             }
         }
 
-        if (!player->isGhost()) {
-            for (auto it = obstacles.begin(); it != obstacles.end(); ) {
+        for (auto it = obstacles.begin(); it != obstacles.end(); ) {
+
+            if (!player->isGhost()) {
                 if (pBox.intersects(it->getTopCollisionBox()) || pBox.intersects(it->getBottomCollisionBox())) {
                     collision = true;
                 }
-
-                if (!it->isPassed() && it->getX() + it->getWidth() < player->getPosition().x - (pBox.getRect().size.x / 2.f)) {
-                    it->setPassed(true);
-                    score++;
-                    gameEvent->addObstaclePassed(obstacles);
-                }
-
-                if (it->getX() + it->getWidth() < 0.f) it = obstacles.erase(it);
-                else ++it;
             }
+
+            if (!it->isPassed() && it->getX() + it->getWidth() < player->getPosition().x - (pBox.getRect().size.x / 2.f)) {
+                it->setPassed(true);
+                score++;
+                gameEvent->addObstaclePassed(obstacles);
+            }
+
+            if (it->getX() + it->getWidth() < 0.f) it = obstacles.erase(it);
+            else ++it;
         }
 
-        else {
-            for (auto& obs : obstacles) {
-                if (!obs.isPassed() && obs.getX() + obs.getWidth() < player->getPosition().x - (pBox.getRect().size.x / 2.f)) {
-                    obs.setPassed(true);
-                    score++;
-                    gameEvent->addObstaclePassed(obstacles);
-                }
+        if (!player->isGhost()) {
+            if (pBox.getRect().position.y < 0.f || pBox.getRect().position.y + pBox.getRect().size.y > 1080.f) {
+                collision = true;
             }
-        }
-
-        if (pBox.getRect().position.y < 0.f || pBox.getRect().position.y + pBox.getRect().size.y > 1080.f) {
-            collision = true;
         }
 
         if (collision) {
             am.stopMusic();
-            am.playDeathSound();
             state = GameState::GameOver;
             gameOverMenu->updateScoreText(score);
             save.addScore(score);
@@ -398,7 +384,7 @@ void Game::render() {
         }
     }
 
-    if (debugMode && (state == GameState::Playing || state == GameState::Ready)) {
+    /*if (debugMode && (state == GameState::Playing || state == GameState::Ready)) {
         player->getCollisionBox().debugDraw(window);
         for (const auto& obs : obstacles) {
             obs.getTopCollisionBox().debugDraw(window);
@@ -410,7 +396,7 @@ void Game::render() {
         for (const auto& box : gameEvent->getLaserCollisionBoxes()) {
             box.debugDraw(window);
         }
-    }
+    }*/
 
     window.display();
 }

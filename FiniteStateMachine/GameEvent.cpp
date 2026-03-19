@@ -40,13 +40,11 @@ void GameEvent::reset() {
     screenShakeIntensity = 0.f;
     activeLasers.clear();
     shouldClearObstacles = false;
-    laserProbability = 20.f; // NOUVEAU : On réinitialise la chance à 20% au Game Over
+    laserProbability = 20.f; 
 }
 
 void GameEvent::update(float dt, std::vector<Obstacle>& obstacles) {
-    if (activeLasers.empty()) {
-        setupWave(0);
-    }
+    
     elapsedTime += dt;
 
     speedMultiplier = std::min(1.f + elapsedTime / 300.f, maxSpeedMultiplier);
@@ -78,9 +76,8 @@ void GameEvent::update(float dt, std::vector<Obstacle>& obstacles) {
         for (auto& l : activeLasers) {
             float warningStart = l.startWarningAt;
 
-            // 🔥 Joue le son EXACTEMENT quand CE laser commence
             if (!l.soundPlayed && waveTimer >= warningStart) {
-                std::cout << "LASER TRIGGER\n"; // ✅ DEBUG
+                std::cout << "LASER TRIGGER\n"; 
                 am.playLaserSound();
                 l.soundPlayed = true;
             }
@@ -196,7 +193,6 @@ void GameEvent::setupWave(int waveIndex) {
     state = EventState::Warning;
 }
 
-// NOUVELLE LOGIQUE PSEUDO-ALÉATOIRE
 void GameEvent::addObstaclePassed(std::vector<Obstacle>& obstacles) {
     obstaclesPassed++;
 

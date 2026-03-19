@@ -36,20 +36,13 @@ bool AudioManager::loadAll() {
     }
     jumpSound.emplace(jumpBuffer);
 
-    if (!deathBuffer.loadFromFile(basePath + "Dead.mp3")) {
-        std::cerr << "ERREUR: Impossible de charger Dead.mp3.\n";
-        return false;
-    }
-    deathSound.emplace(deathBuffer);
-    deathSound->setVolume(0.f);
-
     if (!laserBuffer.loadFromFile(basePath + "Laser.mp3")) {
         std::cerr << "ERREUR: Impossible de charger Laser.mp3.\n";
         return false;
     }
 
     if (!ghostBuffer.loadFromFile(basePath + "Ghost.wav")) {
-        std::cerr << "ERREUR: Impossible de charger Ghost.mp3.\n";
+        std::cerr << "ERREUR: Impossible de charger Ghost.wav.\n";
         return false;
     }
     ghostSound.emplace(ghostBuffer);
@@ -81,13 +74,6 @@ void AudioManager::playJumpSound() {
     if (chance < 5.f) {
         std::cout << "[Audio] Crow joue !" << std::endl;
         jumpSound->play();
-    }
-}
-
-void AudioManager::playDeathSound() {
-    if (deathSound) {
-        std::cout << "[Audio] Bruit de mort (Dead) !" << std::endl;
-        deathSound->play();
     }
 }
 
@@ -160,13 +146,12 @@ void AudioManager::updateSoundVolumes() {
     float mult = isSoundMuted ? 0.f : (masterSoundVolume / 100.f);
 
     if (jumpSound) jumpSound->setVolume(30.f * mult);
-    if (deathSound) deathSound->setVolume(100.f * mult);
     if (ghostSound) ghostSound->setVolume(150.f * mult);
 
     for (auto& sound : laserShots) {
         sound.setVolume(50.f * mult);
     }
-} 
+}
 
 void AudioManager::playLaserSound() {
     laserShots.emplace_back(laserBuffer);
