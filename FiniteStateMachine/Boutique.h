@@ -22,7 +22,7 @@ private:
     sf::RectangleShape infoPanel;
     sf::Sprite returnButton;
     sf::Sprite background;
-    std::optional<sf::Sprite> previewSprite; // visuel du sprite a droite de la boutique 
+    std::optional<sf::Sprite> previewSprite;
     sf::Sprite buyButton;
     sf::Sprite equipButton;
     sf::Sprite equippedButton;
@@ -32,6 +32,9 @@ private:
     sf::Text priceText;
     sf::Text coinsText;
 
+    sf::Text warningText;
+    sf::Clock warningClock;
+    bool showWarning = false;
 
     std::optional<sf::Cursor> handCursor;
     std::optional<sf::Cursor> arrowCursor;
