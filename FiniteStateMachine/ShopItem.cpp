@@ -12,13 +12,11 @@ ShopItem::ShopItem(const std::string& name, int price, const sf::Texture& textur
 
     auto texSize = texture.getSize();
 
-    // calcul automatique d'une frame
     int frameWidth = texSize.x / 3;
     int frameHeight = texSize.y / 3;
 
     sprite.setTextureRect(sf::IntRect({ 0,0 }, { frameWidth,frameHeight }));
 
-    // adapter le scale pour rentrer dans la box
     float targetSize = 120.f;
     float scale = targetSize / frameWidth;
 
@@ -94,17 +92,17 @@ void ShopItem::updateHover(sf::Vector2f mousePos)
 
     if (selected)
     {
-        box.setFillColor(sf::Color(200, 200, 50)); // jaune
+        box.setFillColor(sf::Color(200, 200, 50)); 
         return;
     }
 
     if (box.getGlobalBounds().contains(mousePos))
     {
-        box.setFillColor(sf::Color(120, 120, 120)); // hover
+        box.setFillColor(sf::Color(120, 120, 120)); 
     }
     else
     {
-        box.setFillColor(sf::Color(70, 70, 70)); // normal
+        box.setFillColor(sf::Color(70, 70, 70)); 
     }
 
 }
