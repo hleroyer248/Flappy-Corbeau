@@ -1,7 +1,7 @@
 # Documentation du Projet : Raven Soul
 
-**Équipe de développement :** Hugo Leroyer, Swan Pactole--Othily, Job Uwineza, Léo Bouyat
-**Technologies :** C++ / SFML 3.0.2
+**Langage/Librairie :** C++ / SFML 3.0.2
+
 **Plateforme :** Windows (Visual Studio 2022)
 
 ---
@@ -14,7 +14,7 @@ Dans un monde où la Mort a perdu son emprise, les âmes sont prisonnières du R
 ### Règles du Jeu
 * **Survie :** Le joueur doit naviguer à travers des débris instables et des anomalies. Toute collision avec un obstacle entraîne la fin de la partie.
 * **Capacité Spéciale :** Raven possède un mode **Fantôme** permettant d'altérer ses interactions avec l'environnement.
-* **Progression :** Le jeu propose un gameplay fluide de type arcade avec des niveaux de difficulté variés, incluant un "BossLevel".
+* **Progression :** Le jeu propose un gameplay fluide de type arcade avec des niveaux de difficulté variés.
 * **Contrôles :**
     * **Saut :** Touche `ESPACE`.
     * **Mode Fantôme :** Touche `Maj / Shift`.
@@ -52,3 +52,26 @@ Le projet a été développé avec une volonté de **clarté** et d'**expérimen
 - AudioManager : Gestion des sons et musiques
 - CollisionBox : Détection des collisions
 - Game : Logique principale et boucle de jeu
+```
+
+---
+
+## 5. Organisation de l'Équipe 👥
+
+Le projet **Raven Soul** est le fruit d'une collaboration interdisciplinaire répartie en trois pôles de compétences :
+
+### 💻 Groupe Technique (G. Tech)
+* **LEROYER Hugo**
+* **PACTOLE--OTHILY Swan**
+* **UWINEZA Job**
+* **BOUYAT Léo**
+
+### 🎨 Groupe Artistique (G. Art)
+* **Natchimie Enzo**
+* **Marie Wendy**
+* **Mith Odryan**
+* **Robert Arnaud**
+
+### 📈 Groupe Business & Communication (G. Business)
+* **FERRO Marco**
+* **SAELEN Doryan**
