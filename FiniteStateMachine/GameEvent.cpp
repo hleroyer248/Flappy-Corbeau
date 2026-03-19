@@ -21,7 +21,7 @@ GameEvent::GameEvent(RessourcesManager& rm, AudioManager& am) :
     screenShakeIntensity(0.f),
     laserAnimTimer(0.f),
     currentLaserFrame(0),
-    laserProbability(20.f) // NOUVEAU : Initialisation à 20%
+    laserProbability(20.f) 
 {
     std::random_device rd;
     gen = std::mt19937(rd());
