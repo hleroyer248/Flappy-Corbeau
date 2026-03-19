@@ -2,28 +2,22 @@
 
 Player::Player(const RessourcesManager& rm) : sprite(rm.getPlayerTexture()) {
 
-    // Commit Ghost - debut
     normalTexture = &rm.getPlayerTexture();
     ghostTexture = &rm.getGhostPlayerTexture();
     ghostActive = false;
     ghostTimer = 0.f;
     ghostCooldownTimer = 0.f;
-    // Commit Ghost - fin
 
-    // Commit Crow - debut
     defaultPlayerTexture = &rm.getPlayerTexture();
     isAnimated = true;
     totalFrames = 7;
     currentFrame = 0;
     animationTimer = 0.f;
     frameDuration = 0.08f;
-    // Commit Crow - fin
 
-    // Commit Pixel-Perfect - debut
     normalImage = normalTexture->copyToImage();
     ghostImage = ghostTexture->copyToImage();
     currentImage = &normalImage;
-    // Commit Pixel-Perfect - fin
 
     reset();
 }
@@ -32,16 +26,13 @@ void Player::applyCurrentTexture(const sf::Texture* tex) {
     sprite.setTexture(*tex);
     sf::Vector2u size = tex->getSize();
 
-    // Commit Pixel-Perfect - debut
     if (tex == ghostTexture) currentImage = &ghostImage;
     else currentImage = &normalImage;
-    // Commit Pixel-Perfect - fin
 
     if (tex == defaultPlayerTexture || tex == ghostTexture) {
         isAnimated = true;
         totalFrames = 7;
 
-        // Commit Grid Anim - debut
         frameWidth = size.x / 3;
         frameHeight = size.y / 3;
 
@@ -49,7 +40,6 @@ void Player::applyCurrentTexture(const sf::Texture* tex) {
         int row = currentFrame / 3;
 
         sprite.setTextureRect(sf::IntRect({ col * frameWidth, row * frameHeight }, { frameWidth, frameHeight }));
-        // Commit Grid Anim - fin
 
     }
     else {
@@ -63,7 +53,6 @@ void Player::applyCurrentTexture(const sf::Texture* tex) {
 
     sprite.setOrigin({ frameWidth / 2.f, frameHeight / 2.f });
 
-    // Commit Visual Size - debut
     float visualSize = 115.f;
     sprite.setScale({ visualSize / frameWidth, visualSize / frameHeight });
 }
@@ -72,18 +61,14 @@ void Player::reset() {
     sprite.setPosition({ 300.f, 540.f });
     velocity = { 0.f, 0.f };
 
-    // Commit Ghost - debut
     ghostActive = false;
     ghostTimer = 0.f;
     ghostCooldownTimer = 0.f;
     sprite.setColor(skinColor);
-    // Commit Ghost - fin
 
-    // Commit Crow - debut
     currentFrame = 0;
     animationTimer = 0.f;
     applyCurrentTexture(normalTexture);
-    // Commit Crow - fin
 }
 
 void Player::flap() {
@@ -94,25 +79,20 @@ void Player::update(float dt) {
     velocity.y += 2200.f * dt;
     sprite.move(velocity * dt);
 
-    // Commit Crow - debut
     if (isAnimated) {
         animationTimer += dt;
         if (animationTimer >= frameDuration) {
             animationTimer -= frameDuration;
             currentFrame = (currentFrame + 1) % totalFrames;
 
-            // Commit Grid Anim - debut
             int col = currentFrame % 3;
             int row = currentFrame / 3;
 
             sprite.setTextureRect(sf::IntRect({ col * frameWidth, row * frameHeight }, { frameWidth, frameHeight }));
-            // Commit Grid Anim - fin
         }
     }
-    // Commit Crow - fin
 }
 
-// Commit Ghost - debut
 void Player::activateGhost() {
     ghostActive = true;
     ghostTimer = GHOST_DURATION;
@@ -150,23 +130,19 @@ bool Player::isGhost() const {
 bool Player::canActivateGhost() const {
     return !ghostActive && ghostCooldownTimer <= 0.f;
 }
-// Commit Ghost - fin
 
 CollisionBox Player::getCollisionBox() const {
     sf::FloatRect bounds = sprite.getGlobalBounds();
 
-    // Ajout d'un padding pour le joueur (15% de réduction)
     float padX = bounds.size.x * 0.15f;
     float padY = bounds.size.y * 0.15f;
 
     bounds.size.x -= (padX * 2.f);
     bounds.size.y -= (padY * 2.f);
 
-    // Centrage de la hitbox sur le corps du joueur
     bounds.position.x += padX;
     bounds.position.y += padY;
 
-    // Création de la CollisionBox avec le rectangle réduit
     CollisionBox cb(sprite, *currentImage);
     cb.setRect(bounds);
 
@@ -177,27 +153,20 @@ const sf::Sprite& Player::getSprite() const {
     return sprite;
 }
 
-// Correction SFML 3.0 : Retourne une valeur et non une référence
 sf::Vector2f Player::getPosition() const {
     return sprite.getPosition();
 }
 
 void Player::setSkin(const sf::Texture& texture)
 {
-    // Commit BugFix Ghost - debut
     normalTexture = &texture;
-    // Commit BugFix Ghost - fin
 
-    // Commit Pixel-Perfect - debut
     normalImage = texture.copyToImage();
-    // Commit Pixel-Perfect - fin
 
-    // Commit Crow - debut
     if (!ghostActive) {
         applyCurrentTexture(normalTexture);
         sprite.setColor(skinColor);
     }
-    // Commit Crow - fin
 }
 
 
