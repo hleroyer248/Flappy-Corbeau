@@ -26,13 +26,13 @@ player(nullptr), capaIcon(rm.getCapaTexture())
     backLayers.emplace_back(rm.getBackBgTexture(), 0.3f);
     backLayers.emplace_back(rm.getMidBgTexture(), 0.6f);
 
-    menuTitle.emplace(rm.getFont(), "FLAPPY BIRD", 90);
+    menuTitle.emplace(rm.getFont(), "RAVEN SOUL", 90);
     menuTitle->setPosition({ 700.f, 250.f });
     menuTitle->setFillColor(sf::Color::White);
 
-    startButton.emplace(rm.getFont(), "[ Cliquez ou appuyez sur Espace pour jouer ]", 40);
-    startButton->setPosition({ 550.f, 600.f });
-    startButton->setFillColor(sf::Color::Yellow);
+    startButton.emplace(rm.getFont(), "[ Space-bar or click to fly ]\n[ Press the Shift key to use the ability ]", 40);
+    startButton->setPosition({ 480.f, 600.f }); 
+    startButton->setFillColor(sf::Color::White);
 
     std::random_device rd;
     gen = std::mt19937(rd());
