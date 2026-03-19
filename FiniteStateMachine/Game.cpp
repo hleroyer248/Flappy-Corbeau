@@ -10,21 +10,21 @@ player(nullptr), capaIcon(rm.getCapaTexture())
 
     if (!rm.loadAll()) { std::exit(-1); }
     if (!am.loadAll()) { std::exit(-1); }
-    gameEvent.emplace(rm);
+    gameEvent.emplace(rm, am);
 
     frontLayers.clear();
 
-     //🔥 layer (sol)
+     //?? layer (sol)
     frontLayers.emplace_back(rm.getFrontBottomTexture(), 1.2f);
 
-    //🔥 layer (plafond)
+    //?? layer (plafond)
     frontLayers.emplace_back(rm.getFrontTopTexture(), 1.2f);
 
     player = new Player(rm);
     save.equipSkin(-1);
 
     mainMenu.emplace(rm);
-    optionMenu.emplace(rm);
+    optionMenu.emplace(rm, am);
     gameOverMenu.emplace(rm);
     shop.emplace(rm, save);
 
@@ -48,7 +48,6 @@ player(nullptr), capaIcon(rm.getCapaTexture())
 
     capaIcon.setTexture(rm.getCapaTexture());
 
-    // 🔥 TESTS
     capaIcon.setTextureRect(sf::IntRect({ 0,0 }, {
         (int)rm.getCapaTexture().getSize().x,
         (int)rm.getCapaTexture().getSize().y
@@ -68,10 +67,8 @@ void Game::resetGame() {
 
     int skinIndex = save.getEquippedSkin();
 
-    //  UNE seule texture
     player->setSkin(rm.getPlayerTexture());
 
-    //  couleur selon skin
     sf::Color skinColor;
 
     switch (skinIndex)
@@ -80,8 +77,8 @@ void Game::resetGame() {
     case 1: skinColor = sf::Color::Red; break;
     case 2: skinColor = sf::Color::Blue; break;
     case 3: skinColor = sf::Color::Green; break;
-    case 4: skinColor = sf::Color(255, 215, 0); break; // gold
-    case 5: skinColor = sf::Color(100, 100, 100); break; // shadow
+    case 4: skinColor = sf::Color(255, 215, 0); break;
+    case 5: skinColor = sf::Color(100, 100, 100); break;
     default: skinColor = sf::Color::White; break;
     }
 
@@ -250,35 +247,28 @@ void Game::update(float dt) {
             }
         }
 
-        if (!player->isGhost()) {
-            for (auto it = obstacles.begin(); it != obstacles.end(); ) {
+        for (auto it = obstacles.begin(); it != obstacles.end(); ) {
+
+            if (!player->isGhost()) {
                 if (pBox.intersects(it->getTopCollisionBox()) || pBox.intersects(it->getBottomCollisionBox())) {
                     collision = true;
                 }
-
-                if (!it->isPassed() && it->getX() + it->getWidth() < player->getPosition().x - (pBox.getRect().size.x / 2.f)) {
-                    it->setPassed(true);
-                    score++;
-                    gameEvent->addObstaclePassed(obstacles);
-                }
-
-                if (it->getX() + it->getWidth() < 0.f) it = obstacles.erase(it);
-                else ++it;
             }
+
+            if (!it->isPassed() && it->getX() + it->getWidth() < player->getPosition().x - (pBox.getRect().size.x / 2.f)) {
+                it->setPassed(true);
+                score++;
+                gameEvent->addObstaclePassed(obstacles);
+            }
+
+            if (it->getX() + it->getWidth() < 0.f) it = obstacles.erase(it);
+            else ++it;
         }
 
-        else {
-            for (auto& obs : obstacles) {
-                if (!obs.isPassed() && obs.getX() + obs.getWidth() < player->getPosition().x - (pBox.getRect().size.x / 2.f)) {
-                    obs.setPassed(true);
-                    score++;
-                    gameEvent->addObstaclePassed(obstacles);
-                }
+        if (!player->isGhost()) {
+            if (pBox.getRect().position.y < 0.f || pBox.getRect().position.y + pBox.getRect().size.y > 1080.f) {
+                collision = true;
             }
-        }
-
-        if (pBox.getRect().position.y < 0.f || pBox.getRect().position.y + pBox.getRect().size.y > 1080.f) {
-            collision = true;
         }
 
         if (collision) {

@@ -30,12 +30,16 @@ struct LaserEntity {
     bool isWarning = false;
     bool isFiring = false;
 
+    bool soundPlayed = false;
+
     LaserEntity(const sf::Texture& tex) : sprite(tex) {}
 };
+
 
 class GameEvent {
 
 public:
+    AudioManager& am;
 
     enum class EventState { Normal, Warning, Laser };
 
@@ -64,7 +68,7 @@ public:
 
     bool isLaserActive() const;
 
-    GameEvent(RessourcesManager& rm);
+    GameEvent(RessourcesManager& rm, AudioManager& am);
 
     void update(float dt, std::vector<Obstacle>& obstacles);
     void reset();

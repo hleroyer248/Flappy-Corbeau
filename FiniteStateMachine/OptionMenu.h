@@ -1,27 +1,38 @@
 #pragma once
 #include <SFML/Graphics.hpp>
 #include "RessourcesManager.h"
+#include "AudioManager.h" 
 
 class OptionMenu {
 public:
     enum class Action { None, Return };
 
-    OptionMenu(const RessourcesManager& rm);
+    OptionMenu(const RessourcesManager& rm, AudioManager& am);
     Action handleEvent(const sf::Event& event);
     void draw(sf::RenderWindow& window) const;
 
-    void update(const sf::RenderWindow& window); // Pour la logique du slider
-
-
 private:
+    AudioManager& am; 
+
     sf::Sprite background;
     sf::Sprite returnBtn;
-    sf::Text infoText;
 
-    sf::RectangleShape sliderBar;
-    sf::CircleShape sliderCursor;
-    sf::Text VolumeText;
+    sf::Text musicLabel;
+    sf::RectangleShape musicBar;
+    sf::CircleShape musicCursor;
+    sf::Text musicVolText;
+    sf::RectangleShape musicMuteBtn;
+    sf::Text musicMuteText;
 
-    bool isDraggingVolume = false;
-    float volumeValue = 100.f; // De 0 à 100
+    sf::Text soundLabel;
+    sf::RectangleShape soundBar;
+    sf::CircleShape soundCursor;
+    sf::Text soundVolText;
+    sf::RectangleShape soundMuteBtn;
+    sf::Text soundMuteText;
+
+    bool isDraggingMusic = false;
+    bool isDraggingSound = false;
+
+    void updateUI();
 };

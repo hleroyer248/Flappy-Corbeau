@@ -71,4 +71,6 @@ private:
     sf::VertexArray cooldownArc;
 
     Save save;
+
+    bool laserWasActive = false;
 };
