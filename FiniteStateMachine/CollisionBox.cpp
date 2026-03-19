@@ -4,11 +4,9 @@ CollisionBox::CollisionBox() : sprite(nullptr), image(nullptr) {}
 
 CollisionBox::CollisionBox(const sf::FloatRect& rect) : bounds(rect), sprite(nullptr), image(nullptr) {}
 
-// Commit Pixel-Perfect - debut
 CollisionBox::CollisionBox(const sf::Sprite& s, const sf::Image& img)
     : bounds(s.getGlobalBounds()), sprite(&s), image(&img) {
 }
-// Commit Pixel-Perfect - fin
 
 void CollisionBox::setRect(const sf::FloatRect& rect) {
     bounds = rect;
@@ -19,20 +17,16 @@ const sf::FloatRect& CollisionBox::getRect() const {
 }
 
 bool CollisionBox::intersects(const CollisionBox& other) const {
-    // 1. Vérification basique AABB (boîte englobante)
     std::optional<sf::FloatRect> intersection = bounds.findIntersection(other.getRect());
 
     if (!intersection) {
         return false;
     }
-
-    // Commit Pixel-Perfect - debut
-    // 2. Si on n'a pas les images pour le Pixel-Perfect, on se contente du AABB
+    
     if (!sprite || !image || !other.sprite || !other.image) {
         return true;
     }
 
-    // 3. Vérification Pixel-Perfect dans la zone d'intersection
     sf::FloatRect intersect = intersection.value();
 
     int left = static_cast<int>(intersect.position.x);
@@ -61,7 +55,6 @@ bool CollisionBox::intersects(const CollisionBox& other) const {
             }
         }
     }
-    // Commit Pixel-Perfect - fin
 
     return false;
 }
