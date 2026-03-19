@@ -58,7 +58,7 @@ Obstacle::Obstacle(float startX, float gapY, float gapH, const RessourcesManager
         });
 
     // BODY (étiré seulement en Y) (ON NE TOUCHE PAS)
-    float bodyHeight = bottomBody.getTexture().getSize().y;
+    float bodyHeight = static_cast<float>(bottomBody.getTexture().getSize().y);
 
     bottomBody.setScale({
         scaleXBody,
@@ -90,7 +90,7 @@ void Obstacle::updatePositions() {
         // scale dynamique
         float screenBottom = 1080.f;
         float bodyHeight = screenBottom - (bottomY + headHeight);
-        float originalBodyHeight = bottomBody.getTexture().getSize().y;
+        float originalBodyHeight = static_cast<float>(bottomBody.getTexture().getSize().y);
     }
     else if (type == ObstacleType::MachMouv) {
         float offset = std::sin(time * 1.5f) * 80.f;
@@ -128,7 +128,7 @@ void Obstacle::updatePositions() {
         // Calcul de la hauteur du body
         float screenBottom = 1080.f;
         float bodyHeight = screenBottom - (bottomY + headHeight);
-        float originalBodyHeight = bottomBody.getTexture().getSize().y;
+        float originalBodyHeight = static_cast<float>(bottomBody.getTexture().getSize().y);
     }
 }
 

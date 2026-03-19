@@ -20,6 +20,9 @@ public:
     void playRandomMusic();
     void updateMusic();
     void updateCrow(float dt);
+    void playLaserSound();
+    void updateLaser(float dt);
+
 
     void setMusicVolume(float vol);
     void setSoundVolume(float vol);
@@ -56,4 +59,12 @@ private:
     bool isSoundMuted;
 
     void updateSoundVolumes();
+    struct LaserSound {
+        sf::Sound sound;
+        float lifetime = 0.f;
+    };
+
+    sf::SoundBuffer laserBuffer;
+    std::vector<sf::Sound> laserShots;
+
 };
