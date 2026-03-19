@@ -1,5 +1,7 @@
 #include "Game.h"
 #include <iostream>
+#include <cstdint>
+#include <cmath>
 
 Game::Game() : window(sf::VideoMode({ 1920, 1080 }), "RavenSoul", sf::State::Fullscreen),
 state(GameState::MainMenu), score(0), pipeSpawnTimer(0.f), lastPipeWasMoving(false),
@@ -31,7 +33,7 @@ player(nullptr), capaIcon(rm.getCapaTexture())
     menuTitle->setFillColor(sf::Color::White);
 
     startButton.emplace(rm.getFont(), "[ Space-bar or click to fly ]\n[ Press the Shift key to use the ability ]", 40);
-    startButton->setPosition({ 480.f, 600.f }); 
+    startButton->setPosition({ 480.f, 600.f });
     startButton->setFillColor(sf::Color::White);
 
     std::random_device rd;
@@ -49,6 +51,13 @@ player(nullptr), capaIcon(rm.getCapaTexture())
 
     capaIcon.setScale({ 0.05f, 0.05f });
     capaIcon.setPosition({ 00.f, 950.f });
+
+    shiftTypeText.emplace(rm.getFont(), "Shift", 30);
+    shiftTypeText->setFillColor(sf::Color::White);
+    sf::FloatRect textBounds = shiftTypeText->getLocalBounds();
+    shiftTypeText->setOrigin({ textBounds.size.x / 2.f, textBounds.size.y });
+    sf::FloatRect iconBounds = capaIcon.getGlobalBounds();
+    shiftTypeText->setPosition({ iconBounds.position.x + iconBounds.size.x / 2.f, iconBounds.position.y - 10.f });
 
     cooldownArc = sf::VertexArray(sf::PrimitiveType::TriangleFan);
 }
@@ -193,6 +202,28 @@ void Game::update(float dt) {
     if (state == GameState::Playing) {
         player->update(dt);
         player->updateGhost(dt);
+
+        if (save.getEquippedSkin() == 6) {
+            float time = rainbowClock.getElapsedTime().asSeconds();
+            player->setSkinColor(getRainbowColor(time));
+        }
+
+        if (shiftTypeText) {
+            if (player->isGhost()) {
+
+            }
+            else if (!player->canActivateGhost()) {
+                float time = rainbowClock.getElapsedTime().asSeconds();
+                std::uint8_t alpha = 100 + static_cast<std::uint8_t>(155.f * (0.5f + 0.5f * std::sin(time * 6.f)));
+                sf::Color col = sf::Color::White;
+                col.a = alpha;
+                shiftTypeText->setFillColor(col);
+            }
+            else {
+                shiftTypeText->setFillColor(sf::Color::White);
+            }
+        }
+
         float ratio = player->getCooldownRatio();
         float angleMax = 360.f * ratio;
 
@@ -372,6 +403,11 @@ void Game::render() {
         else if (state == GameState::Playing) {
             drawScore(window, score, { 30.f, 5.f }, 0.12f, false);
             window.draw(capaIcon);
+
+            if (shiftTypeText && !player->isGhost()) {
+                window.draw(*shiftTypeText);
+            }
+
             if (!player->canActivateGhost()) {
                 window.draw(cooldownArc);
             }
@@ -379,6 +415,20 @@ void Game::render() {
 
         if (state == GameState::GameOver) {
             gameOverMenu->draw(window);
+        }
+    }
+
+    if (debugMode && (state == GameState::Playing || state == GameState::Ready)) {
+        player->getCollisionBox().debugDraw(window);
+        for (const auto& obs : obstacles) {
+            obs.getTopCollisionBox().debugDraw(window);
+            obs.getBottomCollisionBox().debugDraw(window);
+        }
+
+        if (gameEvent->isLaserActive()) {
+            for (const auto& box : gameEvent->getLaserCollisionBoxes()) {
+                box.debugDraw(window);
+            }
         }
     }
 
