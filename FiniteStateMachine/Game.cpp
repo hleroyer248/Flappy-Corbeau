@@ -1,7 +1,7 @@
 #include "Game.h"
 #include <iostream>
 
-Game::Game() : window(sf::VideoMode({ 1920, 1080 }), "Flappy Bird - SFML 3.0.2", sf::State::Windowed),
+Game::Game() : window(sf::VideoMode({ 1920, 1080 }), "RavenSoul", sf::State::Windowed),
 state(GameState::MainMenu), score(0), pipeSpawnTimer(0.f), lastPipeWasMoving(false),
 player(nullptr), capaIcon(rm.getCapaTexture())
 {
