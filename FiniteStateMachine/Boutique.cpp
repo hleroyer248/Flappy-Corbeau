@@ -11,9 +11,9 @@ Boutique::Boutique(RessourcesManager& rm, Save& save) :
     buyButton(rm.getBuyBtnTexture()),
     equipButton(rm.getEquipBtnTexture()),
     equippedButton(rm.getEquippedBtnTexture()),
-    coinsText(rm.getFont())
+    coinsText(rm.getFont()),
+    warningText(rm.getFont(), "not enough to cover the purchase", 22) 
 {
-    // Etirement du background
     float scaleX = 1920.f / rm.getMenuBgTexture().getSize().x;
     float scaleY = 1080.f / rm.getMenuBgTexture().getSize().y;
     background.setScale({ scaleX, scaleY });
@@ -32,6 +32,11 @@ Boutique::Boutique(RessourcesManager& rm, Save& save) :
     priceText.setFillColor(sf::Color::Yellow);
     coinsText.setFillColor(sf::Color::Yellow);
     coinsText.setCharacterSize(40);
+
+    warningText.setFillColor(sf::Color::Red);
+    sf::FloatRect textBounds = warningText.getLocalBounds();
+    warningText.setOrigin({ textBounds.size.x / 2.0f, 0.f });
+    warningText.setPosition({ 1620.f, 660.f });
 
     returnButton.setPosition({ 10.f, 20.f });
     returnButton.setScale({ 0.09f, 0.09f });
@@ -68,8 +73,8 @@ Boutique::Boutique(RessourcesManager& rm, Save& save) :
     items[1].setColor(sf::Color::Red);
     items[2].setColor(sf::Color::Blue);
     items[3].setColor(sf::Color::Green);
-    items[4].setColor(sf::Color(255, 215, 0)); // gold
-    items[5].setColor(sf::Color(100, 100, 100)); // shadow
+    items[4].setColor(sf::Color(255, 215, 0)); 
+    items[5].setColor(sf::Color(100, 100, 100)); 
 
 
     int cols = 3;
@@ -103,6 +108,11 @@ Boutique::Action Boutique::handleClick(sf::Vector2f mousePos) {
             save.spendCoins(price);
             save.buySkin(selectedItem);
             items[selectedItem].setOwned(true);
+            showWarning = false; 
+        }
+        else {
+            showWarning = true;
+            warningClock.restart();
         }
         clickedSomething = true;
     }
@@ -117,6 +127,11 @@ Boutique::Action Boutique::handleClick(sf::Vector2f mousePos) {
     for (int i = 0; i < items.size(); i++) {
         if (items[i].isClicked(mousePos)) {
             clickedSomething = true;
+
+            if (selectedItem != i) {
+                showWarning = false;
+            }
+
             selectedItem = i;
             for (auto& item : items) item.setSelected(false);
             items[i].setSelected(true);
@@ -154,10 +169,14 @@ void Boutique::update(sf::RenderWindow& window) {
     sf::Vector2f mousePos = window.mapPixelToCoords(sf::Mouse::getPosition(window));
 
     for (auto& item : items) item.updateHover(mousePos);
-    float time = clock.getElapsedTime().asSeconds(); 
+    float time = clock.getElapsedTime().asSeconds();
+
+    if (showWarning && warningClock.getElapsedTime().asSeconds() >= 3.0f) {
+        showWarning = false;
+    }
 
     for (int i = 0; i < items.size(); i++) {
-        if (i == 6) { // rainbow skin
+        if (i == 6) { 
             items[i].setColor(getRainbowColor(time));
         }
     }
@@ -172,7 +191,7 @@ void Boutique::update(sf::RenderWindow& window) {
             previewSprite->setColor(getRainbowColor(time));
         }
 
-        float targetSize = 250.f; // taille de preview dans le panel
+        float targetSize = 250.f; 
         float scale = targetSize / bounds.size.x;
 
         previewSprite->setScale({ scale, scale });
@@ -197,7 +216,13 @@ void Boutique::draw(sf::RenderWindow& window) {
         window.draw(itemNameText);
         window.draw(priceText);
 
-        if (!items[selectedItem].isOwned()) window.draw(buyButton);
+        if (!items[selectedItem].isOwned()) {
+            window.draw(buyButton);
+
+            if (showWarning) {
+                window.draw(warningText);
+            }
+        }
         else if (items[selectedItem].isEquipped()) window.draw(equippedButton);
         else window.draw(equipButton);
     }
