@@ -26,10 +26,11 @@ void ParallaxLayer::update(float dt, float baseSpeed)
     s2.move({ -speed * dt, 0.f });
 
     if (s1.getPosition().x <= -width) {
-        s1.setPosition({ s2.getPosition().x + width - 1.f, 0.f });
+        s1.setPosition({ s2.getPosition().x + width - 1.f, s1.getPosition().y });
     }
+
     if (s2.getPosition().x <= -width) {
-        s2.setPosition({ s1.getPosition().x + width - 1.f, 0.f });
+        s2.setPosition({ s1.getPosition().x + width - 1.f, s2.getPosition().y });
     }
 }
 

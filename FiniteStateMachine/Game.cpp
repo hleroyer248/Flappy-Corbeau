@@ -14,11 +14,11 @@ player(nullptr), capaIcon(rm.getCapaTexture())
 
     frontLayers.clear();
 
-    // 🔥 layer (sol)
-    //frontLayers.emplace_back(rm.getFrontBottomTexture(), 1.2f);
+     //🔥 layer (sol)
+    frontLayers.emplace_back(rm.getFrontBottomTexture(), 1.2f);
 
-    // 🔥 layer (plafond)
-    //frontLayers.emplace_back(rm.getFrontTopTexture(), 1.2f);
+    //🔥 layer (plafond)
+    frontLayers.emplace_back(rm.getFrontTopTexture(), 1.2f);
 
     player = new Player(rm);
     save.equipSkin(-1);
