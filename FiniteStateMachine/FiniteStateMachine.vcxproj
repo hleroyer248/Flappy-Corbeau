@@ -33,6 +33,7 @@
     <ClInclude Include="RessourcesManager.h" />
     <ClInclude Include="Save.h" />
     <ClInclude Include="ShopItem.h" />
+    <ClInclude Include="Utils.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AudioManager.cpp" />
@@ -50,6 +51,7 @@
     <ClCompile Include="RessourcesManager.cpp" />
     <ClCompile Include="Save.cpp" />
     <ClCompile Include="ShopItem.cpp" />
+    <ClCompile Include="Utils.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>18.0</VCProjectVersion>

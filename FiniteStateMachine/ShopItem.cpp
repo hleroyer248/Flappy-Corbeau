@@ -144,3 +144,4 @@ sf::Color ShopItem::getColor() const
 {
     return color;
 }
+

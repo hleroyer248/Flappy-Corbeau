@@ -1,95 +1,38 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <ClCompile Include="Boutique.cpp">
-      <Filter>Fichiers sources</Filter>
-    </ClCompile>
-    <ClCompile Include="CollisionBox.cpp">
-      <Filter>Fichiers sources</Filter>
-    </ClCompile>
-    <ClCompile Include="Game.cpp">
-      <Filter>Fichiers sources</Filter>
-    </ClCompile>
-    <ClCompile Include="GameOverMenu.cpp">
-      <Filter>Fichiers sources</Filter>
-    </ClCompile>
-    <ClCompile Include="main.cpp">
-      <Filter>Fichiers sources</Filter>
-    </ClCompile>
-    <ClCompile Include="MainMenu.cpp">
-      <Filter>Fichiers sources</Filter>
-    </ClCompile>
-    <ClCompile Include="Obstacle.cpp">
-      <Filter>Fichiers sources</Filter>
-    </ClCompile>
-    <ClCompile Include="OptionMenu.cpp">
-      <Filter>Fichiers sources</Filter>
-    </ClCompile>
-    <ClCompile Include="Player.cpp">
-      <Filter>Fichiers sources</Filter>
-    </ClCompile>
-    <ClCompile Include="RessourcesManager.cpp">
-      <Filter>Fichiers sources</Filter>
-    </ClCompile>
-    <ClCompile Include="Save.cpp">
-      <Filter>Fichiers sources</Filter>
-    </ClCompile>
-    <ClCompile Include="ShopItem.cpp">
-      <Filter>Fichiers sources</Filter>
-    </ClCompile>
-    <ClCompile Include="AudioManager.cpp">
-    <ClCompile Include="ParallaxLayer.cpp">
-      <Filter>Fichiers sources</Filter>
-    </ClCompile>
+    <ClCompile Include="AudioManager.cpp" />
+    <ClCompile Include="Boutique.cpp" />
+    <ClCompile Include="CollisionBox.cpp" />
+    <ClCompile Include="GameEvent.cpp" />
+    <ClCompile Include="Game.cpp" />
+    <ClCompile Include="GameOverMenu.cpp" />
+    <ClCompile Include="main.cpp" />
+    <ClCompile Include="MainMenu.cpp" />
+    <ClCompile Include="Obstacle.cpp" />
+    <ClCompile Include="OptionMenu.cpp" />
+    <ClCompile Include="ParallaxLayer.cpp" />
+    <ClCompile Include="Player.cpp" />
+    <ClCompile Include="RessourcesManager.cpp" />
+    <ClCompile Include="Save.cpp" />
+    <ClCompile Include="ShopItem.cpp" />
+    <ClCompile Include="Utils.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Boutique.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
-    <ClInclude Include="CollisionBox.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
-    <ClInclude Include="Game.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
-    <ClInclude Include="GameOverMenu.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
-    <ClInclude Include="MainMenu.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
-    <ClInclude Include="Obstacle.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
-    <ClInclude Include="OptionMenu.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
-    <ClInclude Include="Player.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
-    <ClInclude Include="RessourcesManager.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
-    <ClInclude Include="Save.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
-    <ClInclude Include="ShopItem.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
-    <ClInclude Include="AudioManager.h">
-    <ClInclude Include="ParallaxLayer.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
-  </ItemGroup>
-  <ItemGroup>
-    <Filter Include="Fichiers d%27en-tête">
-      <UniqueIdentifier>{6c8d10b6-1c5e-4d1c-a8b7-7e0eadbf077b}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Fichiers sources">
-      <UniqueIdentifier>{d5d916ce-b8f4-4224-8498-553d3fe3b56d}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Fichiers de ressources">
-      <UniqueIdentifier>{87e6fb29-c32f-4e9d-90de-d3f20ed5462d}</UniqueIdentifier>
-    </Filter>
+    <ClInclude Include="AudioManager.h" />
+    <ClInclude Include="Boutique.h" />
+    <ClInclude Include="CollisionBox.h" />
+    <ClInclude Include="GameEvent.h" />
+    <ClInclude Include="Game.h" />
+    <ClInclude Include="GameOverMenu.h" />
+    <ClInclude Include="MainMenu.h" />
+    <ClInclude Include="Obstacle.h" />
+    <ClInclude Include="OptionMenu.h" />
+    <ClInclude Include="ParallaxLayer.h" />
+    <ClInclude Include="Player.h" />
+    <ClInclude Include="RessourcesManager.h" />
+    <ClInclude Include="Save.h" />
+    <ClInclude Include="ShopItem.h" />
+    <ClInclude Include="Utils.h" />
   </ItemGroup>
 </Project>

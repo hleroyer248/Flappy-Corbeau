@@ -71,8 +71,7 @@ void Game::resetGame() {
     //  UNE seule texture
     player->setSkin(rm.getPlayerTexture());
 
-    //  couleur selon skin
-    sf::Color skinColor;
+    sf::Color skinColor = sf::Color::White; 
 
     switch (skinIndex)
     {
@@ -80,12 +79,15 @@ void Game::resetGame() {
     case 1: skinColor = sf::Color::Red; break;
     case 2: skinColor = sf::Color::Blue; break;
     case 3: skinColor = sf::Color::Green; break;
-    case 4: skinColor = sf::Color(255, 215, 0); break; // gold
-    case 5: skinColor = sf::Color(100, 100, 100); break; // shadow
-    default: skinColor = sf::Color::White; break;
+    case 4: skinColor = sf::Color(255, 215, 0); break;
+    case 5: skinColor = sf::Color(100, 100, 100); break;
+    case 6:
+        break;
     }
 
-    player->setSkinColor(skinColor);
+    if (skinIndex != 6) {
+        player->setSkinColor(skinColor);
+    }
 
     pipeSpawnTimer = 0.f;
     lastPipeWasMoving = false;
@@ -203,6 +205,11 @@ void Game::update(float dt) {
     if (state == GameState::Playing) {
         player->update(dt);
         player->updateGhost(dt);
+
+        if (save.getEquippedSkin() == 6) {
+            float time = rainbowClock.getElapsedTime().asSeconds();
+            player->setSkinColor(getRainbowColor(time));
+        }
         float ratio = player->getCooldownRatio();
         float angleMax = 360.f * ratio;
 

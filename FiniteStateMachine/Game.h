@@ -16,7 +16,7 @@
 #include "GameOverMenu.h"
 #include "ParallaxLayer.h"
 #include "Save.h" 
-
+#include "Utils.h"
 #include "GameEvent.h"
 
 enum class GameState { MainMenu, OptionMenu, Shop, Ready, Playing, GameOver };
@@ -63,6 +63,7 @@ private:
     bool debugMode = false;
 
     sf::Clock clock;
+    sf::Clock rainbowClock;
     std::mt19937 gen;
     std::uniform_real_distribution<float> gapDist;
     std::uniform_real_distribution<float> chanceDist;
