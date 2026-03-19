@@ -1,12 +1,17 @@
-﻿#include "AudioManager.h"
+#include "AudioManager.h"
 #include <iostream>
 
 AudioManager::AudioManager() {
     std::random_device rd;
     gen = std::mt19937(rd());
     chanceDist = std::uniform_real_distribution<float>(0.f, 100.f);
-    timeDist = std::uniform_real_distribution<float>(2.f, 6.f); 
+    timeDist = std::uniform_real_distribution<float>(2.f, 6.f);
     crowTimer = timeDist(gen);
+
+    masterMusicVolume = 50.f;
+    masterSoundVolume = 100.f;
+    isMusicMuted = false;
+    isSoundMuted = false;
 }
 
 bool AudioManager::loadAll() {
@@ -19,9 +24,8 @@ bool AudioManager::loadAll() {
          basePath + "Music4.mp3"
     };
 
-    dist = std::uniform_int_distribution<int>(0, musicPaths.size() - 1);
+    dist = std::uniform_int_distribution<int>(0, static_cast<int>(musicPaths.size()) - 1);
 
-    // 🔊 On lance une première musique
     playRandomMusic();
 
     std::cout << "[Audio] Playlist chargee !" << std::endl;
@@ -31,7 +35,6 @@ bool AudioManager::loadAll() {
         return false;
     }
     jumpSound.emplace(jumpBuffer);
-    jumpSound->setVolume(30.f);
 
     if (!deathBuffer.loadFromFile(basePath + "Dead.mp3")) {
         std::cerr << "ERREUR: Impossible de charger Dead.mp3.\n";
@@ -50,11 +53,12 @@ bool AudioManager::loadAll() {
         return false;
     }
     ghostSound.emplace(ghostBuffer);
-    ghostSound->setVolume(150.f);
-    ghostSound->setPitch(0.6f); 
+    ghostSound->setPitch(0.6f);
     ghostSound->setRelativeToListener(false);
-    ghostSound->setPosition({ 0.f, 0.f, -10.f }); 
+    ghostSound->setPosition({ 0.f, 0.f, -10.f });
     ghostSound->setMinDistance(5.f);
+
+    updateSoundVolumes();
 
     std::cout << "[Audio] Fichiers charges avec succes !" << std::endl;
     return true;
@@ -74,8 +78,7 @@ void AudioManager::playJumpSound() {
     if (!jumpSound) return;
 
     float chance = chanceDist(gen);
-
-    if (chance < 80.f) {
+    if (chance < 5.f) {
         std::cout << "[Audio] Crow joue !" << std::endl;
         jumpSound->play();
     }
@@ -103,8 +106,8 @@ void AudioManager::playRandomMusic() {
         return;
     }
 
-    bgMusic.setLooping(false); 
-    bgMusic.setVolume(50.f);
+    bgMusic.setLooping(false);
+    bgMusic.setVolume(isMusicMuted ? 0.f : masterMusicVolume);
     bgMusic.play();
 
     std::cout << "[Audio] Lecture musique : " << musicPaths[index] << std::endl;
@@ -120,23 +123,59 @@ void AudioManager::updateCrow(float dt) {
     if (!jumpSound) return;
 
     crowTimer -= dt;
-
     if (crowTimer <= 0.f) {
         std::cout << "[Audio] Crow aleatoire !" << std::endl;
-
-        jumpSound->setPitch(0.8f + (chanceDist(gen) / 100.f) * 0.4f); // 🔥 variation cool
+        jumpSound->setPitch(0.8f + (chanceDist(gen) / 100.f) * 0.4f);
         jumpSound->play();
-
-        crowTimer = timeDist(gen); // 🔁 nouveau temps random
+        crowTimer = timeDist(gen);
     }
 }
 
+void AudioManager::setMusicVolume(float vol) {
+    masterMusicVolume = vol;
+    if (!isMusicMuted) bgMusic.setVolume(masterMusicVolume);
+}
+
+void AudioManager::setSoundVolume(float vol) {
+    masterSoundVolume = vol;
+    updateSoundVolumes();
+}
+
+void AudioManager::setMusicMute(bool mute) {
+    isMusicMuted = mute;
+    bgMusic.setVolume(isMusicMuted ? 0.f : masterMusicVolume);
+}
+
+void AudioManager::setSoundMute(bool mute) {
+    isSoundMuted = mute;
+    updateSoundVolumes();
+}
+
+float AudioManager::getMusicVolume() const { return masterMusicVolume; }
+float AudioManager::getSoundVolume() const { return masterSoundVolume; }
+bool AudioManager::getMusicMuted() const { return isMusicMuted; }
+bool AudioManager::getSoundMuted() const { return isSoundMuted; }
+
+void AudioManager::updateSoundVolumes() {
+    float mult = isSoundMuted ? 0.f : (masterSoundVolume / 100.f);
+
+    if (jumpSound) jumpSound->setVolume(30.f * mult);
+    if (deathSound) deathSound->setVolume(100.f * mult);
+    if (ghostSound) ghostSound->setVolume(150.f * mult);
+
+    for (auto& sound : laserShots) {
+        sound.setVolume(50.f * mult);
+    }
+} 
+
 void AudioManager::playLaserSound() {
-    laserShots.emplace_back(laserBuffer); // ✅ direct dans le vector
+    laserShots.emplace_back(laserBuffer);
 
     sf::Sound& sound = laserShots.back();
 
-    sound.setVolume(50.f);
+    float mult = isSoundMuted ? 0.f : (masterSoundVolume / 100.f);
+    sound.setVolume(50.f * mult);
+
     sound.setPitch(0.95f + (chanceDist(gen) / 100.f) * 0.1f);
     sound.setPlayingOffset(sf::seconds(1.2f));
 

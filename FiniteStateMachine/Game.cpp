@@ -14,17 +14,17 @@ player(nullptr), capaIcon(rm.getCapaTexture())
 
     frontLayers.clear();
 
-    // 🔥 layer (sol)
-    //frontLayers.emplace_back(rm.getFrontBottomTexture(), 1.2f);
+    // layer (sol)
+    frontLayers.emplace_back(rm.getFrontBottomTexture(), 1.2f);
 
-    // 🔥 layer (plafond)
-    //frontLayers.emplace_back(rm.getFrontTopTexture(), 1.2f);
+    // layer (plafond)
+    frontLayers.emplace_back(rm.getFrontTopTexture(), 1.2f);
 
     player = new Player(rm);
     save.equipSkin(-1);
 
     mainMenu.emplace(rm);
-    optionMenu.emplace(rm);
+    optionMenu.emplace(rm, am);
     gameOverMenu.emplace(rm);
     shop.emplace(rm, save);
 
@@ -48,7 +48,6 @@ player(nullptr), capaIcon(rm.getCapaTexture())
 
     capaIcon.setTexture(rm.getCapaTexture());
 
-    // 🔥 TESTS
     capaIcon.setTextureRect(sf::IntRect({ 0,0 }, {
         (int)rm.getCapaTexture().getSize().x,
         (int)rm.getCapaTexture().getSize().y
@@ -68,7 +67,6 @@ void Game::resetGame() {
 
     int skinIndex = save.getEquippedSkin();
 
-    //  UNE seule texture
     player->setSkin(rm.getPlayerTexture());
 
     sf::Color skinColor = sf::Color::White; 
@@ -186,7 +184,6 @@ void Game::processEvents() {
 void Game::update(float dt) {
     am.updateMusic();
     am.updateCrow(dt);
-    //am.updateLaser(dt);
     if (state == GameState::MainMenu || state == GameState::OptionMenu) {
         return;
     }
