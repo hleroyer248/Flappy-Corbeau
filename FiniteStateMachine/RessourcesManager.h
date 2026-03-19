@@ -24,6 +24,8 @@ public:
     const sf::Texture& getBgGameOverTexture() const;
     const sf::Texture& getShopTexture() const;
     const sf::Texture& getShopBgTexture() const;
+    const sf::Texture& getFrontTopTexture() const;
+    const sf::Texture& getFrontBottomTexture() const;
 
     const sf::Texture& getStartBtnTexture() const;
     const sf::Texture& getSettingsBtnTexture() const;
@@ -89,6 +91,8 @@ private:
     sf::Texture menuBgTex;
     sf::Texture bgGameOverTex;
     sf::Texture shopBgTex;
+    sf::Texture frontTopTex;
+    sf::Texture frontBottomTex;
 
     sf::Image topPipeImg[3];
     sf::Image bottomPipeImg[3];

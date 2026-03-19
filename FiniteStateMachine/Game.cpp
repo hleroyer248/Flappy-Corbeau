@@ -12,6 +12,14 @@ player(nullptr), capaIcon(rm.getCapaTexture())
     if (!am.loadAll()) { std::exit(-1); }
     gameEvent.emplace(rm);
 
+    frontLayers.clear();
+
+    // 🔥 layer (sol)
+    //frontLayers.emplace_back(rm.getFrontBottomTexture(), 1.2f);
+
+    // 🔥 layer (plafond)
+    //frontLayers.emplace_back(rm.getFrontTopTexture(), 1.2f);
+
     player = new Player(rm);
     save.equipSkin(-1);
 
