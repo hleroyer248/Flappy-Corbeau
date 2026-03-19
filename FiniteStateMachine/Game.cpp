@@ -176,7 +176,7 @@ void Game::processEvents() {
 void Game::update(float dt) {
     am.updateMusic();
     am.updateCrow(dt);
-    am.updateLaser(dt);
+    //am.updateLaser(dt);
     if (state == GameState::MainMenu || state == GameState::OptionMenu) {
         return;
     }

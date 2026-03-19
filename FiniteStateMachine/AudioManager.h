@@ -45,10 +45,12 @@ private:
     std::uniform_real_distribution<float> chanceDist;
     float crowTimer = 0.f;
     std::uniform_real_distribution<float> timeDist;
+    struct LaserSound {
+        sf::Sound sound;
+        float lifetime = 0.f;
+    };
 
     sf::SoundBuffer laserBuffer;
-
     std::vector<sf::Sound> laserShots;
 
 };
-// Commit BugFix SFML 3 - fin

@@ -78,6 +78,7 @@ void GameEvent::update(float dt, std::vector<Obstacle>& obstacles) {
 
             // 🔥 Joue le son EXACTEMENT quand CE laser commence
             if (!l.soundPlayed && waveTimer >= warningStart) {
+                std::cout << "LASER TRIGGER\n"; // ✅ DEBUG
                 am.playLaserSound();
                 l.soundPlayed = true;
             }

@@ -41,10 +41,9 @@ bool AudioManager::loadAll() {
     deathSound->setVolume(0.f);
 
     if (!laserBuffer.loadFromFile(basePath + "Laser.mp3")) {
-        std::cerr << "ERREUR: Impossible de charger Laser.wav.\n";
+        std::cerr << "ERREUR: Impossible de charger Laser.mp3.\n";
         return false;
     }
-
 
     if (!ghostBuffer.loadFromFile(basePath + "Ghost.wav")) {
         std::cerr << "ERREUR: Impossible de charger Ghost.mp3.\n";
@@ -133,25 +132,23 @@ void AudioManager::updateCrow(float dt) {
 }
 
 void AudioManager::playLaserSound() {
-    sf::Sound sound(laserBuffer);
+    laserShots.emplace_back(laserBuffer); // ✅ direct dans le vector
 
-    sound.setPlayingOffset(sf::seconds(1.2f));
-    sound.setVolume(40.f);
-    sound.setLooping(false);
+    sf::Sound& sound = laserShots.back();
 
+    sound.setVolume(50.f);
     sound.setPitch(0.95f + (chanceDist(gen) / 100.f) * 0.1f);
+    sound.setPlayingOffset(sf::seconds(1.2f));
 
     sound.play();
-
-    laserShots.push_back(sound); 
 }
 
-void AudioManager::updateLaser(float dt) {
 
+void AudioManager::updateLaser(float dt) {
     laserShots.erase(
         std::remove_if(laserShots.begin(), laserShots.end(),
             [](const sf::Sound& s) {
-                return s.getStatus() == sf::Sound::Status::Stopped;
+                return s.getStatus() == sf::SoundSource::Status::Stopped;
             }),
         laserShots.end()
     );
