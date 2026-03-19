@@ -16,6 +16,7 @@
     <ClCompile Include="RessourcesManager.cpp" />
     <ClCompile Include="Save.cpp" />
     <ClCompile Include="ShopItem.cpp" />
+    <ClCompile Include="Utils.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AudioManager.h" />
@@ -32,5 +33,6 @@
     <ClInclude Include="RessourcesManager.h" />
     <ClInclude Include="Save.h" />
     <ClInclude Include="ShopItem.h" />
+    <ClInclude Include="Utils.h" />
   </ItemGroup>
 </Project>
