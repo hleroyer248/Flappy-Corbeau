@@ -15,7 +15,8 @@ Le jeu propose une architecture <ins/>modulaire</ins> basée sur une machine à 
 # **_trouver une phrase d'accroche_**   <br/>
 
 
-img de gameplay
+<img width="1900" height="994" alt="image" src="https://github.com/user-attachments/assets/2200aa05-9a4b-4661-9c18-6145fbf62bb0" />
+
 
 <br/>
 <br/>
