@@ -5,9 +5,11 @@
 #include "RessourcesManager.h"
 #include <optional>
 #include "Save.h"
+#include "Utils.h"
 
 class Boutique
 {
+    sf::Clock clock;
 
 private:
 

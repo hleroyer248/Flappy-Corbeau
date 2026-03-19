@@ -66,8 +66,6 @@ void Player::applyCurrentTexture(const sf::Texture* tex) {
     // Commit Visual Size - debut
     float visualSize = 115.f;
     sprite.setScale({ visualSize / frameWidth, visualSize / frameHeight });
-    // Commit Visual Size - fin
-    sprite.setColor(skinColor);
 }
 
 void Player::reset() {

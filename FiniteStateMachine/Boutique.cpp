@@ -1,6 +1,7 @@
 #include "Boutique.h"
 #include <iostream>
 
+
 Boutique::Boutique(RessourcesManager& rm, Save& save) :
     save(save),
     itemNameText(rm.getFont(), "", 40),
@@ -61,6 +62,7 @@ Boutique::Boutique(RessourcesManager& rm, Save& save) :
     items.emplace_back("Bird Green", 350, rm.getPlayerTexture());
     items.emplace_back("Bird Gold", 550, rm.getPlayerTexture());
     items.emplace_back("Bird Shadow", 850, rm.getPlayerTexture());
+    items.emplace_back("Bird Rainbow", 3000, rm.getPlayerTexture());
 
     items[0].setColor(sf::Color::White);
     items[1].setColor(sf::Color::Red);
@@ -146,12 +148,19 @@ void Boutique::updateCursor(sf::RenderWindow& window) {
     else if (arrowCursor) window.setMouseCursor(*arrowCursor);
 }
 
+
 void Boutique::update(sf::RenderWindow& window) {
     coinsText.setString("Coins : " + std::to_string(save.getTotalScore()));
     sf::Vector2f mousePos = window.mapPixelToCoords(sf::Mouse::getPosition(window));
 
     for (auto& item : items) item.updateHover(mousePos);
+    float time = clock.getElapsedTime().asSeconds(); 
 
+    for (int i = 0; i < items.size(); i++) {
+        if (i == 6) { // rainbow skin
+            items[i].setColor(getRainbowColor(time));
+        }
+    }
     if (selectedItem != -1) {
         itemNameText.setString(items[selectedItem].getName());
         priceText.setString("Price : " + std::to_string(items[selectedItem].getPrice()));
@@ -159,6 +168,9 @@ void Boutique::update(sf::RenderWindow& window) {
         previewSprite = items[selectedItem].getSprite();
 
         auto bounds = previewSprite->getLocalBounds();
+        if (selectedItem == 6) {
+            previewSprite->setColor(getRainbowColor(time));
+        }
 
         float targetSize = 250.f; // taille de preview dans le panel
         float scale = targetSize / bounds.size.x;
