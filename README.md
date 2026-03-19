@@ -12,7 +12,7 @@ Le jeu propose une architecture <ins/>modulaire</ins> basée sur une machine à 
  
 > Prologue :  <br/>
 
-# **_trouver une phrase d'accroche_** 🛰️💫   <br/>
+# **_trouver une phrase d'accroche_**   <br/>
 
 
 img de gameplay
