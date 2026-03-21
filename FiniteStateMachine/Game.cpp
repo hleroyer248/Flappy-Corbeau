@@ -165,6 +165,9 @@ void Game::processEvents() {
                     player->activateGhost();
                     am.playGhostSound();
                 }
+                if (key->code == sf::Keyboard::Key::A) {
+                    slowMotion.activate();
+                }
             }
             if (const auto* mouse = event.getIf<sf::Event::MouseButtonReleased>()) {
                 if (mouse->button == sf::Mouse::Button::Left) {
@@ -182,6 +185,10 @@ void Game::processEvents() {
 }
 
 void Game::update(float dt) {
+    //capacité ralentissement du jeu 
+    slowMotion.update(dt);
+    float scaledDt = dt * slowMotion.getTimeScale();
+
     am.updateMusic();
     am.updateCrow(dt);
     if (state == GameState::MainMenu || state == GameState::OptionMenu) {
@@ -196,11 +203,11 @@ void Game::update(float dt) {
 
     float baseSpeed = 200.f;
 
-    for (auto& layer : backLayers) layer.update(dt, baseSpeed);
-    for (auto& layer : frontLayers) layer.update(dt, baseSpeed);
+    for (auto& layer : backLayers) layer.update(scaledDt, baseSpeed);
+    for (auto& layer : frontLayers) layer.update(scaledDt, baseSpeed);
 
     if (state == GameState::Playing) {
-        player->update(dt);
+        player->update(scaledDt);
         player->updateGhost(dt);
 
         if (save.getEquippedSkin() == 6) {
@@ -246,7 +253,7 @@ void Game::update(float dt) {
             cooldownArc.append(sf::Vertex({ x, y }, sf::Color(100, 100, 100, 150)));
         }
 
-        gameEvent->update(dt, obstacles);
+        gameEvent->update(scaledDt, obstacles);
 
         if (gameEvent->shouldClearObstacles)
         {
@@ -416,6 +423,12 @@ void Game::render() {
         if (state == GameState::GameOver) {
             gameOverMenu->draw(window);
         }
+    }
+    if (slowMotion.isActive()) {
+        sf::RectangleShape overlay;
+        overlay.setSize({ 1920.f, 1080.f });
+        overlay.setFillColor(sf::Color(100, 100, 255, 40));
+        window.draw(overlay);
     }
 
     if (debugMode && (state == GameState::Playing || state == GameState::Ready)) {

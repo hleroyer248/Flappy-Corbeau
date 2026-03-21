@@ -15,6 +15,7 @@
 #include "Save.h" 
 #include "Utils.h"
 #include "GameEvent.h"
+#include "SlowMotion.h"
 
 enum class GameState { MainMenu, OptionMenu, Shop, Ready, Playing, GameOver };
 
@@ -40,6 +41,7 @@ private:
     AudioManager am;
 
     Player* player;
+    SlowMotion slowMotion;
     std::vector<Obstacle> obstacles;
 
     std::vector<ParallaxLayer> backLayers;
