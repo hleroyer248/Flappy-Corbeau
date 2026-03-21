@@ -68,7 +68,10 @@ private:
     std::uniform_real_distribution<float> chanceDist;
 
     sf::Sprite capaIcon;
+    sf::Sprite slowIcon;
+
     std::optional<sf::Text> shiftTypeText;
+    std::optional<sf::Text> slowTypeText;
     sf::VertexArray cooldownArc;
 
     Save save;

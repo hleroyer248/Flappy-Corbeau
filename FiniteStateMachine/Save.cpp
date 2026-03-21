@@ -18,6 +18,7 @@ void Save::load() {
         }
 
         file >> equippedSkin;
+        file >> slowMotionOwned >> slowMotionEquipped;
         file.close();
     }
 }
@@ -29,7 +30,8 @@ void Save::saveToFile() {
         for (bool owned : ownedSkins)
             file << owned << " ";
 
-        file << equippedSkin;
+        file << equippedSkin << " ";
+        file << slowMotionOwned << " " << slowMotionEquipped;
         file.close();
     }
 }
@@ -78,4 +80,21 @@ bool Save::isSkinOwned(int index) const
 int Save::getEquippedSkin() const
 {
     return equippedSkin;
+}
+
+bool Save::isSlowMotionOwned() const {
+    return slowMotionOwned;
+}
+
+bool Save::isSlowMotionEquipped() const {
+    return slowMotionEquipped;
+}
+
+void Save::buySlowMotion() {
+    slowMotionOwned = true;
+}
+
+void Save::equipSlowMotion() {
+    slowMotionEquipped = true;
+    saveToFile();
 }

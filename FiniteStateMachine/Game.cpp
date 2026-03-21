@@ -5,7 +5,7 @@
 
 Game::Game() : window(sf::VideoMode({ 1920, 1080 }), "RavenSoul", sf::State::Fullscreen),
 state(GameState::MainMenu), score(0), pipeSpawnTimer(0.f), lastPipeWasMoving(false),
-player(nullptr), capaIcon(rm.getCapaTexture())
+player(nullptr), capaIcon(rm.getCapaTexture()), slowIcon(rm.getSlowUiTexture())
 {
     window.setFramerateLimit(60);
     window.setKeyRepeatEnabled(false);
@@ -17,7 +17,6 @@ player(nullptr), capaIcon(rm.getCapaTexture())
     frontLayers.clear();
 
     player = new Player(rm);
-    save.equipSkin(-1);
 
     mainMenu.emplace(rm);
     optionMenu.emplace(rm, am);
@@ -34,7 +33,7 @@ player(nullptr), capaIcon(rm.getCapaTexture())
 
     startButton.emplace(rm.getFont(), "[ Space-bar or click to fly ]\n[ Press the Shift key to use the ability ]", 40);
     startButton->setPosition({ 480.f, 600.f });
-    startButton->setFillColor(sf::Color::White);
+    startButton->setFillColor(sf::Color::White);    
 
     std::random_device rd;
     gen = std::mt19937(rd());
@@ -42,6 +41,14 @@ player(nullptr), capaIcon(rm.getCapaTexture())
     gapDist = std::uniform_real_distribution<float>(200.f, 650.f);
     chanceDist = std::uniform_real_distribution<float>(0.f, 100.f);
 
+    slowIcon.setTexture(rm.getSlowUiTexture());
+    slowIcon.setTextureRect(sf::IntRect({ 0,0 }, {
+    (int)rm.getSlowUiTexture().getSize().x,
+    (int)rm.getSlowUiTexture().getSize().y
+        }));
+    slowIcon.setScale({ 0.05f, 0.05f });
+    slowIcon.setPosition({ 200.f, 950.f });
+    
     capaIcon.setTexture(rm.getCapaTexture());
 
     capaIcon.setTextureRect(sf::IntRect({ 0,0 }, {
@@ -58,11 +65,23 @@ player(nullptr), capaIcon(rm.getCapaTexture())
     shiftTypeText->setOrigin({ textBounds.size.x / 2.f, textBounds.size.y });
     sf::FloatRect iconBounds = capaIcon.getGlobalBounds();
     shiftTypeText->setPosition({ iconBounds.position.x + iconBounds.size.x / 2.f, iconBounds.position.y - 10.f });
+    // texte A touche pour activer slow motion
+    slowTypeText.emplace(rm.getFont(), "A", 30);
+    slowTypeText->setFillColor(sf::Color::White);
+    sf::FloatRect slowTextBounds = slowTypeText->getLocalBounds();
+    slowTypeText->setOrigin({ slowTextBounds.size.x / 2.f, slowTextBounds.size.y });
+
+    sf::FloatRect slowIconBounds = slowIcon.getGlobalBounds();
+    slowTypeText->setPosition({
+        slowIconBounds.position.x + slowIconBounds.size.x / 2.f,
+        slowIconBounds.position.y - 10.f
+        });
 
     cooldownArc = sf::VertexArray(sf::PrimitiveType::TriangleFan);
 }
 
 void Game::resetGame() {
+
     player->reset();
     gameEvent->reset();
     obstacles.clear();
@@ -165,7 +184,10 @@ void Game::processEvents() {
                     player->activateGhost();
                     am.playGhostSound();
                 }
-                if (key->code == sf::Keyboard::Key::A) {
+                if (key->code == sf::Keyboard::Key::A
+                    && save.isSlowMotionEquipped()
+                    && slowMotion.canActivate()) {
+
                     slowMotion.activate();
                 }
             }
@@ -177,7 +199,7 @@ void Game::processEvents() {
         }
 
         if (const auto* key = event.getIf<sf::Event::KeyPressed>()) {
-            if (key->code == sf::Keyboard::Key::F1) {
+            if (key->code == sf::Keyboard::Key::E) {
                 debugMode = !debugMode;
             }
         }
@@ -409,7 +431,14 @@ void Game::render() {
         }
         else if (state == GameState::Playing) {
             drawScore(window, score, { 30.f, 5.f }, 0.12f, false);
-            window.draw(capaIcon);
+            window.draw(capaIcon); // ghost
+
+            if (save.isSlowMotionEquipped()) {
+                window.draw(slowIcon); 
+            }
+            if (save.isSlowMotionEquipped() && slowTypeText) {
+                window.draw(*slowTypeText);
+            }
 
             if (shiftTypeText && !player->isGhost()) {
                 window.draw(*shiftTypeText);
@@ -423,12 +452,6 @@ void Game::render() {
         if (state == GameState::GameOver) {
             gameOverMenu->draw(window);
         }
-    }
-    if (slowMotion.isActive()) {
-        sf::RectangleShape overlay;
-        overlay.setSize({ 1920.f, 1080.f });
-        overlay.setFillColor(sf::Color(100, 100, 255, 40));
-        window.draw(overlay);
     }
 
     if (debugMode && (state == GameState::Playing || state == GameState::Ready)) {
