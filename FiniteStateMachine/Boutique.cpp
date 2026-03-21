@@ -68,7 +68,7 @@ Boutique::Boutique(RessourcesManager& rm, Save& save) :
     items.emplace_back("Bird Gold", 550, rm.getPlayerTexture());
     items.emplace_back("Bird Shadow", 850, rm.getPlayerTexture());
     items.emplace_back("Bird Rainbow", 3000, rm.getPlayerTexture());
-    items.emplace_back("Slow Motion", 0, rm.getSlowUiTexture());
+    items.emplace_back("Slow Motion", 500, rm.getSlowUiTexture());
 
     items[0].setColor(sf::Color::White);
     items[1].setColor(sf::Color::Red);
