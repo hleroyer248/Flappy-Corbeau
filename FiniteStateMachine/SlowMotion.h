@@ -8,6 +8,7 @@ private:
     float cooldown;
     float cooldownTimer;
     float slowFactor;
+    bool hasBeenUsed;
 
 public:
     SlowMotion();
@@ -19,4 +20,9 @@ public:
     bool canActivate() const;
 
     float getTimeScale() const;
+
+    float getRemainingTime() const;
+    float getCooldownRatio() const;
+    bool isOnCooldown() const;
+    void reset();
 };

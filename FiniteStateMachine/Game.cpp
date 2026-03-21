@@ -78,10 +78,15 @@ player(nullptr), capaIcon(rm.getCapaTexture()), slowIcon(rm.getSlowUiTexture())
         });
 
     cooldownArc = sf::VertexArray(sf::PrimitiveType::TriangleFan);
+    slowCooldownArc = sf::VertexArray(sf::PrimitiveType::TriangleFan);
+
+    slowCountdownText.emplace(rm.getFont(), "", 40);
+    slowCountdownText->setFillColor(sf::Color::White);
 }
 
 void Game::resetGame() {
 
+    slowMotion.reset();
     player->reset();
     gameEvent->reset();
     obstacles.clear();
@@ -211,6 +216,53 @@ void Game::update(float dt) {
     slowMotion.update(dt);
     float scaledDt = dt * slowMotion.getTimeScale();
 
+    if (slowMotion.isActive()) {
+        int remaining = (int)std::ceil(slowMotion.getRemainingTime());
+
+        slowCountdownText->setString(std::to_string(remaining));
+
+        sf::FloatRect bounds = slowCountdownText->getLocalBounds();
+        slowCountdownText->setOrigin({
+          bounds.size.x / 2.f,
+          bounds.size.y / 2.f
+        });
+
+        sf::FloatRect iconBounds = slowIcon.getGlobalBounds();
+
+        slowCountdownText->setPosition({
+            iconBounds.position.x + iconBounds.size.x / 2.f,
+            iconBounds.position.y + iconBounds.size.y / 2.f
+        });
+    }
+
+    if (slowMotion.isOnCooldown()) {
+
+        float ratio = slowMotion.getCooldownRatio();
+        float angleMax = 360.f * ratio;
+
+        slowCooldownArc.clear();
+
+        sf::FloatRect bounds = slowIcon.getGlobalBounds();
+
+        sf::Vector2f center(
+            bounds.position.x + bounds.size.x / 2.f + slowCircleOffsetX,
+            bounds.position.y + bounds.size.y / 2.f + slowCircleOffsetY
+        );
+
+        slowCooldownArc.append(sf::Vertex(center, sf::Color(100, 100, 100, 150)));
+
+        for (int i = 0; i <= 100; i++) {
+            float angle = (-90.f + (angleMax * i / 100.f)) * 3.14159f / 180.f;
+
+            float radius = std::min(bounds.size.x, bounds.size.y) / 2.f + slowCircleRadiusOffset;
+
+            float x = center.x + cos(angle) * radius;
+            float y = center.y + sin(angle) * radius;
+
+            slowCooldownArc.append(sf::Vertex({ x, y }, sf::Color(100, 100, 100, 150)));
+        }
+    }
+
     am.updateMusic();
     am.updateCrow(dt);
     if (state == GameState::MainMenu || state == GameState::OptionMenu) {
@@ -252,6 +304,7 @@ void Game::update(float dt) {
                 shiftTypeText->setFillColor(sf::Color::White);
             }
         }
+
 
         float ratio = player->getCooldownRatio();
         float angleMax = 360.f * ratio;
@@ -446,6 +499,13 @@ void Game::render() {
 
             if (!player->canActivateGhost()) {
                 window.draw(cooldownArc);
+            }
+
+            if (save.isSlowMotionEquipped() && slowMotion.isOnCooldown() &&!slowMotion.isActive()) {
+                window.draw(slowCooldownArc);
+            }
+            if (save.isSlowMotionEquipped() && slowMotion.isActive() && slowCountdownText) {
+                window.draw(*slowCountdownText);
             }
         }
 

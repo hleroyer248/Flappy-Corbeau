@@ -72,9 +72,15 @@ private:
 
     std::optional<sf::Text> shiftTypeText;
     std::optional<sf::Text> slowTypeText;
+    std::optional<sf::Text> slowCountdownText;
+    sf::VertexArray slowCooldownArc;
     sf::VertexArray cooldownArc;
 
     Save save;
 
     bool laserWasActive = false;
+
+    float slowCircleOffsetX = 5.f;
+    float slowCircleOffsetY = 0.f;
+    float slowCircleRadiusOffset = -15.f;
 };
