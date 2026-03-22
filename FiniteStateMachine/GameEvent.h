@@ -97,4 +97,6 @@ private:
     void addHorizontalLaser(float warnDur, float actDur, float startWarn, float sweepSpd = 0.f, float sweepMin = 100.f, float sweepMax = 800.f);
     void addDiagonalLaser(float warnDur, float actDur, float startWarn, float startX);
     void ensureSpacing(float minDist, float targetStartTime);
+    float groundY;
+
 };
