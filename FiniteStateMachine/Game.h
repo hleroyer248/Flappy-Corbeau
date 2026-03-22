@@ -83,4 +83,7 @@ private:
     float slowCircleOffsetX = 5.f;
     float slowCircleOffsetY = 0.f;
     float slowCircleRadiusOffset = -15.f;
+
+    sf::Sprite ground;
+    float groundHeight;
 };

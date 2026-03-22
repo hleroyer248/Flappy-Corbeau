@@ -3,10 +3,11 @@
 
 class ParallaxLayer {
 public:
-    ParallaxLayer(const sf::Texture& tex, float speedFactor);
+    ParallaxLayer(const sf::Texture& tex, float speedFactor, sf::IntRect rect = sf::IntRect());
 
     void update(float dt, float baseSpeed);
     void draw(sf::RenderWindow& window) const;
+    void setY(float y);
 
 private:
     sf::Sprite s1;

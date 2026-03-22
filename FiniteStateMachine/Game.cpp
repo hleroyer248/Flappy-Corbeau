@@ -5,7 +5,7 @@
 
 Game::Game() : window(sf::VideoMode({ 1920, 1080 }), "RavenSoul", sf::State::Fullscreen),
 state(GameState::MainMenu), score(0), pipeSpawnTimer(0.f), lastPipeWasMoving(false),
-player(nullptr), capaIcon(rm.getCapaTexture()), slowIcon(rm.getSlowUiTexture())
+player(nullptr), capaIcon(rm.getCapaTexture()), slowIcon(rm.getSlowUiTexture()), ground(rm.getGroundBgTexture())
 {
     window.setFramerateLimit(60);
     window.setKeyRepeatEnabled(false);
@@ -26,6 +26,16 @@ player(nullptr), capaIcon(rm.getCapaTexture()), slowIcon(rm.getSlowUiTexture())
     backLayers.clear();
     backLayers.emplace_back(rm.getBackBgTexture(), 0.3f);
     backLayers.emplace_back(rm.getMidBgTexture(), 0.6f);
+    ground.setTexture(rm.getGroundBgTexture());
+
+    sf::IntRect groundRect(
+        { 92, 1080 - 400 },
+        { 1920-182, 200 }
+    );
+
+    frontLayers.emplace_back(rm.getGroundBgTexture(), 1.0f, groundRect);
+    frontLayers.back().setY(1080 - 200);
+
 
     menuTitle.emplace(rm.getFont(), "RAVEN SOUL", 90);
     menuTitle->setPosition({ 700.f, 250.f });
@@ -33,12 +43,14 @@ player(nullptr), capaIcon(rm.getCapaTexture()), slowIcon(rm.getSlowUiTexture())
 
     startButton.emplace(rm.getFont(), "[ Space-bar or click to fly ]\n[ Press the Shift key to use the ability ]", 40);
     startButton->setPosition({ 480.f, 600.f });
-    startButton->setFillColor(sf::Color::White);    
+    startButton->setFillColor(sf::Color::White);   
 
     std::random_device rd;
     gen = std::mt19937(rd());
 
-    gapDist = std::uniform_real_distribution<float>(200.f, 650.f);
+    float minY = 200.f;
+    float maxY = 1080.f - 200.f - 150.f;
+    gapDist = std::uniform_real_distribution<float>(200.f, maxY);
     chanceDist = std::uniform_real_distribution<float>(0.f, 100.f);
 
     slowIcon.setTexture(rm.getSlowUiTexture());
@@ -275,7 +287,7 @@ void Game::update(float dt) {
         return;
     }
 
-    float baseSpeed = 200.f;
+    float baseSpeed = 400.f;
 
     for (auto& layer : backLayers) layer.update(scaledDt, baseSpeed);
     for (auto& layer : frontLayers) layer.update(scaledDt, baseSpeed);
@@ -380,7 +392,9 @@ void Game::update(float dt) {
             }
         }
 
-        if (pBox.getRect().position.y < 0.f || pBox.getRect().position.y + pBox.getRect().size.y > 1080.f) {
+        float groundY = 1080.f - 200.f;
+
+        if (pBox.getRect().position.y + pBox.getRect().size.y > groundY) {
             collision = true;
         }
 
@@ -477,6 +491,7 @@ void Game::render() {
         for (const auto& layer : frontLayers) {
             layer.draw(window);
         }
+        
 
         if (state == GameState::Ready) {
             window.draw(*startButton);
