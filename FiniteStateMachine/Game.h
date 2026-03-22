@@ -15,6 +15,7 @@
 #include "Save.h" 
 #include "Utils.h"
 #include "GameEvent.h"
+#include "SlowMotion.h"
 
 enum class GameState { MainMenu, OptionMenu, Shop, Ready, Playing, GameOver };
 
@@ -40,6 +41,7 @@ private:
     AudioManager am;
 
     Player* player;
+    SlowMotion slowMotion;
     std::vector<Obstacle> obstacles;
 
     std::vector<ParallaxLayer> backLayers;
@@ -66,10 +68,22 @@ private:
     std::uniform_real_distribution<float> chanceDist;
 
     sf::Sprite capaIcon;
+    sf::Sprite slowIcon;
+
     std::optional<sf::Text> shiftTypeText;
+    std::optional<sf::Text> slowTypeText;
+    std::optional<sf::Text> slowCountdownText;
+    sf::VertexArray slowCooldownArc;
     sf::VertexArray cooldownArc;
 
     Save save;
 
     bool laserWasActive = false;
+
+    float slowCircleOffsetX = 5.f;
+    float slowCircleOffsetY = 0.f;
+    float slowCircleRadiusOffset = -15.f;
+
+    sf::Sprite ground;
+    float groundHeight;
 };

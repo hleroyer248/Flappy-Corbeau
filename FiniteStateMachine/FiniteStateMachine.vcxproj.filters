@@ -17,6 +17,7 @@
     <ClCompile Include="Save.cpp" />
     <ClCompile Include="ShopItem.cpp" />
     <ClCompile Include="Utils.cpp" />
+    <ClCompile Include="SlowMotion.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AudioManager.h" />
@@ -34,5 +35,6 @@
     <ClInclude Include="Save.h" />
     <ClInclude Include="ShopItem.h" />
     <ClInclude Include="Utils.h" />
+    <ClInclude Include="SlowMotion.h" />
   </ItemGroup>
 </Project>

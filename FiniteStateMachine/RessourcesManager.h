@@ -59,6 +59,7 @@ public:
     const sf::IntRect& getLaserRect(int index) const;
     int getLaserFrameCount() const;
     const sf::Texture& getCapaTexture() const;
+    const sf::Texture& getSlowUiTexture() const;
 
 private:
     sf::Texture playerTex;
@@ -111,6 +112,7 @@ private:
     std::vector<sf::IntRect> laserRects;
 
     sf::Texture capaTex;
+    sf::Texture slowUiTex;
 
     bool loadTexture(sf::Texture& tex, const std::string& path);
 };

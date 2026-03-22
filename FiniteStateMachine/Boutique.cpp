@@ -68,6 +68,7 @@ Boutique::Boutique(RessourcesManager& rm, Save& save) :
     items.emplace_back("Bird Gold", 550, rm.getPlayerTexture());
     items.emplace_back("Bird Shadow", 850, rm.getPlayerTexture());
     items.emplace_back("Bird Rainbow", 3000, rm.getPlayerTexture());
+    items.emplace_back("Slow Motion", 500, rm.getSlowUiTexture());
 
     items[0].setColor(sf::Color::White);
     items[1].setColor(sf::Color::Red);
@@ -75,6 +76,7 @@ Boutique::Boutique(RessourcesManager& rm, Save& save) :
     items[3].setColor(sf::Color::Green);
     items[4].setColor(sf::Color(255, 215, 0)); 
     items[5].setColor(sf::Color(100, 100, 100)); 
+    items[7].setColor(sf::Color::White);
 
 
     int cols = 3;
@@ -82,9 +84,19 @@ Boutique::Boutique(RessourcesManager& rm, Save& save) :
 
     for (int i = 0; i < items.size(); i++)
     {
-        if (save.isSkinOwned(i)) items[i].setOwned(true);
-        if (save.getEquippedSkin() == i || (save.getEquippedSkin() == -1 && i == 0))
-            items[i].setEquipped(true);
+        if (i == 7) {
+            if (save.isSlowMotionOwned()) items[i].setOwned(true);
+        }
+        else {
+            if (save.isSkinOwned(i)) items[i].setOwned(true);
+        }
+        if (i == 7) {
+            if (save.isSlowMotionEquipped()) items[i].setEquipped(true);
+        }
+        else {
+            if (save.getEquippedSkin() == i || (save.getEquippedSkin() == -1 && i == 0))
+                items[i].setEquipped(true);
+        }
 
         int x = i % cols;
         int y = i / cols;
@@ -106,7 +118,12 @@ Boutique::Action Boutique::handleClick(sf::Vector2f mousePos) {
         int coins = save.getTotalScore();
         if (coins >= price) {
             save.spendCoins(price);
-            save.buySkin(selectedItem);
+            if (selectedItem == 7) {
+                save.buySlowMotion();
+            }
+            else {
+                save.buySkin(selectedItem);
+            }
             items[selectedItem].setOwned(true);
             showWarning = false; 
         }
@@ -118,9 +135,19 @@ Boutique::Action Boutique::handleClick(sf::Vector2f mousePos) {
     }
 
     if (selectedItem != -1 && items[selectedItem].isOwned() && !items[selectedItem].isEquipped() && equipButton.getGlobalBounds().contains(mousePos)) {
-        for (auto& item : items) item.setEquipped(false);
-        save.equipSkin(selectedItem);
-        items[selectedItem].setEquipped(true);
+        if (selectedItem == 7) {
+            save.equipSlowMotion();
+            items[selectedItem].setEquipped(true);
+        }
+        else {
+            // déséquipe seulement les skins
+            for (int i = 0; i < items.size(); i++) {
+                if (i != 7) items[i].setEquipped(false);
+            }
+
+            save.equipSkin(selectedItem);
+            items[selectedItem].setEquipped(true);
+        }
         clickedSomething = true;
     }
 
@@ -186,16 +213,38 @@ void Boutique::update(sf::RenderWindow& window) {
 
         previewSprite = items[selectedItem].getSprite();
 
+
         auto bounds = previewSprite->getLocalBounds();
         if (selectedItem == 6) {
             previewSprite->setColor(getRainbowColor(time));
         }
+        if (selectedItem == 7) {
+            const sf::Texture& tex = previewSprite->getTexture();
 
-        float targetSize = 250.f; 
-        float scale = targetSize / bounds.size.x;
+            previewSprite->setTextureRect(sf::IntRect({ 0,0 }, {
+                (int)tex.getSize().x,
+                (int)tex.getSize().y
+                }));
+        }
+        else {
+            // Skins → seulement 1 frame (comme en jeu)
+            previewSprite->setTextureRect(sf::IntRect({ 0,0 }, { 2000, 1900 }));
+        }
 
-        previewSprite->setScale({ scale, scale });
-        previewSprite->setPosition({ 1600.f, 400.f });
+        if (selectedItem == 7) {
+            previewSprite->setScale({ 0.1f, 0.1f });
+            previewSprite->setPosition({ 1500.f, 400.f });
+        }
+        else {
+            float targetSize = 250.f;
+
+            float scaleX = targetSize / bounds.size.x;
+            float scaleY = targetSize / bounds.size.y;
+            float scale = std::min(scaleX, scaleY);
+
+            previewSprite->setScale({ scale, scale });
+            previewSprite->setPosition({ 1600.f, 400.f });
+        }
 
         if (items[selectedItem].isOwned()) buyButton.setColor(sf::Color(150, 150, 150));
         else buyButton.setColor(sf::Color::White);

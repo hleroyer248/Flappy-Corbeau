@@ -12,15 +12,30 @@ ShopItem::ShopItem(const std::string& name, int price, const sf::Texture& textur
 
     auto texSize = texture.getSize();
 
-    int frameWidth = texSize.x / 3;
-    int frameHeight = texSize.y / 3;
+    if (name == "Slow Motion") {
+        // image normale
+        sprite.setTextureRect(sf::IntRect({ 0,0 }, {
+            (int)texSize.x,
+            (int)texSize.y
+            }));
 
-    sprite.setTextureRect(sf::IntRect({ 0,0 }, { frameWidth,frameHeight }));
+        float targetSize = 120.f;
+        float scale = targetSize / texSize.x;
 
-    float targetSize = 120.f;
-    float scale = targetSize / frameWidth;
+        sprite.setScale({ scale, scale });
+    }
+    else {
+        // spritesheet
+        int frameWidth = texSize.x / 3;
+        int frameHeight = texSize.y / 3;
 
-    sprite.setScale({ scale, scale });
+        sprite.setTextureRect(sf::IntRect({ 0,0 }, { frameWidth, frameHeight }));
+
+        float targetSize = 120.f;
+        float scale = targetSize / frameWidth;
+
+        sprite.setScale({ scale, scale });
+    }
     box.setSize({ 200.f, 200.f });
     box.setFillColor(sf::Color(70, 70, 70));
 

@@ -67,6 +67,7 @@ bool RessourcesManager::loadAll() {
     if (!loadTexture(capaTex, basePath + "Capa.png")) return false;
     if (!loadTexture(frontBottomTex, basePath + "FrontBottom.png")) return false;
     if (!loadTexture(frontTopTex, basePath + "FrontTop.png")) return false;
+    if (!loadTexture(slowUiTex, basePath + "SlowUi.png")) return false;
 
     sf::Image numbersImg;
     if (numbersImg.loadFromFile(basePath + "Chiffre.png") || numbersImg.loadFromFile(basePath + "Chiffre.jpg")) {
@@ -254,6 +255,7 @@ const sf::Texture& RessourcesManager::getLaserTexture() const { return laserTex;
 const sf::Texture& RessourcesManager::getTitleTexture() const { return titleTex; }
 const sf::Texture& RessourcesManager::getShopBgTexture() const { return shopBgTex; }
 const sf::Texture& RessourcesManager::getCapaTexture() const { return capaTex; }
+const sf::Texture& RessourcesManager::getSlowUiTexture() const { return slowUiTex; }
 
 const sf::Texture& RessourcesManager::getTopHeadTexture(int index) const { return topHeadTex[index]; }
 const sf::Texture& RessourcesManager::getTopBodyTexture(int index) const { return topBodyTex[index]; }

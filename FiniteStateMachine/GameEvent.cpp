@@ -12,7 +12,7 @@ GameEvent::GameEvent(RessourcesManager& rm, AudioManager& am) :
     maxSpeedMultiplier(4.0),
     gapDist(150.f, 550.f),
     chanceDist(0.f, 100.f),
-    laserYDist(100.f, 800.f),
+    laserYDist(100.f, 700),
     state(EventState::Normal),
     obstaclesPassed(0),
     lasersDodged(0),
@@ -25,6 +25,7 @@ GameEvent::GameEvent(RessourcesManager& rm, AudioManager& am) :
 {
     std::random_device rd;
     gen = std::mt19937(rd());
+    groundY = 1080.f - 200.f; 
 
     laserDodgedThisFrame = false;
 }
@@ -158,7 +159,7 @@ void GameEvent::setupWave(int waveIndex) {
     }
     else if (waveIndex == 2) {
         currentWaveDuration = 4.5f;
-        addHorizontalLaser(1.0f, 3.5f, 0.f, 200.f, 100.f, 750.f);
+        addHorizontalLaser(1.0f, 3.5f, 0.f, 200.f, 100.f, 600.f);
     }
     else if (waveIndex == 3) {
         currentWaveDuration = 7.5f;
@@ -280,6 +281,7 @@ void GameEvent::spawnObstacle(std::vector<Obstacle>& obstacles) {
 
 void GameEvent::addHorizontalLaser(float warnDur, float actDur, float startWarn, float sweepSpd, float sweepMin, float sweepMax) {
     LaserEntity l(rm.getLaserTexture());
+    sweepMax = std::min(sweepMax, groundY - 100.f);
     l.isDiagonal = false;
     l.warningDuration = warnDur;
     l.activeDuration = actDur;

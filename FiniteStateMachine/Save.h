@@ -21,6 +21,15 @@ public:
     bool isSkinOwned(int index) const;
     int getEquippedSkin() const;
 
+    bool slowMotionOwned;
+    bool slowMotionEquipped;
+
+    bool isSlowMotionOwned() const;
+    bool isSlowMotionEquipped() const;
+
+    void buySlowMotion();
+    void equipSlowMotion();
+
 private:
     int bestScore;
     int totalScore;

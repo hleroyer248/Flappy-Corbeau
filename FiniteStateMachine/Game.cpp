@@ -5,7 +5,7 @@
 
 Game::Game() : window(sf::VideoMode({ 1920, 1080 }), "RavenSoul", sf::State::Fullscreen),
 state(GameState::MainMenu), score(0), pipeSpawnTimer(0.f), lastPipeWasMoving(false),
-player(nullptr), capaIcon(rm.getCapaTexture())
+player(nullptr), capaIcon(rm.getCapaTexture()), slowIcon(rm.getSlowUiTexture()), ground(rm.getGroundBgTexture())
 {
     window.setFramerateLimit(60);
     window.setKeyRepeatEnabled(false);
@@ -17,7 +17,6 @@ player(nullptr), capaIcon(rm.getCapaTexture())
     frontLayers.clear();
 
     player = new Player(rm);
-    save.equipSkin(-1);
 
     mainMenu.emplace(rm);
     optionMenu.emplace(rm, am);
@@ -27,6 +26,16 @@ player(nullptr), capaIcon(rm.getCapaTexture())
     backLayers.clear();
     backLayers.emplace_back(rm.getBackBgTexture(), 0.3f);
     backLayers.emplace_back(rm.getMidBgTexture(), 0.6f);
+    ground.setTexture(rm.getGroundBgTexture());
+
+    sf::IntRect groundRect(
+        { 92, 1080 - 400 },
+        { 1920-182, 200 }
+    );
+
+    frontLayers.emplace_back(rm.getGroundBgTexture(), 1.0f, groundRect);
+    frontLayers.back().setY(1080 - 200);
+
 
     menuTitle.emplace(rm.getFont(), "RAVEN SOUL", 90);
     menuTitle->setPosition({ 700.f, 250.f });
@@ -34,14 +43,24 @@ player(nullptr), capaIcon(rm.getCapaTexture())
 
     startButton.emplace(rm.getFont(), "[ Space-bar or click to fly ]\n[ Press the Shift key to use the ability ]", 40);
     startButton->setPosition({ 480.f, 600.f });
-    startButton->setFillColor(sf::Color::White);
+    startButton->setFillColor(sf::Color::White);   
 
     std::random_device rd;
     gen = std::mt19937(rd());
 
-    gapDist = std::uniform_real_distribution<float>(200.f, 650.f);
+    float minY = 200.f;
+    float maxY = 1080.f - 200.f - 150.f;
+    gapDist = std::uniform_real_distribution<float>(200.f, maxY);
     chanceDist = std::uniform_real_distribution<float>(0.f, 100.f);
 
+    slowIcon.setTexture(rm.getSlowUiTexture());
+    slowIcon.setTextureRect(sf::IntRect({ 0,0 }, {
+    (int)rm.getSlowUiTexture().getSize().x,
+    (int)rm.getSlowUiTexture().getSize().y
+        }));
+    slowIcon.setScale({ 0.05f, 0.05f });
+    slowIcon.setPosition({ 200.f, 950.f });
+    
     capaIcon.setTexture(rm.getCapaTexture());
 
     capaIcon.setTextureRect(sf::IntRect({ 0,0 }, {
@@ -58,11 +77,28 @@ player(nullptr), capaIcon(rm.getCapaTexture())
     shiftTypeText->setOrigin({ textBounds.size.x / 2.f, textBounds.size.y });
     sf::FloatRect iconBounds = capaIcon.getGlobalBounds();
     shiftTypeText->setPosition({ iconBounds.position.x + iconBounds.size.x / 2.f, iconBounds.position.y - 10.f });
+    // texte A touche pour activer slow motion
+    slowTypeText.emplace(rm.getFont(), "A", 30);
+    slowTypeText->setFillColor(sf::Color::White);
+    sf::FloatRect slowTextBounds = slowTypeText->getLocalBounds();
+    slowTypeText->setOrigin({ slowTextBounds.size.x / 2.f, slowTextBounds.size.y });
+
+    sf::FloatRect slowIconBounds = slowIcon.getGlobalBounds();
+    slowTypeText->setPosition({
+        slowIconBounds.position.x + slowIconBounds.size.x / 2.f,
+        slowIconBounds.position.y - 10.f
+        });
 
     cooldownArc = sf::VertexArray(sf::PrimitiveType::TriangleFan);
+    slowCooldownArc = sf::VertexArray(sf::PrimitiveType::TriangleFan);
+
+    slowCountdownText.emplace(rm.getFont(), "", 40);
+    slowCountdownText->setFillColor(sf::Color::White);
 }
 
 void Game::resetGame() {
+
+    slowMotion.reset();
     player->reset();
     gameEvent->reset();
     obstacles.clear();
@@ -165,6 +201,12 @@ void Game::processEvents() {
                     player->activateGhost();
                     am.playGhostSound();
                 }
+                if (key->code == sf::Keyboard::Key::A
+                    && save.isSlowMotionEquipped()
+                    && slowMotion.canActivate()) {
+
+                    slowMotion.activate();
+                }
             }
             if (const auto* mouse = event.getIf<sf::Event::MouseButtonReleased>()) {
                 if (mouse->button == sf::Mouse::Button::Left) {
@@ -174,7 +216,7 @@ void Game::processEvents() {
         }
 
         if (const auto* key = event.getIf<sf::Event::KeyPressed>()) {
-            if (key->code == sf::Keyboard::Key::F1) {
+            if (key->code == sf::Keyboard::Key::E) {
                 debugMode = !debugMode;
             }
         }
@@ -182,6 +224,57 @@ void Game::processEvents() {
 }
 
 void Game::update(float dt) {
+    //capacité ralentissement du jeu 
+    slowMotion.update(dt);
+    float scaledDt = dt * slowMotion.getTimeScale();
+
+    if (slowMotion.isActive()) {
+        int remaining = (int)std::ceil(slowMotion.getRemainingTime());
+
+        slowCountdownText->setString(std::to_string(remaining));
+
+        sf::FloatRect bounds = slowCountdownText->getLocalBounds();
+        slowCountdownText->setOrigin({
+          bounds.size.x / 2.f,
+          bounds.size.y / 2.f
+        });
+
+        sf::FloatRect iconBounds = slowIcon.getGlobalBounds();
+
+        slowCountdownText->setPosition({
+            iconBounds.position.x + iconBounds.size.x / 2.f,
+            iconBounds.position.y + iconBounds.size.y / 2.f
+        });
+    }
+
+    if (slowMotion.isOnCooldown()) {
+
+        float ratio = slowMotion.getCooldownRatio();
+        float angleMax = 360.f * ratio;
+
+        slowCooldownArc.clear();
+
+        sf::FloatRect bounds = slowIcon.getGlobalBounds();
+
+        sf::Vector2f center(
+            bounds.position.x + bounds.size.x / 2.f + slowCircleOffsetX,
+            bounds.position.y + bounds.size.y / 2.f + slowCircleOffsetY
+        );
+
+        slowCooldownArc.append(sf::Vertex(center, sf::Color(100, 100, 100, 150)));
+
+        for (int i = 0; i <= 100; i++) {
+            float angle = (-90.f + (angleMax * i / 100.f)) * 3.14159f / 180.f;
+
+            float radius = std::min(bounds.size.x, bounds.size.y) / 2.f + slowCircleRadiusOffset;
+
+            float x = center.x + cos(angle) * radius;
+            float y = center.y + sin(angle) * radius;
+
+            slowCooldownArc.append(sf::Vertex({ x, y }, sf::Color(100, 100, 100, 150)));
+        }
+    }
+
     am.updateMusic();
     am.updateCrow(dt);
     if (state == GameState::MainMenu || state == GameState::OptionMenu) {
@@ -194,13 +287,13 @@ void Game::update(float dt) {
         return;
     }
 
-    float baseSpeed = 200.f;
+    float baseSpeed = 400.f;
 
-    for (auto& layer : backLayers) layer.update(dt, baseSpeed);
-    for (auto& layer : frontLayers) layer.update(dt, baseSpeed);
+    for (auto& layer : backLayers) layer.update(scaledDt, baseSpeed);
+    for (auto& layer : frontLayers) layer.update(scaledDt, baseSpeed);
 
     if (state == GameState::Playing) {
-        player->update(dt);
+        player->update(scaledDt);
         player->updateGhost(dt);
 
         if (save.getEquippedSkin() == 6) {
@@ -224,6 +317,7 @@ void Game::update(float dt) {
             }
         }
 
+
         float ratio = player->getCooldownRatio();
         float angleMax = 360.f * ratio;
 
@@ -246,7 +340,7 @@ void Game::update(float dt) {
             cooldownArc.append(sf::Vertex({ x, y }, sf::Color(100, 100, 100, 150)));
         }
 
-        gameEvent->update(dt, obstacles);
+        gameEvent->update(scaledDt, obstacles);
 
         if (gameEvent->shouldClearObstacles)
         {
@@ -298,7 +392,9 @@ void Game::update(float dt) {
             }
         }
 
-        if (pBox.getRect().position.y < 0.f || pBox.getRect().position.y + pBox.getRect().size.y > 1080.f) {
+        float groundY = 1080.f - 200.f;
+
+        if (pBox.getRect().position.y + pBox.getRect().size.y > groundY) {
             collision = true;
         }
 
@@ -395,6 +491,7 @@ void Game::render() {
         for (const auto& layer : frontLayers) {
             layer.draw(window);
         }
+        
 
         if (state == GameState::Ready) {
             window.draw(*startButton);
@@ -402,7 +499,14 @@ void Game::render() {
         }
         else if (state == GameState::Playing) {
             drawScore(window, score, { 30.f, 5.f }, 0.12f, false);
-            window.draw(capaIcon);
+            window.draw(capaIcon); // ghost
+
+            if (save.isSlowMotionEquipped()) {
+                window.draw(slowIcon); 
+            }
+            if (save.isSlowMotionEquipped() && slowTypeText) {
+                window.draw(*slowTypeText);
+            }
 
             if (shiftTypeText && !player->isGhost()) {
                 window.draw(*shiftTypeText);
@@ -410,6 +514,13 @@ void Game::render() {
 
             if (!player->canActivateGhost()) {
                 window.draw(cooldownArc);
+            }
+
+            if (save.isSlowMotionEquipped() && slowMotion.isOnCooldown() &&!slowMotion.isActive()) {
+                window.draw(slowCooldownArc);
+            }
+            if (save.isSlowMotionEquipped() && slowMotion.isActive() && slowCountdownText) {
+                window.draw(*slowCountdownText);
             }
         }
 
